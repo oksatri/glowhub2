@@ -31,13 +31,13 @@ Version: 1.1
 
 /* Theme Colors */
 :root {
-  --accent-color: #C5A992;
-  --secondary-color: #C5A992;
-  --dark-color: #2f2f2f;
-  --light-color: #F3F2EC;
+  --accent-color: #f8bbbd;
+  --secondary-color: #f8bbbd;
+  --dark-color: #3d2a33;
+  --light-color: #fff4ed;
   --body-text-color: #757575;
   --light-text-color: #afafaf;
-  --dark-text-color: #2f2f2f;
+  --dark-text-color: #3d2a33;
 }
 
 /* Fonts */
@@ -67,26 +67,26 @@ Version: 1.1
   --bs-body-color: #333;
   --bs-body-color-rgb: 51, 51, 51;
 
-  --bs-primary: #C5A992;
-  --bs-primary-dark: #C5A992;
-  --bs-secondary: #C5A992;
-  --bs-black: #111;
-  --bs-light: #F1F1F0;
-  --bs-dark: #212529;
+  --bs-primary: #f8bbbd;
+  --bs-primary-dark: #f8bbbd;
+  --bs-secondary: #f8bbbd;
+  --bs-black: #3d2a33;
+  --bs-light: #fff4ed;
+  --bs-dark: #3d2a33;
   --bs-gray: #949494;
   --bs-gray-dark: #51565b;
 
-  --bs-primary-rgb: 169, 128, 115;
-  --bs-secondary-rgb: 253, 238, 233;
-  --bs-black-rgb: 17, 17, 17;
-  --bs-light-rgb: 241, 241, 240;
-  --bs-dark-rgb: 33, 37, 41;
+  --bs-primary-rgb: 248, 187, 189;
+  --bs-secondary-rgb: 248, 187, 189;
+  --bs-black-rgb: 61, 42, 51;
+  --bs-light-rgb: 255, 244, 237;
+  --bs-dark-rgb: 61, 42, 51;
 
   --bs-link-color: var(--bs-dark);
-  --bs-link-color-rgb: 17, 17, 17;
+  --bs-link-color-rgb: 61, 42, 51;
   --bs-link-decoration: underline;
   --bs-link-hover-color: var(--bs-primary);
-  --bs-link-hover-color-rgb: 169, 128, 115;
+  --bs-link-hover-color-rgb: 248, 187, 189;
 }
 
 .container,
@@ -147,7 +147,7 @@ a {
 .dropdown-item.active,
 .dropdown-item:active {
   --bs-dropdown-link-active-color: var(--bs-light);
-  --bs-dropdown-link-active-bg: var(--bs-black);
+  --bs-dropdown-link-active-bg: var(--bs-primary);
 }
 
 /* list group */
@@ -168,7 +168,7 @@ a {
   --bs-btn-hover-color: #fff;
   --bs-btn-hover-bg: var(--bs-primary-dark);
   --bs-btn-hover-border-color: var(--bs-primary-dark);
-  --bs-btn-focus-shadow-rgb: 49, 132, 253;
+  --bs-btn-focus-shadow-rgb: 248, 187, 189;
   --bs-btn-active-color: #fff;
   --bs-btn-active-bg: var(--bs-secondary);
   --bs-btn-active-border-color: var(--bs-secondary);
@@ -184,7 +184,7 @@ a {
   --bs-btn-hover-color: #fff;
   --bs-btn-hover-bg: var(--bs-primary);
   --bs-btn-hover-border-color: var(--bs-primary);
-  --bs-btn-focus-shadow-rgb: 13, 110, 253;
+  --bs-btn-focus-shadow-rgb: 248, 187, 189;
   --bs-btn-active-color: #fff;
   --bs-btn-active-bg: var(--bs-primary);
   --bs-btn-active-border-color: var(--bs-primary);
@@ -196,7 +196,7 @@ a {
 }
 
 .pagination {
-  --bs-pagination-active-bg: var(--bs-black);
+  --bs-pagination-active-bg: var(--bs-primary);
   --bs-pagination-bg: transparent;
   --bs-pagination-border-width: 0;
   --bs-pagination-border-radius: 0;
@@ -247,8 +247,8 @@ a {
 
 /* form control */
 .form-control:focus {
-  border-color: #ccc;
-  box-shadow: 0 0 0 0.25rem rgba(200, 200, 200, .25);
+  border-color: var(--bs-primary);
+  box-shadow: 0 0 0 0.25rem rgba(248, 187, 189, .25);
 }
 
 /* dark theme */
@@ -301,7 +301,7 @@ html {
 
 body {
   font-family: var(--body-font);
-  font-size: 16px;
+  font-size: 14px;
   line-height: 2;
   color: var(--body-text-color);
   background-color: var(--light-color);
@@ -673,7 +673,7 @@ input[type="url"]:focus,
 input[type="password"]:focus,
 textarea:focus,
 select:focus {
-  border: 1px solid #33C3F0;
+  border: 1px solid var(--bs-primary);
   outline: 0;
 }
 
@@ -1206,7 +1206,7 @@ fieldset[disabled] a.btn {
 .nav-pills .nav-link.active,
 .nav-pills .show>.nav-link {
   color: #fff;
-  background-color: #0d6efd;
+  background-color: var(--bs-primary);
 }
 
 .nav-fill>.nav-link,
@@ -2034,8 +2034,8 @@ img.post-image {
 
 .tabs .tab.active,
 .tabs .tab:hover {
-  color: #111;
-  border-bottom: 2px solid #9A884C;
+  color: var(--bs-dark);
+  border-bottom: 2px solid var(--bs-primary);
 }
 
 img.books-image {
@@ -2396,6 +2396,438 @@ footer#footer {
 .product-style:hover button.add-to-cart {
   bottom: 380px;
   bottom: 0;
+}
+
+/*----- Custom MUA Sections
+--------------------------------------------------------------*/
+/* Process Steps */
+.process-step {
+  padding: 2rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.process-step:hover {
+  transform: translateY(-5px);
+}
+
+.step-icon {
+  background: var(--bs-light);
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  transition: all 0.3s ease;
+}
+
+.process-step:hover .step-icon {
+  background: var(--bs-primary);
+  transform: scale(1.1);
+}
+
+.process-step:hover .step-icon i {
+  color: #fff !important;
+}
+
+/* MUA Finder Cards */
+.mua-finder-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+}
+
+.mua-finder-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.specialty-option {
+  display: block;
+  padding: 8px 0;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.specialty-option input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+.specialty-option:hover {
+  color: var(--bs-primary);
+}
+
+/* MUA Signup Section */
+.benefit-item {
+  transition: all 0.3s ease;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.benefit-item:hover {
+  background: rgba(248, 187, 189, 0.1);
+  transform: translateX(5px);
+}
+
+/* Testimonials */
+.testimonial-card {
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+
+.testimonial-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--bs-primary);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.testimonial-text {
+  font-style: italic;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+/* Contact Form */
+.contact-form {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.contact-info {
+  background: var(--bs-light);
+  padding: 2rem;
+  border-radius: 10px;
+  height: 100%;
+}
+
+.contact-item {
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.contact-item:last-child {
+  border-bottom: none;
+}
+
+/* Portfolio Gallery */
+.portfolio-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.portfolio-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(61, 42, 51, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.portfolio-item:hover .portfolio-overlay {
+  opacity: 1;
+}
+
+.portfolio-content {
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+}
+
+.portfolio-item:hover .portfolio-content {
+  transform: translateY(0);
+}
+
+/* MUA Profile Cards */
+.mua-profile-card {
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.mua-profile-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+  border-color: var(--bs-primary);
+}
+
+/* Enhanced Button Styles */
+.btn {
+  border-radius: 25px;
+  padding: 10px 25px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--bs-primary), #e8a5a7);
+  border: none;
+  box-shadow: 0 5px 15px rgba(248, 187, 189, 0.4);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #e8a5a7, var(--bs-primary));
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(248, 187, 189, 0.6);
+}
+
+.btn-outline-primary {
+  border: 2px solid var(--bs-primary);
+  color: var(--bs-primary);
+}
+
+.btn-outline-primary:hover {
+  background: var(--bs-primary);
+  border-color: var(--bs-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(248, 187, 189, 0.3);
+}
+
+/* Enhanced Card Styles */
+.mua-finder-card {
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(248, 187, 189, 0.2);
+}
+
+.mua-finder-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+  border-color: var(--bs-primary);
+}
+
+/* Enhanced Section Styling */
+.section-header .section-title {
+  position: relative;
+  background: linear-gradient(135deg, var(--bs-primary), #e8a5a7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Clean card styles for new layout */
+.card {
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+}
+
+/* Hero section improvements */
+#home {
+  position: relative;
+  overflow: hidden;
+}
+
+#home::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, transparent 0%, rgba(248, 187, 189, 0.1) 100%);
+  pointer-events: none;
+}
+
+/* Services section cards */
+#services .card-img-top {
+  transition: all 0.3s ease;
+}
+
+#services .card:hover .card-img-top {
+  transform: scale(1.05);
+}
+
+/* Contact Form Enhancements */
+.contact-form {
+  background: linear-gradient(135deg, #fff, #fff4ed);
+  border: 1px solid rgba(248, 187, 189, 0.2);
+}
+
+.contact-info {
+  background: linear-gradient(135deg, var(--bs-light), #fff4ed);
+  border: 1px solid rgba(248, 187, 189, 0.2);
+}
+
+/* Testimonial Enhancements */
+.testimonial-card {
+  background: linear-gradient(135deg, #fff, #fff4ed);
+  border: 1px solid rgba(248, 187, 189, 0.2);
+}
+
+/* Form Controls */
+.form-control {
+  border-radius: 10px;
+  border: 2px solid #eee;
+  padding: 12px 15px;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: var(--bs-primary);
+  box-shadow: 0 0 0 0.2rem rgba(248, 187, 189, 0.25);
+  transform: translateY(-1px);
+}
+
+.form-select {
+  border-radius: 10px;
+  border: 2px solid #eee;
+  padding: 12px 15px;
+}
+
+/* Stars Animation */
+.stars i {
+  transition: all 0.2s ease;
+}
+
+.stars:hover i {
+  transform: scale(1.2);
+}
+
+/* Gallery Grid Enhancement */
+.mua-gallery img {
+  transition: all 0.3s ease;
+  border: 3px solid #fff;
+}
+
+.mua-gallery img:hover {
+  transform: scale(1.05);
+  border-color: var(--bs-primary);
+}
+
+/* Scroll animations */
+.animate__animated {
+  animation-duration: 0.8s;
+  animation-fill-mode: both;
+}
+
+/* Loading animation */
+.loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* Improved focus states */
+.form-control:focus,
+.form-select:focus {
+  outline: none;
+  border-color: var(--bs-primary);
+  box-shadow: 0 0 0 0.25rem rgba(248, 187, 189, 0.25);
+}
+
+/* Better button focus */
+.btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 0.25rem rgba(248, 187, 189, 0.5);
+}
+
+/* Smooth page transitions */
+body {
+  transition: all 0.3s ease;
+}
+
+/* Enhanced navbar */
+#header {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid rgba(248, 187, 189, 0.2);
+}
+
+/* Improved section spacing */
+section {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Hero section enhancements */
+.hero-section {
+  background: linear-gradient(135deg, var(--bs-light) 0%, #fff4ed 100%);
+  position: relative;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="%23f8bbbd" opacity="0.1"/><circle cx="20" cy="20" r="1" fill="%23f8bbbd" opacity="0.2"/><circle cx="80" cy="30" r="1.5" fill="%23f8bbbd" opacity="0.15"/></svg>') repeat;
+  opacity: 0.5;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+  .process-step {
+    margin-bottom: 2rem;
+  }
+  
+  .mua-finder-card {
+    margin-bottom: 2rem;
+  }
+  
+  .testimonial-card {
+    margin-bottom: 1.5rem;
+  }
+  
+  .contact-info {
+    margin-top: 2rem;
+  }
+  
+  .portfolio-item {
+    margin-bottom: 1rem;
+  }
+  
+  .mua-profile-card {
+    margin-bottom: 2rem;
+  }
+  
+  .btn {
+    padding: 8px 20px;
+    font-size: 0.9rem;
+  }
+  
+  .section-header h2 {
+    font-size: 1.8rem;
+  }
+  
+  .hero-section h1 {
+    font-size: 2rem;
+  }
 }
 
 .product-item figcaption {
