@@ -25,8 +25,15 @@
         </div>
     </section>
 
+    <!-- Section Separator -->
+    <div class="section-separator">
+        <div class="section-separator-icon">
+            <i class="fas fa-star"></i>
+        </div>
+    </div>
+
     <!-- How It Works Section -->
-    <section id="how-it-works" class="py-5">
+    <section id="how-it-works" class="py-5 section-bg-light">
         <div class="container">
             <div class="text-center mb-5">
                 <h2 class="fw-bold mb-3">How GlowHub Works</h2>
@@ -82,8 +89,11 @@
         </div>
     </section>
 
+    <!-- Geometric Separator -->
+    <div class="geometric-separator"></div>
+
     <!-- Find MUA Section -->
-    <section id="find-mua" class="py-5" style="background-color: var(--bs-light);">
+    <section id="find-mua" class="py-5 section-bg-primary-light">
         <div class="container">
             <div class="text-center mb-5">
                 <h2 class="fw-bold mb-3">Discover Top-Rated MUAs</h2>
@@ -93,88 +103,64 @@
 
             <!-- Featured MUA Cards -->
             <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="card h-100 shadow-sm border-0">
-                        <div class="card-body text-center p-4">
-                            <img src="images/default.png" alt="Sarah" class="rounded-circle mb-3" width="80"
-                                height="80">
-                            <h5 class="fw-bold">Sarah Martinez</h5>
-                            <p class="text-primary mb-2">Bridal Specialist • 5 years exp</p>
-                            <p class="text-muted small">From $150 • New York</p>
-                            <a href="#" class="btn btn-outline-primary">View Profile</a>
+                @for ($x = 1; $x <= 6; $x++)
+                    <div class="col-md-4">
+                        <div class="card h-100 shadow-sm border-0 position-relative">
+                            <!-- Heart Icon -->
+                            <div class="position-absolute top-0 end-0 p-3" style="z-index: 10;">
+                                <i class="far fa-heart text-primary" style="font-size: 1.2rem; cursor: pointer;"></i>
+                            </div>
+
+                            <!-- MUA Image -->
+                            <div class="position-relative">
+                                <img src="images/product-item{{ $x }}.jpg" alt="sarah" class="card-img-top"
+                                    style="height: 200px; object-fit: cover;">
+                            </div>
+
+                            <!-- Card Body -->
+                            <div class="card-body text-center p-4">
+                                <h5 class="fw-bold">Sarah Martinez</h5>
+                                <p class="text-primary mb-2">Bridal • Malang | Lowokwaru</p>
+
+                                <!-- Rating -->
+                                <div class="mb-2">
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        <i class="fas fa-star text-warning" style="font-size: 0.9rem;"></i>
+                                    @endfor
+                                    <span class="text-muted small ms-2">4.8 (10 reviews)</span>
+                                </div>
+
+                                <p class="text-muted small mb-3">From Rp. 250.000</p>
+                                <a href="#" class="btn btn-outline-primary">View Profile</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card h-100 shadow-sm border-0">
-                        <div class="card-body text-center p-4">
-                            <img src="images/default.png" alt="Maria" class="rounded-circle mb-3" width="80"
-                                height="80">
-                            <h5 class="fw-bold">Maria Johnson</h5>
-                            <p class="text-primary mb-2">Event Makeup • 7 years exp</p>
-                            <p class="text-muted small">From $120 • Los Angeles</p>
-                            <a href="#" class="btn btn-outline-primary">View Profile</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card h-100 shadow-sm border-0">
-                        <div class="card-body text-center p-4">
-                            <img src="images/default.png" alt="Emma" class="rounded-circle mb-3" width="80"
-                                height="80">
-                            <h5 class="fw-bold">Emma Chen</h5>
-                            <p class="text-primary mb-2">Fashion & Editorial • 8 years exp</p>
-                            <p class="text-muted small">From $180 • Miami</p>
-                            <a href="#" class="btn btn-outline-primary">View Profile</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card h-100 shadow-sm border-0">
-                        <div class="card-body text-center p-4">
-                            <img src="images/default.png" alt="Sarah" class="rounded-circle mb-3" width="80"
-                                height="80">
-                            <h5 class="fw-bold">Sarah Martinez</h5>
-                            <p class="text-primary mb-2">Bridal Specialist • 5 years exp</p>
-                            <p class="text-muted small">From $150 • New York</p>
-                            <a href="#" class="btn btn-outline-primary">View Profile</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card h-100 shadow-sm border-0">
-                        <div class="card-body text-center p-4">
-                            <img src="images/default.png" alt="Maria" class="rounded-circle mb-3" width="80"
-                                height="80">
-                            <h5 class="fw-bold">Maria Johnson</h5>
-                            <p class="text-primary mb-2">Event Makeup • 7 years exp</p>
-                            <p class="text-muted small">From $120 • Los Angeles</p>
-                            <a href="#" class="btn btn-outline-primary">View Profile</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card h-100 shadow-sm border-0">
-                        <div class="card-body text-center p-4">
-                            <img src="images/default.png" alt="Emma" class="rounded-circle mb-3" width="80"
-                                height="80">
-                            <h5 class="fw-bold">Emma Chen</h5>
-                            <p class="text-primary mb-2">Fashion & Editorial • 8 years exp</p>
-                            <p class="text-muted small">From $180 • Miami</p>
-                            <a href="#" class="btn btn-outline-primary">View Profile</a>
-                        </div>
-                    </div>
-                </div>
+                @endfor
             </div>
 
             <div class="text-center mt-4">
-                <a href="#" class="btn btn-primary">View All Artists</a>
+                <a href="{{ route('mua.listing') }}" class="btn btn-primary">View All Artists</a>
             </div>
         </div>
     </section>
 
+    <!-- Wave Separator -->
+    <div class="wave-separator">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path
+                d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z"
+                opacity=".25" fill="currentColor" style="color: var(--bs-primary);"></path>
+            <path
+                d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z"
+                opacity=".5" fill="currentColor" style="color: var(--bs-primary);"></path>
+            <path
+                d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z"
+                fill="currentColor" style="color: var(--bs-primary);"></path>
+        </svg>
+    </div>
+
     <!-- For MUA Section -->
-    <section id="services" class="py-5">
+    <section id="services" class="py-5 section-bg-pattern">
         <div class="container">
             <div class="text-center mb-5">
                 <h2 class="fw-bold mb-3">Join GlowHub as a Makeup Artist</h2>
@@ -273,15 +259,21 @@
                     </div>
                     <div class="d-flex gap-3">
                         <a href="#" class="btn btn-primary btn-lg">Join as MUA</a>
-                        <a href="#" class="btn btn-outline-primary btn-lg">Learn More</a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Section Separator -->
+    <div class="section-separator">
+        <div class="section-separator-icon">
+            <i class="fas fa-heart"></i>
+        </div>
+    </div>
+
     <!-- Testimonials Section -->
-    <section class="py-5" style="background-color: var(--bs-light);">
+    <section class="py-5 section-bg-light">
         <div class="container">
             <div class="text-center mb-5">
                 <h2 class="fw-bold mb-3">Why Clients Love GlowHub</h2>
@@ -302,8 +294,8 @@
                             <p class="mb-3">"GlowHub made finding my wedding MUA so easy! I could compare portfolios,
                                 read reviews, and book directly. Sarah was perfect and my makeup was flawless all day."</p>
                             <div class="d-flex align-items-center">
-                                <img src="images/logo/avatar1.jpg" alt="Emily" class="rounded-circle me-3"
-                                    width="50" height="50">
+                                <img src="images/default.png" alt="Emily" class="rounded-circle me-3" width="50"
+                                    height="50">
                                 <div>
                                     <h6 class="mb-0">Emily Johnson</h6>
                                     <small class="text-muted">Bride</small>
@@ -325,8 +317,8 @@
                             <p class="mb-3">"I love how transparent the pricing is on GlowHub. Found Maria through the
                                 platform and she was amazing for my company gala. The booking process was seamless!"</p>
                             <div class="d-flex align-items-center">
-                                <img src="images/logo/avatar2.jpg" alt="Jessica" class="rounded-circle me-3"
-                                    width="50" height="50">
+                                <img src="images/default.png" alt="Jessica" class="rounded-circle me-3" width="50"
+                                    height="50">
                                 <div>
                                     <h6 class="mb-0">Jessica Chen</h6>
                                     <small class="text-muted">Corporate Event</small>
@@ -348,8 +340,8 @@
                             <p class="mb-3">"As a model, I need reliable MUAs for different shoots. GlowHub's filter
                                 system helped me find Emma who specializes in editorial work. Perfect match every time!"</p>
                             <div class="d-flex align-items-center">
-                                <img src="images/logo/avatar3.jpg" alt="Rachel" class="rounded-circle me-3"
-                                    width="50" height="50">
+                                <img src="images/default.png" alt="Rachel" class="rounded-circle me-3" width="50"
+                                    height="50">
                                 <div>
                                     <h6 class="mb-0">Rachel Adams</h6>
                                     <small class="text-muted">Model</small>
@@ -362,8 +354,17 @@
         </div>
     </section>
 
+    <!-- Section Separator -->
+    <div class="geometric-separator">
+        <div class="geometric-pattern">
+            <div class="diamond"></div>
+            <div class="diamond"></div>
+            <div class="diamond"></div>
+        </div>
+    </div>
+
     <!-- Contact Section -->
-    <section id="contact" class="py-5">
+    <section id="contact" class="py-5 section-bg-pattern">
         <div class="container">
             <div class="text-center mb-5">
                 <h2 class="fw-bold mb-3">Need Help Finding the Right MUA?</h2>

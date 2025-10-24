@@ -42,28 +42,28 @@ Version: 1.1
 
 /* Fonts */
 :root {
-  --body-font: "Raleway", sans-serif;
-  --heading-font: "Prata", Georgia, serif;
-  --secondary-font: "Playfair Display", Georgia, serif;
+  --body-font: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --heading-font: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --secondary-font: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
 /* Bootstrap variables */
 :root,
 [data-bs-theme=light] {
-  --heading-font: "Prata", Georgia, serif;
-  --heading-font-weight: 400;
+  --heading-font: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --heading-font-weight: 600;
   --heading-color: var(--bs-dark);
-  --heading-line-height: 1.1;
+  --heading-line-height: 1.3;
 
   --swiper-theme-color: var(--bs-primary);
 
   --custom-easing: cubic-bezier(.17, .67, .83, .67);
 
   /* theme colors */
-  --bs-body-font-family: "Raleway", arial, sans-serif;
-  --bs-body-font-size: 0.9rem;
+  --bs-body-font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --bs-body-font-size: 0.95rem;
   --bs-body-font-weight: 400;
-  --bs-body-line-height: 1.7;
+  --bs-body-line-height: 1.6;
   --bs-body-color: #333;
   --bs-body-color-rgb: 51, 51, 51;
 
@@ -98,6 +98,298 @@ Version: 1.1
 .container-xxl {
   /* spacing */
   --bs-gutter-x: 2.5rem;
+}
+
+/*--------------------------------------------------------------
+/* POPPINS FONT FAMILY GLOBAL OVERRIDES
+--------------------------------------------------------------*/
+/* Global font family override - but exclude icon fonts */
+*:not(.fa):not(.fas):not(.far):not(.fab):not(.icon):not([class*="icon-"]):not(.icomoon) {
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+}
+
+body {
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+  font-weight: 400;
+}
+
+/* Headings with Poppins */
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6,
+.display-1, .display-2, .display-3, .display-4, .display-5, .display-6 {
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+  font-weight: 600;
+}
+
+/* Form elements */
+.form-control,
+.form-select,
+input,
+textarea,
+select,
+option {
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+}
+
+/* Navigation */
+.nav-link,
+.navbar-nav .nav-link,
+.menu-list li a {
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+  font-weight: 500;
+}
+
+/* Buttons - exclude icon inside buttons */
+.btn,
+a.btn,
+button {
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+  font-weight: 600;
+}
+
+/* Card text */
+.card-title,
+.card-text,
+.card-body {
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+}
+
+/* Preserve icon fonts */
+.fa,
+.fas,
+.far,
+.fab,
+.icon,
+[class*="icon-"],
+.icomoon,
+i.fa,
+i.fas,
+i.far,
+i.fab,
+i.icon,
+i[class*="icon-"] {
+  font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "icomoon", "FontAwesome" !important;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 900;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Specific icomoon font preservation */
+[class^="icon-"],
+[class*=" icon-"] {
+  font-family: 'icomoon' !important;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Font Awesome specific */
+.fa,
+.fas {
+  font-family: "Font Awesome 6 Free" !important;
+  font-weight: 900 !important;
+}
+
+.far {
+  font-family: "Font Awesome 6 Free" !important;
+  font-weight: 400 !important;
+}
+
+.fab {
+  font-family: "Font Awesome 6 Brands" !important;
+  font-weight: 400 !important;
+}
+
+/* Scroll to Top Button */
+.scroll-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, var(--bs-primary), #e8a5a7);
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(248, 187, 189, 0.4);
+  transition: all 0.3s ease;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  z-index: 1000;
+}
+
+.scroll-to-top.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.scroll-to-top:hover {
+  background: linear-gradient(135deg, #e8a5a7, var(--bs-primary));
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(248, 187, 189, 0.6);
+}
+
+.scroll-to-top i {
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 900;
+}
+
+.scroll-to-top:active {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(248, 187, 189, 0.4);
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .scroll-to-top {
+    bottom: 20px;
+    right: 20px;
+    width: 45px;
+    height: 45px;
+  }
+  
+  .scroll-to-top i {
+    font-size: 1.1rem;
+  }
+}
+
+/* Section Dividers & Separators */
+.section-divider {
+  position: relative;
+  padding: 60px 0;
+  overflow: hidden;
+}
+
+.section-divider::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--bs-primary) 50%, transparent 100%);
+  opacity: 0.3;
+}
+
+/* Decorative section separator */
+.section-separator {
+  text-align: center;
+  margin: 40px 0;
+  position: relative;
+}
+
+.section-separator::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(248, 187, 189, 0.3) 20%, rgba(248, 187, 189, 0.6) 50%, rgba(248, 187, 189, 0.3) 80%, transparent 100%);
+  transform: translateY(-50%);
+}
+
+.section-separator-icon {
+  display: inline-block;
+  background: var(--bs-light);
+  padding: 10px 20px;
+  border-radius: 50px;
+  color: var(--bs-primary);
+  font-size: 1.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+/* Wave separator */
+.wave-separator {
+  position: relative;
+  height: 60px;
+  overflow: hidden;
+}
+
+.wave-separator svg {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Geometric pattern separator */
+.geometric-separator {
+  height: 80px;
+  background: linear-gradient(45deg, transparent 30%, rgba(248, 187, 189, 0.1) 50%, transparent 70%);
+  position: relative;
+  overflow: hidden;
+}
+
+.geometric-separator::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100px;
+  height: 2px;
+  background: var(--bs-primary);
+  transform: translate(-50%, -50%);
+  opacity: 0.4;
+}
+
+.geometric-separator::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  background: var(--bs-primary);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.6;
+}
+
+/* Section background variations */
+.section-bg-light {
+  background: linear-gradient(135deg, #fff 0%, var(--bs-light) 100%);
+}
+
+.section-bg-primary-light {
+  background: linear-gradient(135deg, rgba(248, 187, 189, 0.05) 0%, rgba(248, 187, 189, 0.1) 100%);
+}
+
+.section-bg-pattern {
+  background-image: radial-gradient(circle at 1px 1px, rgba(248, 187, 189, 0.1) 1px, transparent 0);
+  background-size: 40px 40px;
+}
+
+/* Responsive section spacing */
+@media (max-width: 768px) {
+  .section-divider {
+    padding: 40px 0;
+  }
+  
+  .section-separator {
+    margin: 30px 0;
+  }
+  
+  .wave-separator {
+    height: 40px;
+  }
+  
+  .geometric-separator {
+    height: 60px;
+  }
 }
 
 .display-1,
@@ -2517,7 +2809,7 @@ footer#footer {
 .portfolio-item {
   position: relative;
   overflow: hidden;
-  border-radius: 10px;
+  border-radius: 20px;
 }
 
 .portfolio-overlay {
@@ -2550,7 +2842,7 @@ footer#footer {
 /* MUA Profile Cards */
 .mua-profile-card {
   background: #fff;
-  border-radius: 15px;
+  border-radius: 20px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.08);
   transition: all 0.3s ease;
   border: 2px solid transparent;
@@ -2563,43 +2855,77 @@ footer#footer {
 }
 
 /* Enhanced Button Styles */
-.btn {
-  border-radius: 25px;
-  padding: 10px 25px;
+.btn,
+a.btn,
+button.btn {
+  border-radius: 50px;
+  padding: 12px 30px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
 }
 
-.btn-primary {
+.btn-lg,
+a.btn-lg,
+button.btn-lg {
+  border-radius: 50px;
+  padding: 15px 35px;
+  font-size: 1.1rem;
+}
+
+.btn-sm,
+a.btn-sm,
+button.btn-sm {
+  border-radius: 50px;
+  padding: 8px 20px;
+  font-size: 0.9rem;
+}
+
+.btn-primary,
+a.btn-primary,
+button.btn-primary {
   background: linear-gradient(135deg, var(--bs-primary), #e8a5a7);
   border: none;
   box-shadow: 0 5px 15px rgba(248, 187, 189, 0.4);
+  color: #fff;
 }
 
-.btn-primary:hover {
+.btn-primary:hover,
+a.btn-primary:hover,
+button.btn-primary:hover {
   background: linear-gradient(135deg, #e8a5a7, var(--bs-primary));
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(248, 187, 189, 0.6);
+  color: #fff;
+  text-decoration: none;
 }
 
-.btn-outline-primary {
+.btn-outline-primary,
+a.btn-outline-primary,
+button.btn-outline-primary {
   border: 2px solid var(--bs-primary);
   color: var(--bs-primary);
+  background: transparent;
 }
 
-.btn-outline-primary:hover {
+.btn-outline-primary:hover,
+a.btn-outline-primary:hover,
+button.btn-outline-primary:hover {
   background: var(--bs-primary);
   border-color: var(--bs-primary);
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(248, 187, 189, 0.3);
+  color: #fff;
+  text-decoration: none;
 }
 
 /* Enhanced Card Styles */
 .mua-finder-card {
   background: #fff;
-  border-radius: 15px;
+  border-radius: 20px;
   box-shadow: 0 8px 25px rgba(0,0,0,0.1);
   transition: all 0.3s ease;
   border: 1px solid rgba(248, 187, 189, 0.2);
@@ -2623,11 +2949,37 @@ footer#footer {
 /* Clean card styles for new layout */
 .card {
   transition: all 0.3s ease;
+  border-radius: 20px !important;
+  overflow: hidden;
 }
 
 .card:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+}
+
+/* Rounded elements */
+.rounded-3 {
+  border-radius: 20px !important;
+}
+
+.rounded-circle {
+  border-radius: 50% !important;
+}
+
+/* Input Group Styling */
+.input-group .form-control {
+  border-top-left-radius: 30px !important;
+  border-bottom-left-radius: 30px !important;
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+.input-group .btn {
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+  border-top-right-radius: 30px !important;
+  border-bottom-right-radius: 30px !important;
 }
 
 /* Hero section improvements */
@@ -2675,9 +3027,9 @@ footer#footer {
 
 /* Form Controls */
 .form-control {
-  border-radius: 10px;
+  border-radius: 25px;
   border: 2px solid #eee;
-  padding: 12px 15px;
+  padding: 12px 20px;
   transition: all 0.3s ease;
 }
 
@@ -2688,9 +3040,15 @@ footer#footer {
 }
 
 .form-select {
-  border-radius: 10px;
+  border-radius: 25px;
   border: 2px solid #eee;
-  padding: 12px 15px;
+  padding: 12px 20px;
+}
+
+.form-control-lg {
+  border-radius: 30px;
+  padding: 15px 25px;
+  font-size: 1.1rem;
 }
 
 /* Stars Animation */
@@ -2750,9 +3108,34 @@ footer#footer {
 }
 
 /* Better button focus */
-.btn:focus {
+.btn:focus,
+a.btn:focus,
+button.btn:focus {
   outline: none;
   box-shadow: 0 0 0 0.25rem rgba(248, 187, 189, 0.5);
+}
+
+/* Ensure anchor buttons behave like buttons */
+a.btn {
+  border: 0;
+  cursor: pointer;
+  user-select: none;
+  vertical-align: middle;
+}
+
+a.btn:not(:disabled):not(.disabled) {
+  cursor: pointer;
+}
+
+/* Remove default link styling for button anchors */
+a.btn:link,
+a.btn:visited {
+  text-decoration: none;
+}
+
+a.btn:focus,
+a.btn:hover {
+  text-decoration: none;
 }
 
 /* Smooth page transitions */

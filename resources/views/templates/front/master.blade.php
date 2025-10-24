@@ -12,8 +12,19 @@
     <meta name="keywords" content="">
     <meta name="description" content="">
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('favicon.png') }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+    <link rel="apple-touch-icon" href="{{ asset('images/logo/Glowhub - Logo-2.png') }}">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+    <!-- Google Fonts - Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -31,6 +42,11 @@
     @include('templates.front._parts.header')
     @yield('content')
     @include('templates.front._parts.footer')
+
+    <!-- Scroll to Top Button -->
+    <div id="scrollToTop" class="scroll-to-top">
+        <i class="fas fa-chevron-up"></i>
+    </div>
 
     <script src="js/jquery-1.11.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
@@ -71,6 +87,20 @@
             animateOnScroll();
             $(window).scroll(function() {
                 animateOnScroll();
+
+                // Show/hide scroll to top button
+                if ($(this).scrollTop() > 300) {
+                    $('#scrollToTop').addClass('show');
+                } else {
+                    $('#scrollToTop').removeClass('show');
+                }
+            });
+
+            // Scroll to top functionality
+            $('#scrollToTop').on('click', function() {
+                $('html, body').animate({
+                    scrollTop: 0
+                }, 800, 'easeInOutCubic');
             });
 
             // Tab functionality for services
