@@ -16,17 +16,3 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/mua-listing', [MuaController::class, 'index'])->name('mua.listing');
 Route::get('/mua/{id}', [MuaController::class, 'show'])->name('mua.detail');
 Route::post('/mua/{id}/book', [MuaController::class, 'book'])->name('mua.book');
-
-// Admin Routes
-Route::prefix('admin')->name('admin.')->group(function () {
-    // Dashboard
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-
-    // Content Management
-    Route::resource('content', ContentController::class);
-    Route::resource('categories', CategoryController::class);
-    Route::resource('testimonials', TestimonialController::class);
-    Route::resource('services', ServiceController::class);
-    Route::resource('hero-sections', HeroSectionController::class);
-    Route::resource('how-it-works', HowItWorkController::class);
-});
