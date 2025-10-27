@@ -1,115 +1,114 @@
-@extends('templates.front.master')
+@extends('templates.front._parts.master')
 @section('content')
-    <!-- Filter Section -->
+    <!-- Hero Section -->
     <section class="py-5" style="background: linear-gradient(135deg, var(--bs-light) 0%, #fff4ed 100%);">
         <div class="container">
+            <!-- Page Title -->
+            <div class="text-center mb-5">
+                <!-- Main Title -->
+                <h1 class="fw-bold mb-3"
+                    style="background: linear-gradient(135deg, #845d70 0%, #ff6b9d 50%, #845d70 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 200% 200%; animation: gradientShift 3s ease-in-out infinite; text-shadow: 0 4px 8px rgba(132, 93, 112, 0.1);">
+                    ✨ Find Your Perfect MUA ✨
+                </h1>
+
+                <!-- Subtitle -->
+                <div class="subtitle-wrapper mb-4">
+                    <p class="lead text-muted" style="font-size: 1.1rem; line-height: 1.6;">
+                        <span class="highlight-text"
+                            style="background: linear-gradient(120deg, rgba(248, 187, 189, 0.3) 0%, rgba(132, 93, 112, 0.1) 100%); padding: 2px 8px; border-radius: 6px; font-weight: 500;">Jelajahi
+                            makeup artist</span>
+                        profesional terverifikasi di area Anda. Bandingkan profil, baca ulasan, dan booking MUA yang
+                        sempurna
+                        untuk acara spesial Anda.
+                    </p>
+                </div>
+
+                <!-- Decorative Elements -->
+                <div class="decorative-elements">
+                    <span class="decorative-dot" style="background: #845d70; animation: pulse 2s infinite;"></span>
+                    <span class="decorative-dot" style="background: #ff6b9d; animation: pulse 2s infinite 0.5s;"></span>
+                    <span class="decorative-dot" style="background: #f8bbbd; animation: pulse 2s infinite 1s;"></span>
+                </div>
+            </div>
+
             <!-- Elegant Filter Section -->
             <div class="row justify-content-center">
-                <div class="col-lg-8">
+                <div class="col-lg-10">
                     <div class="filter-container"
-                        style="background: linear-gradient(145deg, rgba(255,255,255,0.95) 0%, rgba(248,187,189,0.1) 100%); backdrop-filter: blur(10px); border-radius: 20px; box-shadow: 0 8px 32px rgba(132, 93, 112, 0.15); border: 1px solid rgba(255,255,255,0.2); padding: 2rem; margin-bottom: 3rem;">
-                        <!-- Filter Header -->
-                        <div class="text-center mb-4">
-                            <div class="filter-icon mb-3">
-                                <i class="fas fa-search" style="font-size: 2rem; color: #845d70; opacity: 0.8;"></i>
-                            </div>
-                            <h3 class="fw-bold mb-2" style="color: #845d70; font-size: 1.5rem;">Find Your Perfect Match</h3>
-                            <p class="text-muted mb-0" style="font-size: 0.9rem;">Customize your search preferences</p>
-                        </div>
-
+                        style="background: linear-gradient(145deg, rgba(255,255,255,0.95) 0%, rgba(248,187,189,0.1) 100%); backdrop-filter: blur(10px); border-radius: 15px; box-shadow: 0 6px 24px rgba(132, 93, 112, 0.12); border: 1px solid rgba(255,255,255,0.2); padding: 1.5rem;">
                         <!-- Filter Form -->
-                        <form class="filter-form">
-                            <div class="row g-4">
+                        <form class="filter-form" style="margin-bottom: 0px !important">
+                            <div class="row g-3">
                                 <!-- Event Type Filter -->
-                                <div class="col-md-6">
+                                <div class="col-lg-3 col-md-6">
                                     <div class="filter-group">
-                                        <label class="filter-label mb-2">
-                                            <i class="fas fa-calendar-alt me-2" style="color: #845d70;"></i>
-                                            <span class="fw-semibold" style="color: #3d2a33;">Event Type</span>
-                                        </label>
                                         <div class="custom-select-wrapper">
                                             <select class="form-select custom-select"
-                                                style="border: 2px solid #f8bbbd; border-radius: 15px; padding: 12px 16px; background: rgba(255,255,255,0.8); color: #3d2a33; font-weight: 500;">
-                                                <option value="" selected>Choose your event...</option>
+                                                style="border: 2px solid #f8bbbd; border-radius: 15px; padding: 10px 14px; background: rgba(255,255,255,0.9); color: #3d2a33; font-weight: 500; font-size: 0.9rem;">
+                                                <option value="" selected>🎉 Pilih jenis acara Anda...</option>
                                                 @foreach ($filterOptions['events'] as $event)
                                                     <option value="{{ $event }}">{{ $event }}</option>
                                                 @endforeach
                                             </select>
-                                            <i class="fas fa-chevron-down select-arrow"></i>
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- City Filter -->
-                                <div class="col-md-6">
+                                <div class="col-lg-3 col-md-6">
                                     <div class="filter-group">
-                                        <label class="filter-label mb-2">
-                                            <i class="fas fa-map-marker-alt me-2" style="color: #845d70;"></i>
-                                            <span class="fw-semibold" style="color: #3d2a33;">Location</span>
-                                        </label>
                                         <div class="custom-select-wrapper">
                                             <select class="form-select custom-select"
-                                                style="border: 2px solid #f8bbbd; border-radius: 15px; padding: 12px 16px; background: rgba(255,255,255,0.8); color: #3d2a33; font-weight: 500;">
-                                                <option value="" selected>Select your city...</option>
+                                                style="border: 2px solid #f8bbbd; border-radius: 15px; padding: 10px 14px; background: rgba(255,255,255,0.9); color: #3d2a33; font-weight: 500; font-size: 0.9rem;">
+                                                <option value="" selected>📍 Pilih kota Anda...</option>
                                                 @foreach ($filterOptions['cities'] as $city)
                                                     <option value="{{ $city }}">{{ $city }}</option>
                                                 @endforeach
                                             </select>
-                                            <i class="fas fa-chevron-down select-arrow"></i>
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- Date Filter -->
-                                <div class="col-md-6">
+                                <div class="col-lg-3 col-md-6">
                                     <div class="filter-group">
-                                        <label class="filter-label mb-2">
-                                            <i class="fas fa-calendar-day me-2" style="color: #845d70;"></i>
-                                            <span class="fw-semibold" style="color: #3d2a33;">Date</span>
-                                        </label>
                                         <div class="custom-select-wrapper">
                                             <select class="form-select custom-select"
-                                                style="border: 2px solid #f8bbbd; border-radius: 15px; padding: 12px 16px; background: rgba(255,255,255,0.8); color: #3d2a33; font-weight: 500;">
-                                                <option value="" selected>When?</option>
+                                                style="border: 2px solid #f8bbbd; border-radius: 15px; padding: 10px 14px; background: rgba(255,255,255,0.9); color: #3d2a33; font-weight: 500; font-size: 0.9rem;">
+                                                <option value="" selected>📅 Kapan?</option>
                                                 @foreach ($filterOptions['dates'] as $date)
                                                     <option value="{{ $date }}">{{ $date }}</option>
                                                 @endforeach
                                             </select>
-                                            <i class="fas fa-chevron-down select-arrow"></i>
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- Time Filter -->
-                                <div class="col-md-6">
+                                <div class="col-lg-3 col-md-6">
                                     <div class="filter-group">
-                                        <label class="filter-label mb-2">
-                                            <i class="fas fa-clock me-2" style="color: #845d70;"></i>
-                                            <span class="fw-semibold" style="color: #3d2a33;">Time</span>
-                                        </label>
                                         <div class="custom-select-wrapper">
                                             <select class="form-select custom-select"
-                                                style="border: 2px solid #f8bbbd; border-radius: 15px; padding: 12px 16px; background: rgba(255,255,255,0.8); color: #3d2a33; font-weight: 500;">
-                                                <option value="" selected>What time?</option>
+                                                style="border: 2px solid #f8bbbd; border-radius: 15px; padding: 10px 14px; background: rgba(255,255,255,0.9); color: #3d2a33; font-weight: 500; font-size: 0.9rem;">
+                                                <option value="" selected>⏰ Jam berapa?</option>
                                                 @foreach ($filterOptions['times'] as $time)
                                                     <option value="{{ $time }}">{{ $time }}</option>
                                                 @endforeach
                                             </select>
-                                            <i class="fas fa-chevron-down select-arrow"></i>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Action Buttons -->
-                            <div class="filter-actions mt-4">
-                                <div class="d-flex gap-3 justify-content-center">
+                            <div class="filter-actions">
+                                <div class="d-flex gap-2 justify-content-center">
                                     <button type="button" class="btn btn-search"
-                                        style="background: linear-gradient(135deg, #845d70 0%, #6d4c5a 100%); border: none; border-radius: 25px; padding: 12px 32px; color: white; font-weight: 600; box-shadow: 0 4px 15px rgba(132, 93, 112, 0.3); transition: all 0.3s ease;">
-                                        <i class="fas fa-search me-2"></i>Search MUAs
+                                        style="background: linear-gradient(135deg, #845d70 0%, #6d4c5a 100%); border: none; border-radius: 20px; padding: 0px 20px; color: white; font-weight: 600; box-shadow: 0 4px 15px rgba(132, 93, 112, 0.3); transition: all 0.3s ease; font-size: 0.9rem;">
+                                        <i class="fas fa-search me-1"></i>Search MUAs
                                     </button>
                                     <button type="reset" class="btn btn-reset"
-                                        style="background: transparent; border: 2px solid #f8bbbd; border-radius: 25px; padding: 12px 24px; color: #845d70; font-weight: 600; transition: all 0.3s ease;">
+                                        style="background: transparent; border: 2px solid #f8bbbd; border-radius: 20px; padding: 0px 20px; color: #845d70; font-weight: 600; transition: all 0.3s ease; font-size: 0.9rem;">
                                         <i class="fas fa-redo me-2"></i>Reset
                                     </button>
                                 </div>
@@ -162,7 +161,8 @@
 
                                 <p class="text-muted small mb-3">From Rp. {{ number_format($mua['price'], 0, ',', '.') }}
                                 </p>
-                                <a href="#" class="btn btn-outline-primary">View Profile</a>
+                                <a href="{{ route('mua.detail', $mua['id']) }}" class="btn btn-outline-primary btn-sm">View
+                                    Profile</a>
                             </div>
                         </div>
                     </div>
@@ -231,6 +231,89 @@
 
 @section('scripts')
     <style>
+        /* Beautiful Title Animations */
+        @keyframes sparkle {
+
+            0%,
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 0.8;
+            }
+
+            50% {
+                transform: scale(1.1) rotate(5deg);
+                opacity: 1;
+            }
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+
+            50% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+        }
+
+        .decorative-elements {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 1rem;
+        }
+
+        .decorative-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .highlight-text {
+            position: relative;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .highlight-text:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(132, 93, 112, 0.2);
+        }
+
+        .title-icon {
+            position: relative;
+        }
+
+        .subtitle-wrapper {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Enhanced hover effects for title */
+        h1:hover {
+            transform: translateY(-3px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         /* Elegant Filter Styles */
         .filter-container {
             position: relative;
@@ -271,20 +354,6 @@
             border-color: #845d70 !important;
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(132, 93, 112, 0.15);
-        }
-
-        .select-arrow {
-            position: absolute;
-            right: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #845d70;
-            pointer-events: none;
-            transition: transform 0.3s ease;
-        }
-
-        .custom-select:focus+.select-arrow {
-            transform: translateY(-50%) rotate(180deg);
         }
 
         .filter-label {
@@ -333,6 +402,29 @@
             .custom-select {
                 padding: 10px 14px !important;
                 font-size: 0.9rem;
+            }
+
+            /* Mobile title adjustments */
+            .title-icon i {
+                font-size: 2rem !important;
+            }
+
+            h1.display-4 {
+                font-size: 1.8rem !important;
+            }
+
+            .subtitle-wrapper p {
+                font-size: 1rem !important;
+                padding: 0 1rem;
+            }
+
+            .decorative-elements {
+                gap: 8px;
+            }
+
+            .decorative-dot {
+                width: 6px;
+                height: 6px;
             }
         }
     </style>

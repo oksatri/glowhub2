@@ -1,4 +1,4 @@
-@extends('templates.front.master')
+@extends('templates.front._parts.master')
 @section('content')
     <!-- Hero Section -->
     <section id="home" class="py-5"
@@ -10,11 +10,12 @@
                         Find Your Perfect Makeup Artist
                     </h1>
                     <p class="lead mb-4 text-muted">
-                        GlowHub connects you with verified professional makeup artists in your area.
-                        Browse profiles, compare prices, read reviews, and book the perfect MUA for your special occasion.
+                        GlowHub menghubungkan Anda dengan makeup artist profesional terverifikasi di area Anda.
+                        Jelajahi profil, bandingkan harga, baca ulasan, dan booking MUA yang sempurna untuk acara spesial
+                        Anda.
                     </p>
                     <div class="d-flex gap-3">
-                        <a href="#find-mua" class="btn btn-primary btn-lg">Browse MUAs</a>
+                        <a href="{{ url('mua-listing') }}" class="btn btn-primary btn-lg">Browse MUAs</a>
                         <a href="#how-it-works" class="btn btn-outline-primary btn-lg">How It Works</a>
                     </div>
                 </div>
@@ -37,7 +38,7 @@
         <div class="container">
             <div class="text-center mb-5">
                 <h2 class="fw-bold mb-3">How GlowHub Works</h2>
-                <p class="lead text-muted">Connect with professional makeup artists in 4 simple steps</p>
+                <p class="lead text-muted">Terhubung dengan makeup artist profesional dalam 4 langkah sederhana</p>
             </div>
 
             <div class="row g-4">
@@ -47,42 +48,43 @@
                             style="width: 80px; height: 80px;">
                             <i class="fas fa-search text-white fs-3"></i>
                         </div>
-                        <h5 class="fw-bold">1. Browse & Compare</h5>
-                        <p class="text-muted">Search MUAs by location, style, and price. View portfolios and read reviews
-                            from real clients.</p>
+                        <h4 class="fw-bold" style="letter-spacing: -0.5px;">1. Explore MUA Portfolios</h4>
+                        <p class="text-muted">Masukkan tanggal makeup dan jenis acaranya.
+                            Pilih style makeup yang paling cocok dengan vibe kamu!</p>
                     </div>
                 </div>
                 <div class="col-md-3 text-center">
                     <div class="p-4">
                         <div class="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center mb-3"
                             style="width: 80px; height: 80px;">
-                            <i class="fas fa-comments text-white fs-3"></i>
+                            <i class="fas fa-paper-plane text-white fs-3"></i>
                         </div>
-                        <h5 class="fw-bold">2. Contact & Discuss</h5>
-                        <p class="text-muted">Message your chosen MUA to discuss your vision, event details, and
-                            availability.</p>
+                        <h4 class="fw-bold" style="letter-spacing: -0.5px;">2. Send Booking Request</h4>
+                        <p class="text-muted">Isi detail acara, tanggal, dan informasi lainnya. Klik "Request" dan tunggu
+                            konfirmasi ketersediaan dan harga dari MUA.</p>
                     </div>
                 </div>
                 <div class="col-md-3 text-center">
                     <div class="p-4">
                         <div class="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center mb-3"
                             style="width: 80px; height: 80px;">
-                            <i class="fas fa-calendar-check text-white fs-3"></i>
+                            <i class="fas fa-check-circle text-white fs-3"></i>
                         </div>
-                        <h5 class="fw-bold">3. Book & Pay</h5>
-                        <p class="text-muted">Secure your booking with our safe payment system and get instant confirmation.
-                        </p>
+                        <h4 class="fw-bold" style="letter-spacing: -0.5px;">3. MUA Review & Confirm</h4>
+                        <p class="text-muted">Request kamu akan direview oleh MUA untuk memastikan ketersediaan jadwal dan
+                            apakah terdapat penyesuaian dari estimasi harga (misalnya untuk hairdo khusus atau request
+                            tambahan).</p>
                     </div>
                 </div>
                 <div class="col-md-3 text-center">
                     <div class="p-4">
                         <div class="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center mb-3"
                             style="width: 80px; height: 80px;">
-                            <i class="fas fa-star text-white fs-3"></i>
+                            <i class="fas fa-lock text-white fs-3"></i>
                         </div>
-                        <h5 class="fw-bold">4. Get Gorgeous</h5>
-                        <p class="text-muted">Enjoy your professional makeup session and don't forget to rate your
-                            experience!</p>
+                        <h4 class="fw-bold" style="letter-spacing: -0.5px;">4. Secure Your Slot!</h4>
+                        <p class="text-muted">Setelah request dikonfirmasi, kamu akan dihubungi via WA untuk melanjutkan
+                            pembayaran sesuai harga yang dikonfirmasi. Booking akan otomatis terjadwal!</p>
                     </div>
                 </div>
             </div>
@@ -97,8 +99,9 @@
         <div class="container">
             <div class="text-center mb-5">
                 <h2 class="fw-bold mb-3">Discover Top-Rated MUAs</h2>
-                <p class="lead text-muted">Browse verified makeup artists near you. All profiles include portfolios,
-                    reviews, and transparent pricing.</p>
+                <p class="lead text-muted">Jelajahi makeup artist terverifikasi di dekat Anda. Semua profil mencakup
+                    portfolio,
+                    ulasan, dan harga yang transparan.</p>
             </div>
 
             <!-- Featured MUA Cards -->
@@ -164,8 +167,8 @@
         <div class="container">
             <div class="text-center mb-5">
                 <h2 class="fw-bold mb-3">Join GlowHub as a Makeup Artist</h2>
-                <p class="lead text-muted">Grow your business and connect with clients who value professional makeup
-                    artistry</p>
+                <p class="lead text-muted">Kembangkan bisnis Anda dan terhubung dengan klien yang menghargai
+                    keahlian makeup profesional</p>
             </div>
 
             <div class="row g-4 mb-5">
@@ -176,9 +179,9 @@
                                 style="width: 80px; height: 80px;">
                                 <i class="fas fa-users text-white fs-3"></i>
                             </div>
-                            <h5 class="card-title fw-bold">Expand Your Clientele</h5>
-                            <p class="card-text text-muted">Reach thousands of potential clients actively searching for
-                                professional makeup artists in your area.</p>
+                            <h4 class="card-title fw-bold" style="letter-spacing: -0.5px;">Expand Your Clientele</h4>
+                            <p class="card-text text-muted">Jangkau ribuan klien potensial yang secara aktif mencari
+                                makeup artist profesional di area Anda.</p>
                         </div>
                     </div>
                 </div>
@@ -189,9 +192,9 @@
                                 style="width: 80px; height: 80px;">
                                 <i class="fas fa-calendar-alt text-white fs-3"></i>
                             </div>
-                            <h5 class="card-title fw-bold">Manage Your Schedule</h5>
-                            <p class="card-text text-muted">Easy booking system with calendar integration. Set your
-                                availability and let clients book directly through the platform.</p>
+                            <h4 class="card-title fw-bold" style="letter-spacing: -0.5px;">Manage Your Schedule</h4>
+                            <p class="card-text text-muted">Sistem booking mudah dengan integrasi kalender. Tetapkan
+                                ketersediaan Anda dan biarkan klien booking langsung melalui platform.</p>
                         </div>
                     </div>
                 </div>
@@ -202,9 +205,10 @@
                                 style="width: 80px; height: 80px;">
                                 <i class="fas fa-credit-card text-white fs-3"></i>
                             </div>
-                            <h5 class="card-title fw-bold">Secure Payments</h5>
-                            <p class="card-text text-muted">Get paid safely and on time. Our secure payment system handles
-                                transactions and releases funds after completed services.</p>
+                            <h4 class="card-title fw-bold" style="letter-spacing: -0.5px;">Secure Payments</h4>
+                            <p class="card-text text-muted">Dapatkan pembayaran dengan aman dan tepat waktu. Sistem
+                                pembayaran aman kami menangani
+                                transaksi dan merilis dana setelah layanan selesai.</p>
                         </div>
                     </div>
                 </div>
@@ -222,8 +226,8 @@
                             <i class="fas fa-check-circle text-primary me-3 mt-1"></i>
                             <div>
                                 <strong>Professional Profile</strong>
-                                <p class="text-muted mb-0">Showcase your portfolio, certifications, and client reviews in a
-                                    beautiful profile page.</p>
+                                <p class="text-muted mb-0">Tampilkan portfolio, sertifikat, dan ulasan klien Anda dalam
+                                    halaman profil yang indah.</p>
                             </div>
                         </div>
                     </div>
@@ -232,8 +236,9 @@
                             <i class="fas fa-check-circle text-primary me-3 mt-1"></i>
                             <div>
                                 <strong>Set Your Own Rates</strong>
-                                <p class="text-muted mb-0">You control your pricing. No hidden fees - only a small
-                                    commission on completed bookings.</p>
+                                <p class="text-muted mb-0">Anda mengontrol harga. Tidak ada biaya tersembunyi - hanya
+                                    komisi kecil
+                                    pada booking yang selesai.</p>
                             </div>
                         </div>
                     </div>
@@ -242,8 +247,8 @@
                             <i class="fas fa-check-circle text-primary me-3 mt-1"></i>
                             <div>
                                 <strong>Marketing Support</strong>
-                                <p class="text-muted mb-0">We handle the marketing and customer acquisition. You focus on
-                                    what you do best - creating beautiful looks.</p>
+                                <p class="text-muted mb-0">Kami menangani marketing dan akuisisi pelanggan. Anda fokus pada
+                                    yang terbaik - menciptakan tampilan yang indah.</p>
                             </div>
                         </div>
                     </div>
@@ -277,7 +282,7 @@
         <div class="container">
             <div class="text-center mb-5">
                 <h2 class="fw-bold mb-3">Why Clients Love GlowHub</h2>
-                <p class="lead text-muted">Real experiences from our platform users</p>
+                <p class="lead text-muted">Pengalaman nyata dari pengguna platform kami</p>
             </div>
 
             <div class="row g-4">
@@ -291,8 +296,10 @@
                                 <i class="fas fa-star text-warning"></i>
                                 <i class="fas fa-star text-warning"></i>
                             </div>
-                            <p class="mb-3">"GlowHub made finding my wedding MUA so easy! I could compare portfolios,
-                                read reviews, and book directly. Sarah was perfect and my makeup was flawless all day."</p>
+                            <p class="mb-3">"GlowHub membuat pencarian MUA untuk pernikahan saya sangat mudah! Saya bisa
+                                membandingkan portfolio,
+                                membaca ulasan, dan booking langsung. Sarah sempurna dan makeup saya flawless sepanjang
+                                hari."</p>
                             <div class="d-flex align-items-center">
                                 <img src="images/default.png" alt="Emily" class="rounded-circle me-3" width="50"
                                     height="50">
@@ -314,8 +321,10 @@
                                 <i class="fas fa-star text-warning"></i>
                                 <i class="fas fa-star text-warning"></i>
                             </div>
-                            <p class="mb-3">"I love how transparent the pricing is on GlowHub. Found Maria through the
-                                platform and she was amazing for my company gala. The booking process was seamless!"</p>
+                            <p class="mb-3">"Saya suka bagaimana harga di GlowHub sangat transparan. Menemukan Maria
+                                melalui
+                                platform ini dan dia luar biasa untuk gala perusahaan saya. Proses booking sangat lancar!"
+                            </p>
                             <div class="d-flex align-items-center">
                                 <img src="images/default.png" alt="Jessica" class="rounded-circle me-3" width="50"
                                     height="50">
@@ -337,8 +346,9 @@
                                 <i class="fas fa-star text-warning"></i>
                                 <i class="fas fa-star text-warning"></i>
                             </div>
-                            <p class="mb-3">"As a model, I need reliable MUAs for different shoots. GlowHub's filter
-                                system helped me find Emma who specializes in editorial work. Perfect match every time!"</p>
+                            <p class="mb-3">"Sebagai model, saya butuh MUA yang reliable untuk berbagai pemotretan.
+                                Sistem filter GlowHub
+                                membantu saya menemukan Emma yang spesialis editorial work. Perfect match setiap waktu!"</p>
                             <div class="d-flex align-items-center">
                                 <img src="images/default.png" alt="Rachel" class="rounded-circle me-3" width="50"
                                     height="50">
@@ -368,8 +378,9 @@
         <div class="container">
             <div class="text-center mb-5">
                 <h2 class="fw-bold mb-3">Need Help Finding the Right MUA?</h2>
-                <p class="lead text-muted">Our team can help you find the perfect makeup artist for your event. Contact us
-                    for personalized recommendations!</p>
+                <p class="lead text-muted">Tim kami dapat membantu Anda menemukan makeup artist yang sempurna untuk acara
+                    Anda. Hubungi kami
+                    untuk rekomendasi yang personal!</p>
             </div>
 
             <div class="row justify-content-center">
@@ -381,24 +392,24 @@
                                     <h5 class="fw-bold mb-4">Get Personalized Help</h5>
                                     <form>
                                         <div class="mb-3">
-                                            <input type="text" class="form-control" placeholder="Your Name" required>
+                                            <input type="text" class="form-control" placeholder="Nama Anda" required>
                                         </div>
                                         <div class="mb-3">
-                                            <input type="email" class="form-control" placeholder="Your Email" required>
+                                            <input type="email" class="form-control" placeholder="Email Anda" required>
                                         </div>
                                         <div class="mb-3">
                                             <select class="form-select" required>
-                                                <option value="">What do you need help with?</option>
-                                                <option>Finding a Bridal MUA</option>
-                                                <option>Event Makeup Artist</option>
-                                                <option>Editorial/Fashion MUA</option>
-                                                <option>Platform Support</option>
-                                                <option>Become a MUA Partner</option>
+                                                <option value="">Apa yang dapat kami bantu?</option>
+                                                <option>Mencari MUA untuk Pernikahan</option>
+                                                <option>Makeup Artist untuk Event</option>
+                                                <option>MUA Editorial/Fashion</option>
+                                                <option>Dukungan Platform</option>
+                                                <option>Menjadi MUA Partner</option>
                                             </select>
                                         </div>
                                         <div class="mb-3">
                                             <textarea class="form-control" rows="4"
-                                                placeholder="Tell us about your event, budget, location, and any specific requirements..." required></textarea>
+                                                placeholder="Ceritakan tentang acara, budget, lokasi, dan requirements khusus Anda..." required></textarea>
                                         </div>
                                         <button type="submit" class="btn btn-primary w-100">Send Message</button>
                                     </form>

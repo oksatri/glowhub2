@@ -55,7 +55,7 @@
                 <div class="col-md-2">
                     <div class="main-logo">
                         <a href="{{ url('/') }}">
-                            <img src="images/logo/Glowhub - Logo-2.png" alt="logo"
+                            <img src="{{ asset('images/logo/Glowhub - Logo-2.png') }}" alt="logo"
                                 style="max-width: 100%; height: auto; max-height: 50px;">
                         </a>
                     </div>
@@ -66,15 +66,32 @@
                     <nav id="navbar">
                         <div class="main-menu stellarnav">
                             <ul class="menu-list">
-                                <li class="menu-item"><a href="{{ url('/') }}">Home</a></li>
-                                <li class="menu-item"><a href="{{ url('/') }}#how-it-works" class="nav-link">How It
-                                        Works</a></li>
-                                <li class="menu-item"><a href="{{ route('mua.listing') }}" class="nav-link">Find MUA</a>
+                                @php
+                                    $isHomePage =
+                                        request()->is('/') ||
+                                        request()->routeIs('home') ||
+                                        request()->url() === url('/');
+                                @endphp
+
+                                <li class="menu-item">
+                                    <a href="{{ $isHomePage ? '#home' : url('/#home') }}">Home</a>
                                 </li>
-                                <li class="menu-item"><a href="{{ url('/') }}#services" class="nav-link">For
-                                        MUA</a></li>
-                                <li class="menu-item"><a href="{{ url('/') }}#contact" class="nav-link">Contact
-                                        Us</a></li>
+                                <li class="menu-item">
+                                    <a href="{{ $isHomePage ? '#how-it-works' : url('/#how-it-works') }}"
+                                        class="nav-link">How It Works</a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="{{ $isHomePage ? '#find-mua' : url('/#find-mua') }}" class="nav-link">Find
+                                        MUA</a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="{{ $isHomePage ? '#services' : url('/#services') }}" class="nav-link">For
+                                        MUA</a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="{{ $isHomePage ? '#contact' : url('/#contact') }}" class="nav-link">Contact
+                                        Us</a>
+                                </li>
                             </ul>
 
                             <div class="hamburger">
