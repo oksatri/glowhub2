@@ -38,11 +38,12 @@ class HeroSectionController extends Controller
             'button_text' => 'nullable|string|max:100',
             'button_url' => 'nullable|url|max:255',
             'background_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'status' => 'required|in:active,inactive',
+            'is_active' => 'nullable|boolean',
             'sort_order' => 'nullable|integer',
         ]);
 
         $data = $request->all();
+        $data['is_active'] = $request->has('is_active');
 
         if ($request->hasFile('background_image')) {
             $data['background_image'] = $request->file('background_image')->store('hero-sections', 'public');
@@ -65,9 +66,9 @@ class HeroSectionController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(HeroSection $heroSection)
     {
-        //
+        return view('templates.back.admin.hero-sections.edit', compact('heroSection'));
     }
 
     /**
@@ -82,11 +83,12 @@ class HeroSectionController extends Controller
             'button_text' => 'nullable|string|max:100',
             'button_url' => 'nullable|url|max:255',
             'background_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'status' => 'required|in:active,inactive',
+            'is_active' => 'nullable|boolean',
             'sort_order' => 'nullable|integer',
         ]);
 
         $data = $request->all();
+        $data['is_active'] = $request->has('is_active');
 
         if ($request->hasFile('background_image')) {
             if ($heroSection->background_image) {
