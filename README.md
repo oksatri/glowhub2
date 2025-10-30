@@ -1,23 +1,163 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# GlowHub2 Backend - README
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+![GlowHub2 Logo](https://via.placeholder.com/400x100/ff6b6b/ffffff?text=GlowHub2+Backend)
+
+## 🌟 Overview
+
+**GlowHub2** adalah platform backend lengkap untuk menghubungkan makeup artist profesional dengan klien. Dibangun dengan Laravel dan PostgreSQL, sistem ini menyediakan admin panel yang powerful dan mobile-responsive untuk mengelola semua aspek platform beauty services.
+
+### ✨ Key Features
+
+🎨 **Content Management System** - Kelola artikel, halaman, dan konten website
+📁 **Category Management** - Sistem kategori yang fleksibel dan hierarkis  
+💼 **Service Catalog** - Manajemen layanan MUA dengan pricing dan features
+⭐ **Testimonial System** - Sistem review dan rating pelanggan
+🖼️ **Hero Section Control** - Kelola banner dan call-to-action homepage
+🔄 **Process Workflow** - Manajemen "How It Works" step-by-step
+📱 **Mobile Responsive** - Admin panel yang fully responsive
+🔍 **Search & Filter** - Sistem pencarian dan filter yang advanced
+📊 **Dashboard Analytics** - Overview dan statistik sistem
+
+## 🚀 Quick Start
+
+### Prasyarat
+
+-   PHP 8.1+
+-   PostgreSQL 12+
+-   Composer
+-   Node.js & NPM (optional)
+
+### Instalasi Cepat
+
+```bash
+# Clone repository
+git clone https://github.com/oksatri/glowhub2.git
+cd glowhub2
+
+# Install dependencies
+composer install
+
+# Setup environment
+cp .env.example .env
+php artisan key:generate
+
+# Setup database
+php artisan migrate:fresh
+php artisan db:seed --class=DefaultContentSeeder
+
+# Create storage link
+php artisan storage:link
+
+# Start development server
+php artisan serve --host=0.0.0.0 --port=8000
+```
+
+### 🌐 Access URLs
+
+-   **Website**: http://localhost:8000
+-   **Admin Panel**: http://localhost:8000/admin
+
+## 📋 Feature Details
+
+### 🎯 Admin Panel Features
+
+| Feature                 | Description                                  | Status |
+| ----------------------- | -------------------------------------------- | ------ |
+| **Dashboard**           | Overview dengan statistik dan quick actions  | ✅     |
+| **Content Management**  | CRUD untuk artikel, halaman, dan konten      | ✅     |
+| **Category System**     | Manajemen kategori dengan slug auto-generate | ✅     |
+| **Service Catalog**     | Kelola layanan MUA dengan pricing fleksibel  | ✅     |
+| **Testimonial Manager** | Sistem review dengan rating 1-5 bintang      | ✅     |
+| **Hero Section**        | Banner homepage dengan CTA customizable      | ✅     |
+| **How It Works**        | Step-by-step process workflow                | ✅     |
+| **Image Upload**        | Upload dan manajemen gambar terintegrasi     | ✅     |
+| **Search & Filter**     | Multi-filter dan real-time search            | ✅     |
+| **Mobile Interface**    | Responsive design dengan mobile navigation   | ✅     |
+
+## 📖 Documentation
+
+### Available Documentation
+
+-   **[BACKEND_DOCUMENTATION.md](BACKEND_DOCUMENTATION.md)** - Technical documentation lengkap
+-   **[ADMIN_USER_GUIDE.md](ADMIN_USER_GUIDE.md)** - Panduan lengkap admin panel
+-   **[CHANGELOG.md](CHANGELOG.md)** - Version history dan features
+
+## 🎨 Screenshots
+
+### Admin Dashboard
+
+![Dashboard](https://via.placeholder.com/800x400/f8f9fa/333?text=GlowHub2+Admin+Dashboard)
+
+### Content Management
+
+![Content Management](https://via.placeholder.com/800x400/ffffff/333?text=Content+Management+Interface)
+
+### Mobile Responsive
+
+![Mobile Interface](https://via.placeholder.com/400x600/ff6b6b/ffffff?text=Mobile+Admin+Panel)
+
+## 🔧 Tech Stack
+
+-   **Framework**: Laravel 10+
+-   **Database**: PostgreSQL 12+
+-   **Frontend**: Bootstrap 5, FontAwesome, TinyMCE
+-   **Storage**: Local/Cloud storage support
+-   **Authentication**: Laravel built-in auth
+-   **API**: RESTful API ready
+
+## 📞 Support & Community
+
+### Getting Help
+
+-   **GitHub Issues**: Bug reports dan feature requests
+-   **Documentation**: Comprehensive guides dan tutorials
+-   **Code Comments**: Inline documentation dalam kode
+
+### Contributing
+
+1. Fork repository
+2. Create feature branch
+3. Commit changes
+4. Push to branch
+5. Open Pull Request
+
+## 📜 License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+## 🏆 Acknowledgments
+
+### Built With Love Using
+
+-   **[Laravel](https://laravel.com)** - The PHP Framework for Web Artisans
+-   **[PostgreSQL](https://postgresql.org)** - Advanced Open Source Database
+-   **[Bootstrap](https://getbootstrap.com)** - CSS Framework
+-   **[FontAwesome](https://fontawesome.com)** - Icon Library
+-   **[TinyMCE](https://tinymce.com)** - Rich Text Editor
+
+---
+
+<div align="center">
+
+**⭐ Star this repo if you find it helpful!**
+
+**Made with ❤️ for the Beauty Industry**
+
+[🌟 Star](https://github.com/oksatri/glowhub2) • [🐛 Report Bug](https://github.com/oksatri/glowhub2/issues) • [✨ Request Feature](https://github.com/oksatri/glowhub2/issues)
+
+</div>
 
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+-   [Simple, fast routing engine](https://laravel.com/docs/routing).
+-   [Powerful dependency injection container](https://laravel.com/docs/container).
+-   Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
+-   Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
+-   Database agnostic [schema migrations](https://laravel.com/docs/migrations).
+-   [Robust background job processing](https://laravel.com/docs/queues).
+-   [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
@@ -35,14 +175,14 @@ We would like to extend our thanks to the following sponsors for funding Laravel
 
 ### Premium Partners
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+-   **[Vehikl](https://vehikl.com)**
+-   **[Tighten Co.](https://tighten.co)**
+-   **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
+-   **[64 Robots](https://64robots.com)**
+-   **[Curotec](https://www.curotec.com/services/technologies/laravel)**
+-   **[DevSquad](https://devsquad.com/hire-laravel-developers)**
+-   **[Redberry](https://redberry.international/laravel-development)**
+-   **[Active Logic](https://activelogic.com)**
 
 ## Contributing
 
