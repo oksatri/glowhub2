@@ -1,137 +1,215 @@
 @extends('back._parts.master')
 @section('page-title', 'Content Management')
 @section('content')
+    <!-- Page Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h1 class="h3 mb-1">Content Management</h1>
-            <p class="text-muted small mb-0">Elegant view to browse, filter and manage site content.</p>
+            <h1 class="h2 mb-2" style="color: #2D3748; font-weight: 600; letter-spacing: -0.025em;">Content Management</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb m-0" style="font-size: 0.95rem;">
+                    <li class="breadcrumb-item">
+                        <a href="{{ route('dashboard') }}" class="text-decoration-none" style="color: #6B7280;">
+                            <i class="fas fa-home me-1 opacity-75"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active" style="color: #4B5563;">Content Management</li>
+                </ol>
+            </nav>
         </div>
-        <a href="{{ url('content-management/create') }}" class="btn btn-primary fw-semibold">
-            <!-- simple plus SVG to avoid dependency on icon fonts -->
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-plus-lg me-2"
-                viewBox="0 0 16 16">
-                <path
-                    d="M8 1a.5.5 0 0 1 .5.5v6.5H15a.5.5 0 0 1 0 1H8.5V15a.5.5 0 0 1-1 0V9.5H1a.5.5 0 0 1 0-1h6.5V1.5A.5.5 0 0 1 8 1z" />
-            </svg>
-            Create Content
+        <a href="{{ url('content-management/create') }}"
+           class="btn px-4 py-2 rounded-pill shadow-sm text-white"
+           style="background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%); border: none; transition: all 0.3s ease;">
+            <i class="fas fa-plus-circle me-2"></i>
+            Create New Content
         </a>
     </div>
 
-    <form method="GET" action="{{ url('content-management') }}" class="card card-body mb-4 p-3">
-        <div class="row g-2 align-items-center">
-            <div class="col-md-5">
-                <div class="input-group">
-                    <span class="input-group-text bg-white border-end-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="bi bi-search" viewBox="0 0 16 16">
-                            <path d="M11 6a5 5 0 1 1-10 0 5 5 0 0 1 10 0z" />
-                            <path d="M12.344 11.344 15 14l-1.5 1.5-2.656-2.656A6.5 6.5 0 1 0 12.344 11.344z" />
-                        </svg>
-                    </span>
-                    <input type="text" name="title" class="form-control border-start-0"
-                        placeholder="Search by title..." value="{{ request('title') }}">
+    <!-- Search & Filter Card -->
+    <div class="card border-0 shadow-sm mb-4" style="background: linear-gradient(to right, #F9FAFB, #F3F4F6);">
+        <div class="card-body px-4 py-4">
+            <form method="GET" action="{{ url('content-management') }}" class="mb-0">
+                <div class="row g-3 align-items-center">
+                    <div class="col-lg-5 col-md-6">
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text bg-white border-0 ps-4">
+                                <i class="fas fa-search" style="color: #9CA3AF;"></i>
+                            </span>
+                            <input type="text" name="title"
+                                   class="form-control border-0 ps-2 shadow-none"
+                                   style="background: white; font-size: 0.95rem;"
+                                   placeholder="Search content..."
+                                   value="{{ request('title') }}">
+                        </div>
+                    </div>
+
+                    <div class="col-lg-2 col-md-6">
+                        <select name="section_type" class="form-select shadow-none border-0"
+                                style="background: white; height: 48px; font-size: 0.95rem;">
+                            <option value="">Content Type</option>
+                            <option value="content" {{ request('section_type') == 'content' ? 'selected' : '' }}>Content Section</option>
+                            <option value="hero" {{ request('section_type') == 'hero' ? 'selected' : '' }}>Hero Banner</option>
+                            <option value="product" {{ request('section_type') == 'product' ? 'selected' : '' }}>Product</option>
+                            <option value="testimonials" {{ request('section_type') == 'testimonials' ? 'selected' : '' }}>Testimonials</option>
+                        </select>
+                    </div>
+
+                    <div class="col-lg-2 col-md-6">
+                        <select name="status" class="form-select shadow-none border-0"
+                                style="background: white; height: 48px; font-size: 0.95rem;">
+                            <option value="">All Status</option>
+                            <option value="publish" {{ request('status') == 'publish' ? 'selected' : '' }}>Published</option>
+                            <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
+                            <option value="archive" {{ request('status') == 'archive' ? 'selected' : '' }}>Archived</option>
+                        </select>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 d-flex gap-2">
+                        <button type="submit" class="btn flex-fill py-2 text-white"
+                                style="background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%); border: none; font-size: 0.95rem;">
+                            <i class="fas fa-filter me-2 opacity-75"></i>Apply Filter
+                        </button>
+                        @if(request()->hasAny(['title', 'section_type', 'status']))
+                            <a href="{{ url('content-management') }}"
+                               class="btn py-2 px-3"
+                               style="background: white; border: 1px solid #E5E7EB; color: #4B5563;">
+                                <i class="fas fa-times opacity-50"></i>
+                            </a>
+                        @endif
+                    </div>
                 </div>
-            </div>
-
-            <div class="col-md-2">
-                <select name="section_type" class="form-control form-select">
-                    <option value="">All Types</option>
-                    <option value="article" {{ request('section_type') == 'article' ? 'selected' : '' }}>Article</option>
-                    <option value="video" {{ request('section_type') == 'video' ? 'selected' : '' }}>Video</option>
-                </select>
-            </div>
-
-            <div class="col-md-2">
-                <select name="status" class="form-control form-select">
-                    <option value="">All Status</option>
-                    <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
-                    <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
-                </select>
-            </div>
-
-            <div class="col-md-3 d-flex">
-                <button type="submit" class="btn btn-outline-primary me-2 flex-grow-1">Filter</button>
-            </div>
+            </form>
         </div>
+    </div>
 
-        <div class="row mt-3">
-            <div class="col text-muted small">
-                Showing results for:
-                <strong>{{ request('title') ?: 'any title' }}</strong>,
-                type <strong>{{ request('section_type') ?: 'all' }}</strong>,
-                status <strong>{{ request('status') ?: 'all' }}</strong>
-            </div>
-        </div>
-    </form>
-
-    <div class="card">
+    <!-- Content Table -->
+    <div class="card border-0 shadow-sm" style="background: white;">
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-bordered table-hover align-middle mb-0">
-                    <thead class="table-light">
+                <table class="table table-hover align-middle mb-0" style="border-collapse: separate; border-spacing: 0;">
+                    <thead style="background: #F8FAFC;">
                         <tr>
-                            <th>Title</th>
-                            <th>Type</th>
-                            <th>Status</th>
-                            <th>Order</th>
-                            <th>Created</th>
-                            <th class="text-end">Actions</th>
+                            <th class="px-4 py-3" style="color: #1F2937; font-weight: 600; border-bottom: 2px solid #E5E7EB;">Content Details</th>
+                            <th class="py-3" style="width: 150px; color: #1F2937; font-weight: 600; border-bottom: 2px solid #E5E7EB;">Type</th>
+                            <th class="py-3" style="width: 120px; color: #1F2937; font-weight: 600; border-bottom: 2px solid #E5E7EB;">Status</th>
+                            <th class="py-3" style="width: 100px; color: #1F2937; font-weight: 600; border-bottom: 2px solid #E5E7EB;">Order</th>
+                            <th class="py-3" style="width: 200px; color: #1F2937; font-weight: 600; border-bottom: 2px solid #E5E7EB;">Last Updated</th>
+                            <th class="py-3 text-end px-4" style="width: 200px; color: #1F2937; font-weight: 600; border-bottom: 2px solid #E5E7EB;">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($contents as $content)
-                            <tr>
-                                <td>
-                                    <strong>{{ $content->title }}</strong>
+                            <tr style="border-bottom: 1px solid #F3F4F6;">
+                                <td class="px-4" style="padding-top: 1rem; padding-bottom: 1rem;">
+                                    <div class="d-flex align-items-center py-1">
+                                        <div class="content-icon me-3 rounded-lg d-flex align-items-center justify-content-center"
+                                             style="width: 48px; height: 48px;margin-right:10px">
+                                            @switch($content->section_type)
+                                                @case('hero')
+                                                    <i class="fas fa-star" style="color: #FBBF24 !important; font-size: 2.25rem;"></i>
+                                                    @break
+                                                @case('product')
+                                                    <i class="fas fa-box" style="color: #3B82F6 !important; font-size: 2.25rem;"></i>
+                                                    @break
+                                                @case('testimonials')
+                                                    <i class="fas fa-quote-right" style="color: #10B981 !important; font-size: 2.25rem;"></i>
+                                                    @break
+                                                @default
+                                                    <i class="fas fa-file-alt" style="color: #60A5FA !important; font-size: 2.25rem;"></i>
+                                            @endswitch
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1" style="color: #111827; font-weight: 600; font-size: 0.975rem;">{{ $content->title }}</h6>
+                                            <p class="mb-0" style="color: #6B7280; font-size: 0.875rem;">{{ Str::limit($content->description, 50) }}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="vertical-align: middle;">
+                                    <span class="text-capitalize" style="color: #374151; font-weight: 500;">{{ $content->section_type }}</span>
                                 </td>
                                 <td>
-                                    {{ $content->section_type }}
+                                    @switch($content->status)
+                                        @case('publish')
+                                            <span class="badge rounded-pill px-3 py-2"
+                                                  style="background: #ECFDF5; color: #065F46; font-weight: 500;">Published</span>
+                                            @break
+                                        @case('draft')
+                                            <span class="badge rounded-pill px-3 py-2"
+                                                  style="background: #FEF3C7; color: #92400E; font-weight: 500;">Draft</span>
+                                            @break
+                                        @case('archive')
+                                            <span class="badge rounded-pill px-3 py-2"
+                                                  style="background: #F3F4F6; color: #374151; font-weight: 500;">Archived</span>
+                                            @break
+                                    @endswitch
                                 </td>
                                 <td>
-                                    <span class="text-warning">{{ $content->status }}</span>
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <span class="badge rounded-pill px-3 py-2"
+                                              style="background: #EFF6FF; color: #1E40AF; font-weight: 600; min-width: 32px;">
+                                            {{ $content->order ?? 0 }}
+                                        </span>
+                                    </div>
                                 </td>
                                 <td>
-                                    <span class="badge badge-primary rounded-circle">{{ $content->order ?? 0 }}</span>
+                                    <div class="d-flex flex-column">
+                                        <span style="color: #374151; font-size: 0.875rem; font-weight: 500;">{{ $content->updated_at->format('M d, Y') }}</span>
+                                        <span style="color: #6B7280; font-size: 0.813rem;">{{ $content->updated_at->format('h:i A') }}</span>
+                                    </div>
                                 </td>
-                                <td>
-                                    <span
-                                        class="text-muted">{{ $content->created_at ? $content->created_at->format('Y-m-d') : '-' }}</span>
-                                </td>
-                                <td class="text-end">
-                                    <a href="{{ url('content-management/' . $content->id . '/edit') }}"
-                                        class="btn btn-sm btn-outline-primary me-1">
-                                        <i class="bi bi-pencil"></i> Edit
-                                    </a>
-                                    <form action="{{ url('content-management/' . $content->id) }}" method="POST"
-                                        style="display:inline-block;" onsubmit="return confirm('Delete this content?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn btn-sm btn-outline-danger me-1">
-                                            <i class="bi bi-trash"></i> Delete?
-                                        </button>
-                                    </form>
-                                    @if ($content->status == 'publish')
-                                        <form action="{{ url('content-management/' . $content->id . '/unpublish') }}"
-                                            method="POST" style="display:inline-block;">
+                                <td class="text-end px-4">
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <a href="{{ url('content-management/' . $content->id . '/edit') }}"
+                                           class="btn btn-sm d-inline-flex align-items-center"
+                                           style="background: #F9FAFB; border: 1px solid #E5E7EB; color: #374151; font-weight: 500; padding: 0.5rem 1rem;">
+                                            <i class="fas fa-edit me-2 opacity-70"></i> Edit
+                                        </a>
+
+                                        @if ($content->status == 'publish')
+                                            <form action="{{ url('content-management/' . $content->id . '/unpublish') }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm d-inline-flex align-items-center"
+                                                        style="background: #FEF3C7; border: 1px solid #D97706; color: #92400E; font-weight: 500; padding: 0.5rem 1rem;"
+                                                        onclick="return confirm('Are you sure you want to unpublish this content?')">
+                                                    <i class="fas fa-eye-slash me-2 opacity-70"></i> Unpublish
+                                                </button>
+                                            </form>
+                                        @else
+                                            <form action="{{ url('content-management/' . $content->id . '/publish') }}" method="POST" class="d-inline">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm d-inline-flex align-items-center"
+                                                        style="background: #ECFDF5; border: 1px solid #059669; color: #065F46; font-weight: 500; padding: 0.5rem 1rem;"
+                                                        onclick="return confirm('Are you sure you want to publish this content?')">
+                                                    <i class="fas fa-check-circle me-2 opacity-70"></i> Publish
+                                                </button>
+                                            </form>
+                                        @endif
+
+                                        <form action="{{ url('content-management/' . $content->id) }}" method="POST" class="d-inline">
                                             @csrf
-                                            <button class="btn btn-sm btn-success">
-                                                <i class="bi bi-upload"></i> Unpublish?
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm d-inline-flex align-items-center"
+                                                    style="background: #FEE2E2; border: 1px solid #EF4444; color: #991B1B; font-weight: 500; padding: 0.5rem 1rem;"
+                                                    onclick="return confirm('Are you sure you want to delete this content? This action cannot be undone.')">
+                                                <i class="fas fa-trash-alt me-2 opacity-70"></i> Delete
                                             </button>
                                         </form>
-                                    @else
-                                        <form action="{{ url('content-management/' . $content->id . '/publish') }}"
-                                            method="POST" style="display:inline-block;">
-                                            @csrf
-                                            <button class="btn btn-sm btn-warning">
-                                                <i class="bi bi-eye-slash"></i> Publish?
-                                            </button>
-                                        </form>
-                                    @endif
+                                    </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="text-center py-4">No contents found.</td>
+                                <td colspan="6" class="text-center py-16">
+                                    <div class="d-flex flex-column align-items-center">
+                                        <div class="empty-state mb-4 p-3 rounded-circle" style="background: #F3F4F6;">
+                                            <i class="fas fa-file-alt fa-4x" style="color: #9CA3AF;"></i>
+                                        </div>
+                                        <h5 class="fw-normal mb-2" style="color: #374151; font-size: 1.25rem;">No Content Found</h5>
+                                        <p style="color: #6B7280; font-size: 1rem;" class="mb-4">Start by adding your first content section</p>
+                                        <a href="{{ url('content-management/create') }}" class="btn px-4 py-2 rounded-pill text-white" style="background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%); border: none;">
+                                            <i class="fas fa-plus me-2"></i> Create New Content
+                                        </a>
+                                    </div>
+                                </td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -140,8 +218,15 @@
         </div>
     </div>
 
-    <div class="mt-3">
-        {{ $contents->links() }}
+    <div class="mt-4 d-flex justify-content-between align-items-center">
+        <div style="color: #4B5563; font-size: 0.95rem;">
+            Showing <span class="fw-medium">{{ $contents->firstItem() ?? 0 }}</span> to
+            <span class="fw-medium">{{ $contents->lastItem() ?? 0 }}</span> of
+            <span class="fw-medium">{{ $contents->total() ?? 0 }}</span> entries
+        </div>
+        <div class="pagination-wrapper" style="margin: -0.25rem;">
+            {{ $contents->appends(request()->query())->links() }}
+        </div>
     </div>
 
 @endsection

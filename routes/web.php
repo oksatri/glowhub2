@@ -40,8 +40,11 @@ Route::middleware('auth')->group(function () {
     Route::middleware([RoleMiddleware::class . ':admin'])->group(function () {
         // Tambahkan route khusus admin di sini
         // Contoh: Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-        // Register resource routes for content management with admin. name prefix
-        Route::resource('content-management', ContentController::class, ['as' => 'admin']);
+    // Register resource routes for content management with admin. name prefix
+    Route::resource('content-management', ContentController::class, ['as' => 'admin']);
+    // Additional actions: publish / unpublish
+    Route::post('content-management/{id}/publish', [ContentController::class, 'publish'])->name('content.publish');
+    Route::post('content-management/{id}/unpublish', [ContentController::class, 'unpublish'])->name('content.unpublish');
     });
 
     // MUA routes

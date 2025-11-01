@@ -171,8 +171,15 @@ class ContentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ContentSection $content)
+    public function update(Request $request, $id)
     {
+        $content = ContentSection::findOrFail($id);
+
+        \Log::info('Update request received', [
+            'request_all' => $request->all(),
+            'content_id' => $content->id
+        ]);
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -219,7 +226,28 @@ class ContentController extends Controller
             $data['buttons_count'] = count($data['buttons']);
         }
 
-        $content->update($data);
+        try {
+            \Log::info('Attempting to update content', [
+                'content_id' => $content->id,
+                'data' => $data,
+                'content_exists' => $content->exists
+            ]);
+
+            $result = $content->update($data);
+
+            \Log::info('Update result', [
+                'success' => $result,
+                'content_after' => $content->fresh()->toArray()
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Error updating content', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['error' => 'Terjadi kesalahan saat mengupdate content: ' . $e->getMessage()]);
+        }
 
         // Sync details when section_type == content
         if (($validated['section_type'] ?? null) === 'content') {
@@ -326,8 +354,14 @@ class ContentController extends Controller
             }
         }
 
-        return redirect(url('content-management'))
-            ->with('success', 'Content berhasil diupdate.');
+        if ($result) {
+            return redirect(url('content-management'))
+                ->with('success', 'Content berhasil diupdate.');
+        }
+
+        return redirect()->back()
+            ->withInput()
+            ->withErrors(['error' => 'Gagal mengupdate content. Silakan coba lagi.']);
     }
 
     /**
@@ -344,5 +378,43 @@ class ContentController extends Controller
 
         return redirect(url('content-management'))
             ->with('success', 'Content berhasil dihapus.');
+    }
+
+    /**
+     * Publish the specified content (set status = 'publish').
+     */
+    public function publish(Request $request, $id)
+    {
+        $content = ContentSection::findOrFail($id);
+
+        try {
+            $content->status = 'publish';
+            $content->save();
+        } catch (\Exception $e) {
+            \Log::error('Failed to publish content', ['id' => $id, 'error' => $e->getMessage()]);
+            return redirect()->back()->withErrors(['error' => 'Gagal mempublish content.']);
+        }
+
+        return redirect(url('content-management'))
+            ->with('success', 'Content berhasil dipublish.');
+    }
+
+    /**
+     * Unpublish the specified content (set status = 'draft').
+     */
+    public function unpublish(Request $request, $id)
+    {
+        $content = ContentSection::findOrFail($id);
+
+        try {
+            $content->status = 'draft';
+            $content->save();
+        } catch (\Exception $e) {
+            \Log::error('Failed to unpublish content', ['id' => $id, 'error' => $e->getMessage()]);
+            return redirect()->back()->withErrors(['error' => 'Gagal mengubah status content.']);
+        }
+
+        return redirect(url('content-management'))
+            ->with('success', 'Content berhasil diubah menjadi draft.');
     }
 }

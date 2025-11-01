@@ -9,19 +9,11 @@
             <!-- ============================================================== -->
             <div class="navbar-brand">
                 <!-- Logo icon -->
-                <a href="{{ route('dashboard') }}">
+                <a href="{{ route('dashboard') }}" class="navbar-brand">
                     <b class="logo-icon">
-                        <!-- Dark Logo icon -->
-                        <img src="{{ asset('images/logo/logo_saja.png') }}" style="width: 100%;" alt="homepage"
-                            class="dark-logo" />
-                        <!-- Light Logo icon -->
-                        <img src="{{ asset('images/logo/logo_saja.png') }}" style="width: 100%;" alt="homepage"
-                            class="light-logo" />
+                        <img src="{{ asset('images/logo/logo_saja.png') }}" alt="GlowHub" />
                     </b>
-                    <!--End Logo icon -->
-                    <!-- Logo text -->
-                    <span class="logo-text"
-                        style="font-family: 'Poppins', sans-serif !important; font-weight: bold; color: #5A189A;">
+                    <span class="logo-text" style="font-family: 'Poppins', sans-serif !important; font-weight: bold; color: #5A189A;">
                         GlowHub
                     </span>
                 </a>

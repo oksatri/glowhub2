@@ -3,16 +3,16 @@
 @section('content')
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h1 class="h3 mb-1">Create Content</h1>
+            <h1 class="h2 mb-1" style="color: #2D3748; font-weight:600;">Create Content</h1>
             <p class="text-muted small mb-0">Create a new content section for the front page — elegant and simple.</p>
         </div>
-        <a href="{{ url('content-management') }}" class="btn btn-outline-secondary">
-            Back to list
+        <a href="{{ url('content-management') }}" class="btn px-3 py-2" style="background:white; border:1px solid #E5E7EB; color:#374151;">
+            <i class="fas fa-arrow-left me-2"></i>Back to list
         </a>
     </div>
 
-    <div class="card">
-        <div class="card-body">
+    <div class="card border-0 shadow-sm">
+        <div class="card-body px-4 py-4">
             <form action="{{ url('content-management') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
@@ -166,68 +166,59 @@
                             <div id="details-list">
                                 @if (old('details'))
                                     @foreach (old('details') as $i => $det)
-                                        <div class="card mb-2 detail-row p-3">
-                                            <div class="row g-2 align-items-start">
-                                                <div class="col-md-3">
-                                                    <label class="form-label small">Category</label>
-                                                    <select name="details[{{ $i }}][category]"
-                                                        class="form-select detail-category">
-                                                        <option value="about"
-                                                            {{ isset($det['category']) && $det['category'] == 'about' ? 'selected' : '' }}>
-                                                            About</option>
-                                                        <option value="feature"
-                                                            {{ isset($det['category']) && $det['category'] == 'feature' ? 'selected' : '' }}>
-                                                            Feature</option>
-                                                        <option value="team"
-                                                            {{ isset($det['category']) && $det['category'] == 'team' ? 'selected' : '' }}>
-                                                            Team</option>
-                                                        <option value="faq"
-                                                            {{ isset($det['category']) && $det['category'] == 'faq' ? 'selected' : '' }}>
-                                                            FAQ</option>
-                                                        <option value="custom"
-                                                            {{ isset($det['category']) && $det['category'] == 'custom' ? 'selected' : '' }}>
-                                                            Custom</option>
-                                                    </select>
+                                        <div class="card mb-2 detail-row">
+                                            <div class="card-header d-flex justify-content-between align-items-center p-2">
+                                                <div>
+                                                    <strong class="detail-title">{{ $det['title'] ?? 'Detail' }}</strong>
+                                                    <small class="text-muted ms-2">({{ $det['category'] ?? 'feature' }})</small>
                                                 </div>
-
-                                                <div class="col-md-3 detail-icon-col">
-                                                    <label class="form-label small">Icon (font class)</label>
-                                                    <input type="text" name="details[{{ $i }}][icon]"
-                                                        class="form-control" value="{{ $det['icon'] ?? '' }}"
-                                                        placeholder="e.g. fa fa-star">
+                                                <div>
+                                                    <button type="button" class="btn btn-sm btn-outline-secondary me-1 toggle-detail">Toggle</button>
+                                                    <button type="button" class="btn btn-sm btn-outline-danger remove-detail">×</button>
                                                 </div>
+                                            </div>
+                                            <div class="card-body p-3 detail-body">
+                                                <div class="row g-2 align-items-start">
+                                                    <div class="col-md-3">
+                                                        <label class="form-label small">Category</label>
+                                                        <select name="details[{{ $i }}][category]" class="form-select detail-category">
+                                                            <option value="about" {{ isset($det['category']) && $det['category'] == 'about' ? 'selected' : '' }}>About</option>
+                                                            <option value="feature" {{ isset($det['category']) && $det['category'] == 'feature' ? 'selected' : '' }}>Feature</option>
+                                                            <option value="team" {{ isset($det['category']) && $det['category'] == 'team' ? 'selected' : '' }}>Team</option>
+                                                            <option value="faq" {{ isset($det['category']) && $det['category'] == 'faq' ? 'selected' : '' }}>FAQ</option>
+                                                            <option value="custom" {{ isset($det['category']) && $det['category'] == 'custom' ? 'selected' : '' }}>Custom</option>
+                                                        </select>
+                                                    </div>
 
-                                                <div class="col-md-4 detail-image-col" style="display: none;">
-                                                    <label class="form-label small">Image (for About)</label>
-                                                    <input type="file" name="details[{{ $i }}][image]"
-                                                        class="form-control">
-                                                </div>
+                                                    <div class="col-md-3 detail-icon-col">
+                                                        <label class="form-label small">Icon (font class)</label>
+                                                        <input type="text" name="details[{{ $i }}][icon]" class="form-control" value="{{ $det['icon'] ?? '' }}" placeholder="e.g. fa fa-star">
+                                                    </div>
 
-                                                <div class="col-md-2 text-end">
-                                                    <button type="button"
-                                                        class="btn btn-sm btn-outline-danger remove-detail">×</button>
-                                                </div>
+                                                    <div class="col-md-4 detail-image-col" style="display: none;">
+                                                        <label class="form-label small">Image (for About)</label>
+                                                        <input type="file" name="details[{{ $i }}][image]" class="form-control">
+                                                    </div>
 
-                                                <div class="col-md-6 mt-2">
-                                                    <label class="form-label small">Title</label>
-                                                    <input type="text" name="details[{{ $i }}][title]"
-                                                        class="form-control" value="{{ $det['title'] ?? '' }}">
-                                                </div>
+                                                    <div class="col-md-6 mt-2">
+                                                        <label class="form-label small">Title</label>
+                                                        <input type="text" name="details[{{ $i }}][title]" class="form-control" value="{{ $det['title'] ?? '' }}">
+                                                    </div>
 
-                                                <div class="col-md-6 mt-2">
-                                                    <label class="form-label small">Order</label>
-                                                    <input type="number" name="details[{{ $i }}][order]"
-                                                        class="form-control" value="{{ $det['order'] ?? 0 }}">
-                                                </div>
+                                                    <div class="col-md-6 mt-2">
+                                                        <label class="form-label small">Order</label>
+                                                        <input type="number" name="details[{{ $i }}][order]" class="form-control" value="{{ $det['order'] ?? 0 }}">
+                                                    </div>
 
-                                                <div class="col-12 mt-2">
-                                                    <label class="form-label small">Description</label>
-                                                    <textarea name="details[{{ $i }}][description]" rows="2" class="form-control">{{ $det['description'] ?? '' }}</textarea>
-                                                </div>
+                                                    <div class="col-12 mt-2">
+                                                        <label class="form-label small">Description</label>
+                                                        <textarea name="details[{{ $i }}][description]" rows="2" class="form-control">{{ $det['description'] ?? '' }}</textarea>
+                                                    </div>
 
-                                                <div class="col-12 mt-2 detail-additional-col" style="display: none;">
-                                                    <label class="form-label small">Additional (JSON or text)</label>
-                                                    <textarea name="details[{{ $i }}][additional]" rows="2" class="form-control">{{ $det['additional'] ?? '' }}</textarea>
+                                                    <div class="col-12 mt-2 detail-additional-col" style="display: none;">
+                                                        <label class="form-label small">Additional (JSON or text)</label>
+                                                        <textarea name="details[{{ $i }}][additional]" rows="2" class="form-control">{{ $det['additional'] ?? '' }}</textarea>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -240,22 +231,19 @@
                             @endif
                         </div>
 
-                        <div class="mt-4">
-                            <button class="btn btn-primary">Create Content</button>
-                            <a href="{{ url('content-management') }}" class="btn btn-link ms-2">Cancel</a>
+                        <div class="mt-4 d-flex align-items-center gap-2">
+                            <button class="btn px-4 py-2 rounded-pill text-white" style="background: linear-gradient(135deg,#667EEA 0%,#764BA2 100%); border:none;">Create Content</button>
+                            <a href="{{ url('content-management') }}" class="btn" style="background:transparent; color:#6B7280;">Cancel</a>
                         </div>
                     </div>
 
                     <div class="col-lg-4">
-                        <div class="card shadow-sm">
+                        <div class="card border-0 shadow-sm">
                             <div class="card-body">
-                                <h6 class="card-title">Image / Media</h6>
-                                <p class="text-muted small">Upload an image that represents this section. Ideal size
-                                    depends
-                                    on your layout.</p>
+                                <h6 class="card-title" style="color:#111827; font-weight:600;">Image / Media</h6>
+                                <p class="text-muted small">Upload an image that represents this section. Ideal size depends on your layout.</p>
                                 <div class="mb-3">
-                                    <input type="file" name="image"
-                                        class="form-control {{ $errors->has('image') ? 'is-invalid' : '' }}">
+                                    <input type="file" name="image" class="form-control {{ $errors->has('image') ? 'is-invalid' : '' }}">
                                     @if ($errors->has('image'))
                                         <div class="invalid-feedback">{{ $errors->first('image') }}</div>
                                     @endif
@@ -263,12 +251,10 @@
 
                                 <hr>
 
-                                <h6 class="card-title">Meta & Settings</h6>
+                                <h6 class="card-title" style="color:#111827; font-weight:600;">Meta & Settings</h6>
                                 <div class="mb-3">
                                     <label class="form-label small">Slug (optional)</label>
-                                    <input type="text" name="slug"
-                                        class="form-control {{ $errors->has('slug') ? 'is-invalid' : '' }}"
-                                        value="{{ old('slug') }}" placeholder="auto-generated from title">
+                                    <input type="text" name="slug" class="form-control {{ $errors->has('slug') ? 'is-invalid' : '' }}" value="{{ old('slug') }}" placeholder="auto-generated from title">
                                     @if ($errors->has('slug'))
                                         <div class="invalid-feedback">{{ $errors->first('slug') }}</div>
                                     @endif
@@ -283,8 +269,7 @@
                                 </div>
 
                                 <div class="mb-3 text-muted small">
-                                    <strong>Tip:</strong> Use buttons to add primary actions. Keep descriptions concise for
-                                    best results.
+                                    <strong>Tip:</strong> Use buttons to add primary actions. Keep descriptions concise for best results.
                                 </div>
                             </div>
                         </div>
@@ -363,8 +348,6 @@
                 })();
 
                 function makeDetailRow(idx, values = {}) {
-                    const card = document.createElement('div');
-                    card.className = 'card mb-2 detail-row p-3';
                     const category = values.category || 'feature';
                     const title = values.title || '';
                     const desc = values.description || '';
@@ -372,59 +355,67 @@
                     const order = values.order || 0;
                     const additional = values.additional || '';
 
-                    card.innerHTML = `
-                        <div class="row g-2 align-items-start">
-                            <div class="col-md-3">
-                                <label class="form-label small">Category</label>
-                                <select name="details[${idx}][category]" class="form-select detail-category">
-                                    <option value="about" ${category==='about'? 'selected':''}>About</option>
-                                    <option value="feature" ${category==='feature'? 'selected':''}>Feature</option>
-                                    <option value="team" ${category==='team'? 'selected':''}>Team</option>
-                                    <option value="faq" ${category==='faq'? 'selected':''}>FAQ</option>
-                                    <option value="custom" ${category==='custom'? 'selected':''}>Custom</option>
-                                </select>
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'card mb-2 detail-row';
+                    wrapper.innerHTML = `
+                        <div class="card-header d-flex justify-content-between align-items-center p-2">
+                            <div>
+                                <strong class="detail-title">${title || 'Detail'}</strong>
+                                <small class="text-muted ms-2">(${category})</small>
                             </div>
-
-                            <div class="col-md-3 detail-icon-col">
-                                <label class="form-label small">Icon (font class)</label>
-                                <input type="text" name="details[${idx}][icon]" class="form-control" value="${icon}" placeholder="e.g. fa fa-star">
-                            </div>
-
-                            <div class="col-md-4 detail-image-col" style="display: none;">
-                                <label class="form-label small">Image (for About)</label>
-                                <input type="file" name="details[${idx}][image]" class="form-control">
-                            </div>
-
-                            <div class="col-md-2 text-end">
+                            <div>
+                                <button type="button" class="btn btn-sm btn-outline-secondary me-1 toggle-detail">Toggle</button>
                                 <button type="button" class="btn btn-sm btn-outline-danger remove-detail">×</button>
                             </div>
+                        </div>
+                        <div class="card-body p-3 detail-body">
+                            <div class="row g-2 align-items-start">
+                                <div class="col-md-3">
+                                    <label class="form-label small">Category</label>
+                                    <select name="details[${idx}][category]" class="form-select detail-category">
+                                        <option value="about" ${category==='about'? 'selected':''}>About</option>
+                                        <option value="feature" ${category==='feature'? 'selected':''}>Feature</option>
+                                        <option value="team" ${category==='team'? 'selected':''}>Team</option>
+                                        <option value="faq" ${category==='faq'? 'selected':''}>FAQ</option>
+                                        <option value="custom" ${category==='custom'? 'selected':''}>Custom</option>
+                                    </select>
+                                </div>
 
-                            <div class="col-md-6 mt-2">
-                                <label class="form-label small">Title</label>
-                                <input type="text" name="details[${idx}][title]" class="form-control" value="${title}">
-                            </div>
+                                <div class="col-md-3 detail-icon-col">
+                                    <label class="form-label small">Icon (font class)</label>
+                                    <input type="text" name="details[${idx}][icon]" class="form-control" value="${icon}" placeholder="e.g. fa fa-star">
+                                </div>
 
-                            <div class="col-md-6 mt-2">
-                                <label class="form-label small">Order</label>
-                                <input type="number" name="details[${idx}][order]" class="form-control" value="${order}">
-                            </div>
+                                <div class="col-md-4 detail-image-col" style="display: none;">
+                                    <label class="form-label small">Image (for About)</label>
+                                    <input type="file" name="details[${idx}][image]" class="form-control">
+                                </div>
 
-                            <div class="col-12 mt-2">
-                                <label class="form-label small">Description</label>
-                                <textarea name="details[${idx}][description]" rows="2" class="form-control">${desc}</textarea>
-                            </div>
+                                <div class="col-md-6 mt-2">
+                                    <label class="form-label small">Title</label>
+                                    <input type="text" name="details[${idx}][title]" class="form-control" value="${title}">
+                                </div>
 
-                            <div class="col-12 mt-2 detail-additional-col" style="display: none;">
-                                <label class="form-label small">Additional (JSON or text)</label>
-                                <textarea name="details[${idx}][additional]" rows="2" class="form-control">${additional}</textarea>
+                                <div class="col-md-6 mt-2">
+                                    <label class="form-label small">Order</label>
+                                    <input type="number" name="details[${idx}][order]" class="form-control" value="${order}">
+                                </div>
+
+                                <div class="col-12 mt-2">
+                                    <label class="form-label small">Description</label>
+                                    <textarea name="details[${idx}][description]" rows="2" class="form-control">${desc}</textarea>
+                                </div>
+
+                                <div class="col-12 mt-2 detail-additional-col" style="display: none;">
+                                    <label class="form-label small">Additional (JSON or text)</label>
+                                    <textarea name="details[${idx}][additional]" rows="2" class="form-control">${additional}</textarea>
+                                </div>
                             </div>
                         </div>
                     `;
 
-                    // after creating, set correct visibility
-                    toggleDetailFields(card, category);
-
-                    return card;
+                    toggleDetailFields(wrapper, category);
+                    return wrapper;
                 }
 
                 function toggleDetailFields(cardEl, category) {
@@ -449,11 +440,19 @@
                     detailsList.appendChild(row);
                 });
 
-                // Delegate events: remove, category change
+                // Delegate events: remove, category change, toggle
                 detailsList && detailsList.addEventListener('click', function(e) {
                     if (e.target && e.target.classList.contains('remove-detail')) {
                         const card = e.target.closest('.detail-row');
                         card && card.remove();
+                    }
+
+                    if (e.target && e.target.classList.contains('toggle-detail')) {
+                        const card = e.target.closest('.detail-row');
+                        if (!card) return;
+                        const body = card.querySelector('.detail-body');
+                        if (!body) return;
+                        body.style.display = body.style.display === 'none' ? 'block' : 'none';
                     }
                 });
 

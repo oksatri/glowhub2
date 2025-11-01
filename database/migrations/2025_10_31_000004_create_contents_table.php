@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('contents', function (Blueprint $table) {
             $table->id();
+            $table->string('slug')->unique();
+            $table->string('excerpt')->nullable();
             $table->string('title');
             $table->text('description')->nullable();
             $table->enum('section_type', ['product', 'testimonials', 'contact', 'content', 'hero'])->default('content');

@@ -15,11 +15,82 @@
     <link href="{{ asset('admin/assets/extra-libs/c3/c3.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/assets/libs/chartist/dist/chartist.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/assets/extra-libs/jvector/jquery-jvectormap-2.0.2.css') }}" rel="stylesheet">
-    <!-- Explicitly load Font Awesome (local) to ensure fonts resolve correctly -->
-    <link href="{{ asset('admin/dist/css/icons/font-awesome/css/fontawesome-all.min.css') }}" rel="stylesheet">
+    <!-- Load Font Awesome from CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <!-- Custom CSS -->
     <link href="{{ asset('admin/dist/css/style.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/dist/css/custom-admin-override.css') }}" rel="stylesheet">
+
+    <style>
+        /* Fix for Font Awesome icons */
+        .fas, .far, .fa, .fab {
+            font-family: "Font Awesome 6 Free" !important;
+        }
+
+        /* Logo responsiveness fixes */
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            padding: 0 !important;
+            margin: 0;
+        }
+
+        .logo-icon {
+            display: inline-flex;
+            align-items: center;
+            padding: 0 10px;
+        }
+
+        .logo-icon img {
+            max-width: 40px !important;
+            width: auto !important;
+            height: auto;
+        }
+
+        .logo-text {
+            font-size: 1.2rem;
+            margin-left: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .navbar-header {
+                padding: 0 10px;
+            }
+            .logo-icon img {
+                max-width: 30px !important;
+            }
+            .logo-text {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .logo-icon img {
+                max-width: 25px !important;
+            }
+            .logo-text {
+                font-size: 0.9rem;
+            }
+        }
+
+        .fab {
+            font-family: "Font Awesome 6 Brands" !important;
+        }
+
+        /* Mobile responsiveness fixes */
+        @media (max-width: 768px) {
+            .container-fluid {
+                padding: 1rem !important;
+            }
+            .card-body {
+                padding: 1.25rem !important;
+            }
+            .page-wrapper > .container-fluid {
+                min-height: calc(100vh - 180px);
+            }
+        }
+    </style>
 </head>
 
 <body>
