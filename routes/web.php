@@ -2,8 +2,10 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Front\MuaController;
+use App\Http\Controllers\Back\ContentController;
 use App\Http\Controllers\Back\DashboardController;
 
 Route::get('/', function () {
@@ -35,9 +37,11 @@ Route::middleware('auth')->group(function () {
         return redirect('/login');
     })->name('logout');
     // Admin routes
-    Route::middleware('role:admin')->group(function () {
+    Route::middleware([RoleMiddleware::class . ':admin'])->group(function () {
         // Tambahkan route khusus admin di sini
         // Contoh: Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+        // Register resource routes for content management with admin. name prefix
+        Route::resource('content-management', ContentController::class, ['as' => 'admin']);
     });
 
     // MUA routes

@@ -9,8 +9,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="admin/assets/images/favicon.png">
-    <title>GlowHub - admin template</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/logo/logo_saja.png') }}">
+    <title>GlowHub - Auth</title>
     <!-- Custom CSS -->
     <link href="admin/dist/css/style.min.css" rel="stylesheet">
 </head>

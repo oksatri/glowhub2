@@ -9,21 +9,17 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('admin/assets/images/favicon.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/logo/logo_saja.png') }}">
     <title>Admin GlowHub - @yield('page-title', 'Dashboard')</title>
     <!-- Custom CSS -->
     <link href="{{ asset('admin/assets/extra-libs/c3/c3.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/assets/libs/chartist/dist/chartist.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('admin/assets/extra-libs/jvector/jquery-jvectormap-2.0.2.css') }}" rel="stylesheet" />
+    <link href="{{ asset('admin/assets/extra-libs/jvector/jquery-jvectormap-2.0.2.css') }}" rel="stylesheet">
+    <!-- Explicitly load Font Awesome (local) to ensure fonts resolve correctly -->
+    <link href="{{ asset('admin/dist/css/icons/font-awesome/css/fontawesome-all.min.css') }}" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="{{ asset('admin/dist/css/style.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/dist/css/custom-admin-override.css') }}" rel="stylesheet">
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-<![endif]-->
 </head>
 
 <body>
@@ -41,81 +37,22 @@
     <!-- ============================================================== -->
     <div id="main-wrapper" data-theme="light" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
         data-sidebar-position="fixed" data-header-position="fixed" data-boxed-layout="full">
-        <!-- ============================================================== -->
-        <!-- Topbar header - style you can find in pages.scss -->
-        <!-- ============================================================== -->
+
         @include('back._parts.header')
-        <!-- ============================================================== -->
-        <!-- End Topbar header -->
-        <!-- ============================================================== -->
-        <!-- ============================================================== -->
-        <!-- Left Sidebar - style you can find in sidebar.scss  -->
-        <!-- ============================================================== -->
+
         @include('back._parts.sidebar')
-        <!-- ============================================================== -->
-        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
-        <!-- ============================================================== -->
-        <!-- ============================================================== -->
-        <!-- Page wrapper  -->
-        <!-- ============================================================== -->
+
         <div class="page-wrapper">
-            <!-- ============================================================== -->
-            <!-- Bread crumb and right sidebar toggle -->
-            <!-- ============================================================== -->
-            <div class="page-breadcrumb">
-                <div class="row">
-                    <div class="col-7 align-self-center">
-                        <h3 class="page-title text-truncate text-dark font-weight-medium mb-1">
-                            @yield('page-title', 'Dashboard')
-                        </h3>
-                        <div class="d-flex align-items-center">
-                            <nav aria-label="breadcrumb">
-                                <ol class="breadcrumb m-0 p-0">
-                                    <li class="breadcrumb-item">
-                                        <a href="{{ route('dashboard') }}">Dashboard</a>
-                                    </li>
-                                    @yield('breadcrumb')
-                                </ol>
-                            </nav>
-                        </div>
-                    </div>
-                    <div class="col-5 align-self-center">
-                        <div class="customize-input float-right">
-                            @yield('page-select')
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- ============================================================== -->
-            <!-- End Bread crumb and right sidebar toggle -->
-            <!-- ============================================================== -->
-            <!-- ============================================================== -->
-            <!-- Container fluid  -->
-            <!-- ============================================================== -->
+
             <div class="container-fluid">
                 @yield('content')
             </div>
-            <!-- ============================================================== -->
-            <!-- End Container fluid  -->
-            <!-- ============================================================== -->
-            <!-- ============================================================== -->
-            <!-- footer -->
-            <!-- ============================================================== -->
+
             @include('back._parts.footer')
-            <!-- ============================================================== -->
-            <!-- End footer -->
-            <!-- ============================================================== -->
+
         </div>
-        <!-- ============================================================== -->
-        <!-- End Page wrapper  -->
-        <!-- ============================================================== -->
+
     </div>
-    <!-- ============================================================== -->
-    <!-- End Wrapper -->
-    <!-- ============================================================== -->
-    <!-- End Wrapper -->
-    <!-- ============================================================== -->
-    <!-- All Jquery -->
     <!-- ============================================================== -->
     <script src="{{ asset('admin/assets/libs/jquery/dist/jquery.min.js') }}"></script>
     <script src="{{ asset('admin/assets/libs/popper.js/dist/umd/popper.min.js') }}"></script>
@@ -136,6 +73,8 @@
     <script src="{{ asset('admin/assets/extra-libs/jvector/jquery-jvectormap-2.0.2.min.js') }}"></script>
     <script src="{{ asset('admin/assets/extra-libs/jvector/jquery-jvectormap-world-mill-en.js') }}"></script>
     <script src="{{ asset('admin/dist/js/pages/dashboards/dashboard1.min.js') }}"></script>
+    {{-- Place for page-specific pushed scripts --}}
+    @stack('scripts')
 </body>
 
 </html>
