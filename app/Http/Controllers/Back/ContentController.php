@@ -367,17 +367,32 @@ class ContentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ContentSection $content)
+    public function destroy($id)
     {
-        // Hapus gambar jika ada
-        if ($content->image) {
-            Storage::disk('public')->delete($content->image);
+        $content = ContentSection::with('details')->findOrFail($id);
+
+        try {
+            // Hapus gambar section jika ada
+            if ($content->image) {
+                Storage::disk('public')->delete($content->image);
+            }
+
+            // Hapus gambar dan record detail jika ada
+            foreach ($content->details as $det) {
+                if ($det->image) {
+                    Storage::disk('public')->delete($det->image);
+                }
+                $det->delete();
+            }
+
+            $content->delete();
+
+            return redirect(url('content-management'))
+                ->with('success', 'Content berhasil dihapus.');
+        } catch (\Exception $e) {
+            \Log::error('Failed to delete content', ['id' => $id, 'error' => $e->getMessage()]);
+            return redirect()->back()->withErrors(['error' => 'Gagal menghapus content.']);
         }
-
-        $content->delete();
-
-        return redirect(url('content-management'))
-            ->with('success', 'Content berhasil dihapus.');
     }
 
     /**

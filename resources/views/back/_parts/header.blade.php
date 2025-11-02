@@ -138,32 +138,28 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
-                        <img src="{{ asset('admin/assets/images/users/profile-pic.jpg') }}" alt="user"
-                            class="rounded-circle" width="40">
-                        <span class="ml-2 d-none d-lg-inline-block"><span>Hello,</span> <span class="text-dark">Jason
-                                Doe</span> <i data-feather="chevron-down" class="svg-icon"></i></span>
+                        @php
+                            $user = auth()->user();
+                            $profile = $user->profile_image ?? null;
+                            if ($profile) {
+                                // if it's a full URL use it, otherwise assume it's stored in storage/app/public
+                                $src = filter_var($profile, FILTER_VALIDATE_URL) ? $profile : asset('storage/' . ltrim($profile, '/'));
+                            } else {
+                                $src = asset('admin/assets/images/users/profile-pic.jpg');
+                            }
+                        @endphp
+                        <img src="{{ $src }}" alt="{{ $user->name }}" class="rounded-circle" width="40">
+                        <span class="ml-2 d-none d-lg-inline-block"><span>Hello,</span> <span class="text-dark">{{ auth()->user()->name }}</span> <i data-feather="chevron-down" class="svg-icon"></i></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right user-dd animated flipInY">
                         <a class="dropdown-item" href="javascript:void(0)"><i data-feather="user"
                                 class="svg-icon mr-2 ml-1"></i>
                             My Profile</a>
-                        <a class="dropdown-item" href="javascript:void(0)"><i data-feather="credit-card"
-                                class="svg-icon mr-2 ml-1"></i>
-                            My Balance</a>
-                        <a class="dropdown-item" href="javascript:void(0)"><i data-feather="mail"
-                                class="svg-icon mr-2 ml-1"></i>
-                            Inbox</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="javascript:void(0)"><i data-feather="settings"
-                                class="svg-icon mr-2 ml-1"></i>
-                            Account Setting</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="javascript:void(0)"><i data-feather="power"
+                        <a class="dropdown-item" href="{{ route('logout') }}"><i data-feather="power"
                                 class="svg-icon mr-2 ml-1"></i>
                             Logout</a>
-                        <div class="dropdown-divider"></div>
-                        <div class="pl-4 p-3"><a href="javascript:void(0)" class="btn btn-sm btn-info">View
-                                Profile</a></div>
+
                     </div>
                 </li>
                 <!-- ============================================================== -->

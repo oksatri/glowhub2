@@ -3,8 +3,8 @@
 @section('content')
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h1 class="h2 mb-1" style="color:#2D3748; font-weight:600;">Edit Content</h1>
-            <p class="text-muted small mb-0">Edit an existing content section.</p>
+            <h1 class="h2 mb-1" style="color: #2D3748; font-weight:600;">Edit Content</h1>
+            <p class="text-muted small mb-0">Update an existing content section — elegant and simple.</p>
         </div>
         <a href="{{ url('content-management') }}" class="btn px-3 py-2" style="background:white; border:1px solid #E5E7EB; color:#374151;">
             <i class="fas fa-arrow-left me-2"></i>Back to list
@@ -59,6 +59,8 @@
                                 <label class="form-label">Section Type</label>
                                 <select name="section_type"
                                     class="form-select {{ $errors->has('section_type') ? 'is-invalid' : '' }}">
+                                    <option value="">
+                                        None</option>
                                     <option value="content"
                                         {{ old('section_type', $content->section_type) == 'content' ? 'selected' : '' }}>
                                         Content</option>
@@ -165,14 +167,13 @@
                             </div>
                         </div>
 
-                        <!-- Details area (for edit) -->
+                        <!-- Content Details: shown only when section_type == content -->
                         <div id="details-area"
                             style="display: {{ old('section_type', $content->section_type) == 'content' ? 'block' : 'none' }};">
                             <hr>
-                            <h5>Section Details <small class="text-muted">(found {{ count($content->details ?? []) }}
-                                    details)</small></h5>
-                            <p class="text-muted small">Add or edit detail rows. Category "about" uses an image instead of
-                                an icon.</p>
+                            <h5>Section Details</h5>
+                            <p class="text-muted small">Add one or more detail rows for this content section. For category
+                                "about" you'll provide an image instead of an icon and may add additional JSON/text.</p>
 
                             <div class="mb-3 d-flex gap-2 align-items-center">
                                 <button type="button" id="add-detail" class="btn btn-sm btn-outline-primary">Add
@@ -190,8 +191,8 @@
                                                 <small class="text-muted ms-2">({{ $det['category'] ?? 'feature' }})</small>
                                             </div>
                                             <div>
-                                                <button type="button" class="btn btn-sm btn-outline-secondary me-1 toggle-detail">Toggle</button>
-                                                <button type="button" class="btn btn-sm btn-outline-danger remove-detail">×</button>
+                                                <button type="button" class="btn btn-sm btn-outline-secondary me-1 toggle-detail"><i class="fas fa-minus"></i></button>
+                                                <button type="button" class="btn btn-sm btn-outline-danger remove-detail"><i class="fas fa-trash"></i></button>
                                             </div>
                                         </div>
                                         <div class="card-body p-3 detail-body">
@@ -201,8 +202,6 @@
                                                     <select name="details[{{ $i }}][category]" class="form-select detail-category">
                                                         <option value="about" {{ isset($det['category']) && $det['category'] == 'about' ? 'selected' : '' }}>About</option>
                                                         <option value="feature" {{ isset($det['category']) && $det['category'] == 'feature' ? 'selected' : '' }}>Feature</option>
-                                                        <option value="team" {{ isset($det['category']) && $det['category'] == 'team' ? 'selected' : '' }}>Team</option>
-                                                        <option value="faq" {{ isset($det['category']) && $det['category'] == 'faq' ? 'selected' : '' }}>FAQ</option>
                                                         <option value="custom" {{ isset($det['category']) && $det['category'] == 'custom' ? 'selected' : '' }}>Custom</option>
                                                     </select>
                                                 </div>
@@ -216,7 +215,9 @@
                                                     <label class="form-label small">Image (for About)</label>
                                                     <input type="file" name="details[{{ $i }}][image]" class="form-control">
                                                     @if (!empty($det['image']))
-                                                        <div class="small mt-1">Current: <a href="{{ asset('storage/' . $det['image']) }}" target="_blank">view</a></div>
+                                                        <div class="small mt-1">Current: <a href="{{ asset('storage/' . $det['image']) }}" class="btn btn-sm btn-primarybtn btn-sm btn-outline-primary" target="_blank">view</a></div>
+                                                    @else
+                                                        <div class="small mt-1 text-muted">No image uploaded.</div>
                                                     @endif
                                                 </div>
 
@@ -262,8 +263,10 @@
                                     @if ($errors->has('image'))
                                         <div class="invalid-feedback">{{ $errors->first('image') }}</div>
                                     @endif
-                                    @if ($content->image)
-                                        <div class="small mt-1">Current: <a href="{{ asset('storage/' . $content->image) }}" target="_blank">view</a></div>
+                                    @if (!empty($content->image))
+                                        <div class="small mt-1">Current: <a class="btn btn-sm btn-primarybtn btn-sm btn-outline-primary" href="{{ asset('storage/' . $content->image) }}" target="_blank">View</a></div>
+                                    @else
+                                        <div class="small mt-1 text-muted">No image uploaded.</div>
                                     @endif
                                 </div>
 
@@ -382,8 +385,8 @@
                                 <small class="text-muted ms-2">(${category})</small>
                             </div>
                             <div>
-                                <button type="button" class="btn btn-sm btn-outline-secondary me-1 toggle-detail">Toggle</button>
-                                <button type="button" class="btn btn-sm btn-outline-danger remove-detail">×</button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary me-1 toggle-detail"><i class="fas fa-minus"></i></button>
+                                                <button type="button" class="btn btn-sm btn-outline-danger remove-detail"><i class="fas fa-trash"></i></button>
                             </div>
                         </div>
                         <div class="card-body p-3 detail-body">

@@ -184,12 +184,12 @@
                                             </form>
                                         @endif
 
-                                        <form action="{{ url('content-management/' . $content->id) }}" method="POST" class="d-inline">
+                                        <form action="{{ url('content-management/' . $content->id) }}" method="POST" class="d-inline delete-form">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-sm d-inline-flex align-items-center"
+                                            <button type="button" class="btn btn-sm d-inline-flex align-items-center delete-btn"
                                                     style="background: #FEE2E2; border: 1px solid #EF4444; color: #991B1B; font-weight: 500; padding: 0.5rem 1rem;"
-                                                    onclick="return confirm('Are you sure you want to delete this content? This action cannot be undone.')">
+                                                    data-id="{{ $content->id }}" data-title="{{ $content->title }}">
                                                 <i class="fas fa-trash-alt me-2 opacity-70"></i> Delete
                                             </button>
                                         </form>
@@ -230,3 +230,38 @@
     </div>
 
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle delete button clicks
+        const deleteButtons = document.querySelectorAll('.delete-btn');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const contentId = this.dataset.id;
+                const contentTitle = this.dataset.title;
+
+                if (confirm(`Are you sure you want to delete "${contentTitle}"? This action cannot be undone.`)) {
+                    // Find the parent form and submit it
+                    const form = this.closest('.delete-form');
+                    if (form) {
+                        form.submit();
+                    }
+                }
+            });
+        });
+
+        // Auto-hide alerts after 5 seconds
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            setTimeout(() => {
+                const closeButton = alert.querySelector('.btn-close');
+                if (closeButton) {
+                    closeButton.click();
+                }
+            }, 5000);
+        });
+    });
+</script>
+@endpush

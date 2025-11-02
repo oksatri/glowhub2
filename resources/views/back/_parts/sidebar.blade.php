@@ -8,18 +8,18 @@
                         aria-expanded="false"><i data-feather="home" class="feather-icon"></i><span
                             class="hide-menu">Dashboard</span></a>
                 </li>
-                <li class="list-divider"></li>
+                {{-- <li class="list-divider"></li> --}}
                 {{-- <li class="nav-small-cap"><span class="hide-menu">Mater Data</span></li> --}}
 
                 <li class="sidebar-item"> <a class="sidebar-link" href="{{ url('content-management') }}"
                         aria-expanded="false"><i data-feather="tag" class="feather-icon"></i><span
                             class="hide-menu">Content Management
                         </span></a>
+                <li class="sidebar-item"> <a class="sidebar-link" target="_blank" href="{{ url('/') }}"
+                        aria-expanded="false"><i data-feather="tag" class="feather-icon"></i><span
+                            class="hide-menu">Visit Website
+                        </span></a>
                 </li>
-                <li class="list-divider"></li>
-                <li class="sidebar-item"> <a class="sidebar-link sidebar-link" href="{{ route('logout') }}"
-                        aria-expanded="false"><i data-feather="log-out" class="feather-icon"></i><span
-                            class="hide-menu">Logout</span></a></li>
             </ul>
         </nav>
         <!-- End Sidebar navigation -->

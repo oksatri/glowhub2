@@ -52,6 +52,8 @@
                                 <label class="form-label">Section Type</label>
                                 <select name="section_type"
                                     class="form-select {{ $errors->has('section_type') ? 'is-invalid' : '' }}">
+                                    <option value="">
+                                        None</option>
                                     <option value="content" {{ old('section_type') == 'content' ? 'selected' : '' }}>
                                         Content</option>
                                     <option value="product" {{ old('section_type') == 'product' ? 'selected' : '' }}>
@@ -173,8 +175,8 @@
                                                     <small class="text-muted ms-2">({{ $det['category'] ?? 'feature' }})</small>
                                                 </div>
                                                 <div>
-                                                    <button type="button" class="btn btn-sm btn-outline-secondary me-1 toggle-detail">Toggle</button>
-                                                    <button type="button" class="btn btn-sm btn-outline-danger remove-detail">×</button>
+                                                    <button type="button" class="btn btn-sm btn-outline-secondary me-1 toggle-detail"><i class="fas fa-minus"></i></button>
+                                                <button type="button" class="btn btn-sm btn-outline-danger remove-detail"><i class="fas fa-trash"></i></button>
                                                 </div>
                                             </div>
                                             <div class="card-body p-3 detail-body">
@@ -364,8 +366,8 @@
                                 <small class="text-muted ms-2">(${category})</small>
                             </div>
                             <div>
-                                <button type="button" class="btn btn-sm btn-outline-secondary me-1 toggle-detail">Toggle</button>
-                                <button type="button" class="btn btn-sm btn-outline-danger remove-detail">×</button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary me-1 toggle-detail"><i class="fas fa-minus"></i></button>
+                                                <button type="button" class="btn btn-sm btn-outline-danger remove-detail"><i class="fas fa-trash"></i></button>
                             </div>
                         </div>
                         <div class="card-body p-3 detail-body">
