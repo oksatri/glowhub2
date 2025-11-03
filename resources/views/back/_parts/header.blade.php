@@ -13,7 +13,8 @@
                     <b class="logo-icon">
                         <img src="{{ asset('images/logo/logo_saja.png') }}" alt="GlowHub" />
                     </b>
-                    <span class="logo-text" style="font-family: 'Poppins', sans-serif !important; font-weight: bold; color: #5A189A;">
+                    <span class="logo-text"
+                        style="font-family: 'Poppins', sans-serif !important; font-weight: bold; color: #5A189A;">
                         GlowHub
                     </span>
                 </a>
@@ -143,16 +144,20 @@
                             $profile = $user->profile_image ?? null;
                             if ($profile) {
                                 // if it's a full URL use it, otherwise assume it's stored in storage/app/public
-                                $src = filter_var($profile, FILTER_VALIDATE_URL) ? $profile : asset('storage/' . ltrim($profile, '/'));
+                                $src = filter_var($profile, FILTER_VALIDATE_URL)
+                                    ? $profile
+                                    : asset('storage/' . ltrim($profile, '/'));
                             } else {
                                 $src = asset('admin/assets/images/users/profile-pic.jpg');
                             }
                         @endphp
                         <img src="{{ $src }}" alt="{{ $user->name }}" class="rounded-circle" width="40">
-                        <span class="ml-2 d-none d-lg-inline-block"><span>Hello,</span> <span class="text-dark">{{ auth()->user()->name }}</span> <i data-feather="chevron-down" class="svg-icon"></i></span>
+                        <span class="ml-2 d-none d-lg-inline-block"><span>Hello,</span> <span
+                                class="text-dark">{{ auth()->user()->name }}</span> <i data-feather="chevron-down"
+                                class="svg-icon"></i></span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right user-dd animated flipInY">
-                        <a class="dropdown-item" href="javascript:void(0)"><i data-feather="user"
+                        <a class="dropdown-item" href="{{ route('profile.edit') }}"><i data-feather="user"
                                 class="svg-icon mr-2 ml-1"></i>
                             My Profile</a>
                         <div class="dropdown-divider"></div>

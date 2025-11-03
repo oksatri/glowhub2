@@ -11,14 +11,27 @@
                 {{-- <li class="list-divider"></li> --}}
                 {{-- <li class="nav-small-cap"><span class="hide-menu">Mater Data</span></li> --}}
 
-                <li class="sidebar-item"> <a class="sidebar-link" href="{{ url('content-management') }}"
-                        aria-expanded="false"><i data-feather="tag" class="feather-icon"></i><span
-                            class="hide-menu">Content Management
-                        </span></a>
-                <li class="sidebar-item"> <a class="sidebar-link" target="_blank" href="{{ url('/') }}"
-                        aria-expanded="false"><i data-feather="tag" class="feather-icon"></i><span
-                            class="hide-menu">Visit Website
-                        </span></a>
+                <li class="sidebar-item">
+                    <a class="sidebar-link {{ request()->is('content-management*') ? 'active' : '' }}"
+                        href="{{ url('content-management') }}" aria-expanded="false">
+                        <i data-feather="file-text" class="feather-icon"></i>
+                        <span class="hide-menu">Content Management</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item">
+                    <a class="sidebar-link {{ request()->is('testimonials*') ? 'active' : '' }}"
+                        href="{{ url('testimonials') }}" aria-expanded="false">
+                        <i data-feather="star" class="feather-icon"></i>
+                        <span class="hide-menu">Testimonials</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item">
+                    <a class="sidebar-link" target="_blank" href="{{ url('/') }}" aria-expanded="false">
+                        <i data-feather="external-link" class="feather-icon"></i>
+                        <span class="hide-menu">Visit Website</span>
+                    </a>
                 </li>
             </ul>
         </nav>

@@ -24,7 +24,10 @@
 
     <style>
         /* Fix for Font Awesome icons */
-        .fas, .far, .fa, .fab {
+        .fas,
+        .far,
+        .fa,
+        .fab {
             font-family: "Font Awesome 6 Free" !important;
         }
 
@@ -57,9 +60,11 @@
             .navbar-header {
                 padding: 0 10px;
             }
+
             .logo-icon img {
                 max-width: 30px !important;
             }
+
             .logo-text {
                 font-size: 1rem;
             }
@@ -69,6 +74,7 @@
             .logo-icon img {
                 max-width: 25px !important;
             }
+
             .logo-text {
                 font-size: 0.9rem;
             }
@@ -83,10 +89,12 @@
             .container-fluid {
                 padding: 1rem !important;
             }
+
             .card-body {
                 padding: 1.25rem !important;
             }
-            .page-wrapper > .container-fluid {
+
+            .page-wrapper>.container-fluid {
                 min-height: calc(100vh - 180px);
             }
         }
@@ -116,28 +124,37 @@
         <div class="page-wrapper">
 
             <div class="container-fluid">
-                @if(session('success'))
+                @if (session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" onclick="this.closest('.alert').style.display='none';"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
+                            onclick="this.closest('.alert').style.display='none';">
+                            <i class="fas fa-times"></i>
+                        </button>
                     </div>
                 @endif
 
-                @if(session('error'))
+                @if (session('error'))
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                         <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" onclick="this.closest('.alert').style.display='none';"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
+                            onclick="this.closest('.alert').style.display='none';">
+                            <i class="fas fa-times"></i>
+                        </button>
                     </div>
                 @endif
 
-                @if($errors->any())
+                @if ($errors->any())
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
                         <ul class="mb-0">
-                            @foreach($errors->all() as $error)
+                            @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
                             @endforeach
                         </ul>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" onclick="this.closest('.alert').style.display='none';"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
+                            onclick="this.closest('.alert').style.display='none';">
+                            <i class="fas fa-times"></i>
+                        </button>
                     </div>
                 @endif
 

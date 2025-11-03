@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Front;
 
-use Illuminate\Http\Request;
-use App\Models\HeroSection;
-use App\Models\HowItWork;
-use App\Models\Service;
-use App\Models\Testimonial;
 use App\Models\Content;
+use App\Models\Service;
+use App\Models\HowItWork;
+use App\Models\HeroSection;
+use App\Models\Testimonial;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class HomeController extends Controller
 {
@@ -28,12 +29,6 @@ class HomeController extends Controller
         // Get featured content/articles
         $featuredContent = Content::where('status', 'published')->take(3)->get();
 
-        return view('home', compact(
-            'heroSection',
-            'howItWorksSteps',
-            'featuredServices',
-            'testimonials',
-            'featuredContent'
-        ));
+        return view('front.home');
     }
 }
