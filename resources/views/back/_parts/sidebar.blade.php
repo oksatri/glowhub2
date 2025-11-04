@@ -28,6 +28,14 @@
                 </li>
 
                 <li class="sidebar-item">
+                    <a class="sidebar-link {{ request()->is('muas*') ? 'active' : '' }}" href="{{ url('muas') }}"
+                        aria-expanded="false">
+                        <i data-feather="box" class="feather-icon"></i>
+                        <span class="hide-menu">MUA Management</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item">
                     <a class="sidebar-link {{ request()->is('users*') ? 'active' : '' }}" href="{{ url('users') }}"
                         aria-expanded="false">
                         <i data-feather="users" class="feather-icon"></i>

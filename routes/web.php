@@ -6,6 +6,8 @@ use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Front\MuaController;
 use App\Http\Controllers\Back\ContentController;
+use App\Http\Controllers\Back\MuaController as BackMuaController;
+use App\Http\Controllers\Back\MuaServiceController as BackMuaServiceController;
 use App\Http\Controllers\Back\DashboardController;
 use App\Http\Controllers\Back\ProfileController;
 use App\Http\Controllers\Back\TestimonialController;
@@ -61,6 +63,13 @@ Route::middleware('auth')->group(function () {
         Route::post('settings', [SiteSettingController::class, 'update'])->name('admin.settings.update');
         // Users management
         Route::resource('users', UserController::class, ['as' => 'admin']);
+
+        // MUA management
+        Route::resource('muas', BackMuaController::class, ['as' => 'admin']);
+        // Nested MUA services (muas/{mua}/services)
+        Route::post('muas/{mua}/services', [BackMuaServiceController::class, 'store'])->name('admin.muas.services.store');
+        Route::put('muas/{mua}/services/{id}', [BackMuaServiceController::class, 'update'])->name('admin.muas.services.update');
+        Route::delete('muas/{mua}/services/{id}', [BackMuaServiceController::class, 'destroy'])->name('admin.muas.services.destroy');
     });
 
     // MUA routes

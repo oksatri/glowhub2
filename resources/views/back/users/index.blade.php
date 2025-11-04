@@ -114,7 +114,21 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="text-center text-muted">No users found.</td>
+                            <td colspan="7" class="text-center py-16">
+                                <div class="d-flex flex-column align-items-center">
+                                    <div class="empty-state mb-4 p-3 rounded-circle" style="background: #F3F4F6;">
+                                        <i class="fas fa-file-alt fa-4x" style="color: #9CA3AF;"></i>
+                                    </div>
+                                    <h5 class="fw-normal mb-2" style="color: #374151; font-size: 1.25rem;">No User Found
+                                    </h5>
+                                    <p style="color: #6B7280; font-size: 1rem;" class="mb-4">Start by adding your first
+                                        User</p>
+                                    <a href="{{ url('users/create') }}" class="btn px-4 py-2 rounded-pill text-white"
+                                        style="background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%); border: none;">
+                                        <i class="fas fa-plus me-2"></i> Create New User
+                                    </a>
+                                </div>
+                            </td>
                         </tr>
                     @endforelse
                 </tbody>
