@@ -14,9 +14,20 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('images/logo/logo_saja.png') }}">
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/logo/logo_saja.png') }}">
-    <link rel="apple-touch-icon" href="{{ asset('images/logo/logo_saja.png') }}">
+    @php
+        $__settings = \App\Models\SiteSetting::first();
+        $__favicon = null;
+        if ($__settings && !empty($__settings->favicon)) {
+            $__favicon = asset('storage/' . $__settings->favicon);
+        } elseif ($__settings && !empty($__settings->logo)) {
+            $__favicon = asset('storage/' . $__settings->logo);
+        } else {
+            $__favicon = asset('images/logo/logo_saja.png');
+        }
+    @endphp
+    <link rel="icon" type="image/png" href="{{ $__favicon }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ $__favicon }}">
+    <link rel="apple-touch-icon" href="{{ $__favicon }}">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
@@ -28,7 +39,7 @@
         rel="stylesheet">
 
     <!-- Font Awesome -->
-        <!-- Font Awesome -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Animate.css -->

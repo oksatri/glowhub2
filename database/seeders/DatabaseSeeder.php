@@ -24,5 +24,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ContentSeeder::class);
         // Testimonials shown on the front page
         $this->call(TestimonialSeeder::class);
+        // Site-wide settings (single row)
+        $this->call(SiteSettingsSeeder::class);
     }
 }

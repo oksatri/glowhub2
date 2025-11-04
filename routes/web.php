@@ -9,6 +9,8 @@ use App\Http\Controllers\Back\ContentController;
 use App\Http\Controllers\Back\DashboardController;
 use App\Http\Controllers\Back\ProfileController;
 use App\Http\Controllers\Back\TestimonialController;
+use App\Http\Controllers\Back\SiteSettingController;
+use App\Http\Controllers\Back\UserController;
 use App\Http\Controllers\Front\HomeController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -54,6 +56,11 @@ Route::middleware('auth')->group(function () {
         Route::post('content-management/{id}/unpublish', [ContentController::class, 'unpublish'])->name('content.unpublish');
         // Testimonials resource
         Route::resource('testimonials', TestimonialController::class, ['as' => 'admin']);
+        // Site settings (single page)
+        Route::get('settings', [SiteSettingController::class, 'index'])->name('admin.settings.index');
+        Route::post('settings', [SiteSettingController::class, 'update'])->name('admin.settings.update');
+        // Users management
+        Route::resource('users', UserController::class, ['as' => 'admin']);
     });
 
     // MUA routes

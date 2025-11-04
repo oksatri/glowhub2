@@ -9,13 +9,24 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/logo/logo_saja.png') }}">
+    @php
+        $__settings = \App\Models\SiteSetting::first();
+        $__favicon = null;
+        if ($__settings && !empty($__settings->favicon)) {
+            $__favicon = asset('storage/' . $__settings->favicon);
+        } elseif ($__settings && !empty($__settings->logo)) {
+            $__favicon = asset('storage/' . $__settings->logo);
+        } else {
+            $__favicon = asset('images/logo/logo_saja.png');
+        }
+    @endphp
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ $__favicon }}">
     <title>Admin GlowHub - @yield('page-title', 'Dashboard')</title>
     <!-- Custom CSS -->
     <link href="{{ asset('admin/assets/extra-libs/c3/c3.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/assets/libs/chartist/dist/chartist.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('admin/assets/extra-libs/jvector/jquery-jvectormap-2.0.2.css') }}" rel="stylesheet">
-    <!-- Load Font Awesome from CDN -->
+    <link href="{{ asset('admin/assets/extra-libs/jvector/jquery-jvectormap-2.0.2.css') }}" re <!-- Load Font Awesome
+        from CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Custom CSS -->
@@ -24,8 +35,9 @@
 
     <style>
         /* Fix for Font Awesome icons */
-        .fas,
-        .far,
+
+        .f a s,
+        . f ar,
         .fa,
         .fab {
             font-family: "Font Awesome 6 Free" !important;
@@ -58,10 +70,12 @@
 
         @media (max-width: 768px) {
             .navbar-header {
+
                 padding: 0 10px;
             }
 
             .logo-icon img {
+
                 max-width: 30px !important;
             }
 
@@ -72,6 +86,7 @@
 
         @media (max-width: 576px) {
             .logo-icon img {
+
                 max-width: 25px !important;
             }
 
@@ -86,12 +101,12 @@
 
         /* Mobile responsiveness fixes */
         @media (max-width: 768px) {
-            .container-fluid {
+            .container -fluid {
                 padding: 1rem !important;
             }
 
-            .card-body {
-                padding: 1.25rem !important;
+            .car d-body {
+                pdding: 1.25rem !important;
             }
 
             .page-wrapper>.container-fluid {
@@ -127,67 +142,71 @@
                 @if (session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
                         <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
-                            onclick="this.closest('.alert').style.display='none';">
-                            <i class="fas fa-times"></i>
-                        </button>
+
+                        <button type="button" class="btn-c
+                           <i class="fas fa-times"></i>
+                            lose" data-bs-dismiss="alert" aria-label="Close"
+                            onclick="this.closest('.alert ').style.display='none';"></button>
                     </div>
                 @endif
 
                 @if (session('error'))
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
-                            onclick="this.closest('.alert').style.display='none';">
-                            <i class="fas fa-times"></i>
-                        </button>
+                        <i class="fas fa-exclamation-circle me-2"></i>{{ session('error
+                        ') }}
+                        <button type="button" cla <i class="fas fa-times"></i>
+                            ss="btn-close" data-bs-dismiss="alert" aria-label="Close"
+                            onclick="this.closes t('.alert').style.display='none';"></button>
                     </div>
                 @endif
 
                 @if ($errors->any())
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <div class="alert alert-danger a lert-dismissible fade show" role="alert">
                         <ul class="mb-0">
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
                             @endforeach
+
                         </ul>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
-                            onclick="this.closest('.alert').style.display='none';">
-                            <i class="fas fa-times"></i>
-                        </button>
+                        <button type <i class="fas fa-times"></i>
+                            ="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
+                            onclick="this.closest('.alert').style.display='none';"></button>
                     </div>
                 @endif
 
-                @yield('content')
+
+
+                <div class="container-fluid">
+                    @yield('content')
+                </div>
+
+                @include('back._parts.footer')
+
             </div>
 
-            @include('back._parts.footer')
-
         </div>
-
-    </div>
-    <!-- ============================================================== -->
-    <script src="{{ asset('admin/assets/libs/jquery/dist/jquery.min.js') }}"></script>
-    <script src="{{ asset('admin/assets/libs/popper.js/dist/umd/popper.min.js') }}"></script>
-    <script src="{{ asset('admin/assets/libs/bootstrap/dist/js/bootstrap.min.js') }}"></script>
-    <!-- apps -->
-    <!-- apps -->
-    <script src="{{ asset('admin/dist/js/app-style-switcher.js') }}"></script>
-    <script src="{{ asset('admin/dist/js/feather.min.js') }}"></script>
-    <script src="{{ asset('admin/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js') }}"></script>
-    <script src="{{ asset('admin/dist/js/sidebarmenu.js') }}"></script>
-    <!--Custom JavaScript -->
-    <script src="{{ asset('admin/dist/js/custom.min.js') }}"></script>
-    <!--This page JavaScript -->
-    <script src="{{ asset('admin/assets/extra-libs/c3/d3.min.js') }}"></script>
-    <script src="{{ asset('admin/assets/extra-libs/c3/c3.min.js') }}"></script>
-    <script src="{{ asset('admin/assets/libs/chartist/dist/chartist.min.js') }}"></script>
-    <script src="{{ asset('admin/assets/libs/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js') }}"></script>
-    <script src="{{ asset('admin/assets/extra-libs/jvector/jquery-jvectormap-2.0.2.min.js') }}"></script>
-    <script src="{{ asset('admin/assets/extra-libs/jvector/jquery-jvectormap-world-mill-en.js') }}"></script>
-    <script src="{{ asset('admin/dist/js/pages/dashboards/dashboard1.min.js') }}"></script>
-    {{-- Place for page-specific pushed scripts --}}
-    @stack('scripts')
+        <!-- ============================================================== -->
+        <script src="{{ asset('admin/assets/libs/jquery/dist/jquery.min.js') }}"></script>
+        <script src="{{ asset('admin/assets/libs/popper.js/dist/umd/popper.min.js') }}"></script>
+        <script src="{{ asset('admin/assets/libs/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+        <!-- apps -->
+        <!-- apps -->
+        <script src="{{ asset('admin/dist/js/app-style-switcher.js') }}"></script>
+        <script src="{{ asset('admin/dist/js/feather.min.js') }}"></script>
+        <script src="{{ asset('admin/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js') }}"></script>
+        <script src="{{ asset('admin/dist/js/sidebarmenu.js') }}"></script>
+        <!--Custom JavaScript -->
+        <script src="{{ asset('admin/dist/js/custom.min.js') }}"></script>
+        <!--This page JavaScript -->
+        <script src="{{ asset('admin/assets/extra-libs/c3/d3.min.js') }}"></script>
+        <script src="{{ asset('admin/assets/extra-libs/c3/c3.min.js') }}"></script>
+        <script src="{{ asset('admin/assets/libs/chartist/dist/chartist.min.js') }}"></script>
+        <script src="{{ asset('admin/assets/libs/chartist-plugin-tooltips/dist/chartist-plugin-tooltip.min.js') }}"></script>
+        <script src="{{ asset('admin/assets/extra-libs/jvector/jquery-jvectormap-2.0.2.min.js') }}"></script>
+        <script src="{{ asset('admin/assets/extra-libs/jvector/jquery-jvectormap-world-mill-en.js') }}"></script>
+        <script src="{{ asset('admin/dist/js/pages/dashboards/dashboard1.min.js') }}"></script>
+        {{-- Place for page-specific pushed scripts --}}
+        @stack('scripts')
 </body>
 
 </html>

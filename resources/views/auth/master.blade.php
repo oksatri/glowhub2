@@ -9,7 +9,18 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/logo/logo_saja.png') }}">
+    @php
+        $__settings = \App\Models\SiteSetting::first();
+        $__favicon = null;
+        if ($__settings && !empty($__settings->favicon)) {
+            $__favicon = asset('storage/' . $__settings->favicon);
+        } elseif ($__settings && !empty($__settings->logo)) {
+            $__favicon = asset('storage/' . $__settings->logo);
+        } else {
+            $__favicon = asset('images/logo/logo_saja.png');
+        }
+    @endphp
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ $__favicon }}">
     <title>GlowHub - Auth</title>
     <!-- Custom CSS -->
     <link href="admin/dist/css/style.min.css" rel="stylesheet">

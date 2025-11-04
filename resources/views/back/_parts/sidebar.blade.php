@@ -28,6 +28,24 @@
                 </li>
 
                 <li class="sidebar-item">
+                    <a class="sidebar-link {{ request()->is('users*') ? 'active' : '' }}" href="{{ url('users') }}"
+                        aria-expanded="false">
+                        <i data-feather="users" class="feather-icon"></i>
+                        <span class="hide-menu">User Management</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item">
+                    <a class="sidebar-link {{ request()->is('settings') || request()->is('settings/*') ? 'active' : '' }}"
+                        href="{{ url('settings') }}" aria-expanded="false">
+                        <i data-feather="settings" class="feather-icon"></i>
+                        <span class="hide-menu">Settings</span>
+                    </a>
+                </li>
+
+                <li class="list-divider"></li>
+
+                <li class="sidebar-item">
                     <a class="sidebar-link" target="_blank" href="{{ url('/') }}" aria-expanded="false">
                         <i data-feather="external-link" class="feather-icon"></i>
                         <span class="hide-menu">Visit Website</span>
