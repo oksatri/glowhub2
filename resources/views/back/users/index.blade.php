@@ -19,6 +19,50 @@
                 <div class="alert alert-success">{{ session('success') }}</div>
             @endif
 
+            <!-- Search & Filter Card -->
+            <div class="card border-0 shadow-sm mb-4" style="background: linear-gradient(to right, #F9FAFB, #F3F4F6);">
+                <div class="card-body px-4 py-4">
+                    <form method="GET" action="{{ url('users') }}" class="mb-0">
+                        <div class="row g-3 align-items-center">
+                            <div class="col-lg-5 col-md-6">
+                                <div class="input-group input-group-lg">
+                                    <span class="input-group-text bg-white border-0 ps-4">
+                                        <i class="fas fa-search" style="color: #9CA3AF;"></i>
+                                    </span>
+                                    <input type="text" name="name" class="form-control border-0 ps-2 shadow-none"
+                                        style="background: white; font-size: 0.95rem;"
+                                        placeholder="Search by name, username, or email..." value="{{ request('name') }}">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-2 col-md-6">
+                                <select name="role" class="form-select shadow-none border-0"
+                                    style="background: white; height: 48px; font-size: 0.95rem;">
+                                    <option value="">All Roles</option>
+                                    <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                                    <option value="mua" {{ request('role') == 'mua' ? 'selected' : '' }}>MUA</option>
+                                    <option value="member" {{ request('role') == 'member' ? 'selected' : '' }}>Member
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="col-lg-3 col-md-6 d-flex gap-2">
+                                <button type="submit" class="btn flex-fill py-2 text-white"
+                                    style="background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%); border: none; font-size: 0.95rem;">
+                                    <i class="fas fa-filter me-2 opacity-75"></i>Apply Filter
+                                </button>
+                                @if (request()->hasAny(['name', 'role']))
+                                    <a href="{{ url('users') }}" class="btn py-2 px-3"
+                                        style="background: white; border: 1px solid #E5E7EB; color: #4B5563;">
+                                        <i class="fas fa-times opacity-50"></i>
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <table class="table table-hover">
                 <thead>
                     <tr>
@@ -77,7 +121,7 @@
             </table>
 
             <div class="mt-3">
-                {{ $users->links() }}
+                {{ $users->appends(request()->query())->links() }}
             </div>
         </div>
     </div>
