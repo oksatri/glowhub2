@@ -136,7 +136,7 @@
                             <h4 class="mb-0">
                                 <i class="fas fa-calendar-alt me-2"></i>Book Your Session
                             </h4>
-                            <p class="mb-0 small opacity-75">Pilih tanggal dan waktu yang Anda inginkan</p>
+                            <p class="mb-0 small opacity-75">Choose your preferred date and time</p>
                         </div>
 
                         <div class="card-body p-4">

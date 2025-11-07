@@ -19,7 +19,7 @@
         <a href="{{ url('testimonials/create') }}" class="btn px-4 py-2 rounded-pill shadow-sm text-white"
             style="background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%); border: none; transition: all 0.3s ease;">
             <i class="fas fa-plus-circle me-2"></i>
-            Create Testimonial
+            Create New Testimonial
         </a>
     </div>
 
@@ -225,7 +225,7 @@
                                             <a href="{{ url('testimonials/create') }}"
                                                 class="btn px-4 py-2 rounded-pill text-white"
                                                 style="background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%); border: none;">
-                                                <i class="fas fa-plus me-2"></i> Create Testimonial
+                                                <i class="fas fa-plus me-2"></i> Create New Testimonial
                                             </a>
                                         </div>
                                     </td>

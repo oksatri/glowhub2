@@ -26,5 +26,8 @@ class DatabaseSeeder extends Seeder
         $this->call(TestimonialSeeder::class);
         // Site-wide settings (single row)
         $this->call(SiteSettingsSeeder::class);
+        // Large administrative regions (provinces/regencies/districts/villages)
+        // Requires database/sql/wilayah_indonesia_pg.sql to exist in the project
+        $this->call(WilayahSeeder::class);
     }
 }

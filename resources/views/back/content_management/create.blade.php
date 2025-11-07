@@ -39,49 +39,6 @@
                         style="background:transparent; color:#6B7280;">Cancel</a>
                 </div>
         </div>
-
-        <div class="col-lg-4">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body">
-                    <h6 class="card-title" style="color:#111827; font-weight:600;">Image / Media</h6>
-                    <p class="text-muted small">Upload an image that represents this section. Ideal size depends on your
-                        layout.</p>
-                    <div class="mb-3">
-                        <input type="file" name="image"
-                            class="form-control {{ $errors->has('image') ? 'is-invalid' : '' }}">
-                        @if ($errors->has('image'))
-                            <div class="invalid-feedback">{{ $errors->first('image') }}</div>
-                        @endif
-                    </div>
-
-                    <hr>
-
-                    <h6 class="card-title" style="color:#111827; font-weight:600;">Meta & Settings</h6>
-                    <div class="mb-3">
-                        <label class="form-label small">Slug (optional)</label>
-                        <input type="text" name="slug"
-                            class="form-control {{ $errors->has('slug') ? 'is-invalid' : '' }}" value="{{ old('slug') }}"
-                            placeholder="auto-generated from title">
-                        @if ($errors->has('slug'))
-                            <div class="invalid-feedback">{{ $errors->first('slug') }}</div>
-                        @endif
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label small">Excerpt (for SEO)</label>
-                        <textarea name="excerpt" rows="3" class="form-control {{ $errors->has('excerpt') ? 'is-invalid' : '' }}">{{ old('excerpt') }}</textarea>
-                        @if ($errors->has('excerpt'))
-                            <div class="invalid-feedback">{{ $errors->first('excerpt') }}</div>
-                        @endif
-                    </div>
-
-                    <div class="mb-3 text-muted small">
-                        <strong>Tip:</strong> Use buttons to add primary actions. Keep descriptions concise for best
-                        results.
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
     </form>

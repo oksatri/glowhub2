@@ -120,3 +120,46 @@ a, .nav-link {
 .text-dark, .text-muted {
   color: var(--gh-dark) !important;
 }
+
+/* Admin: improve select (form-select) appearance
+   Some admin templates used utility classes like shadow-none and border-0 which
+   made selects look broken. Provide a clear admin override so selects are
+   elegant, accessible and match the front theme. */
+.form-select {
+  padding: .5rem .75rem !important;
+  border: 1px solid rgba(15,23,42,0.08) !important; /* subtle warm gray */
+  border-radius: 8px !important;
+  background-color: #ffffff !important;
+  color: var(--gh-dark) !important;
+  box-shadow: none !important;
+  height: calc(1.5em + .75rem + 2px) !important;
+  line-height: 1.4 !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  background-image: var(--bs-form-select-bg-img, none) !important;
+  background-repeat: no-repeat !important;
+  background-position: right .75rem center !important;
+}
+
+.form-select:focus {
+  outline: none !important;
+  border-color: rgba(248,187,189,0.6) !important; /* accent focus */
+  box-shadow: 0 0 0 0.15rem rgba(248,187,189,0.12) !important;
+}
+
+/* If templates use utility classes that remove shadow/border, re-add a tasteful border */
+.form-select.shadow-none, .form-select.border-0, .form-select.shadow-none.border-0 {
+  border: 1px solid rgba(15,23,42,0.08) !important;
+}
+
+/* small helper for disabled state readability */
+.form-select:disabled {
+  background-color: #f8f8f8 !important;
+  color: #9ca3af !important;
+}
+
+/* ensure selects inside cards stretch full width */
+.card .form-select {
+  width: 100% !important;
+}

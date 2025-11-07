@@ -140,7 +140,7 @@ class MuaController extends Controller
             'times' => ['Pagi (06:00-12:00)', 'Siang (12:00-18:00)', 'Malam (18:00-24:00)']
         ];
 
-        return view('templates.front.mua-listing', compact('items', 'pagination', 'filterOptions'));
+        return view('front.mua-listing', compact('items', 'pagination', 'filterOptions'));
     }
 
     /**
@@ -211,7 +211,7 @@ class MuaController extends Controller
             asset('images/product-item6.jpg')
         ];
 
-        return view('templates.front.mua-detail', compact('mua', 'portfolio'));
+        return view('front.mua-detail', compact('mua', 'portfolio'));
     }
 
     /**

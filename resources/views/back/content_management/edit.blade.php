@@ -14,86 +14,37 @@
 
     <div class="card border-0 shadow-sm">
         <div class="card-body px-4 py-4">
-            @if (session('error'))
-                <div class="alert alert-danger">
-                    @push('scripts')
-                        <script>
-                            (function() {
-                                // Buttons area
-                                const hasButtonEl = document.getElementById('has_button');
-                                const buttonsArea = document.getElementById('buttons-area');
-                                const generateBtn = document.getElementById('generate-buttons');
-                                const buttonsCountEl = document.getElementById('buttons_count');
-                                const buttonsList = document.getElementById('buttons-list');
+            <form action="{{ url('content-management/' . $content->id) }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
 
-                                if (hasButtonEl) {
-                                    hasButtonEl.addEventListener('change', function() {
-                                        buttonsArea.style.display = this.checked ? 'block' : 'none';
-                                    });
-                                }
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
-                                function createButtonRow(idx, label = '', url = '') {
-                                    const row = document.createElement('div');
-                                    row.className = 'row g-2 align-items-center mb-2 button-row';
-                                    row.innerHTML = `
-                                    <div class="col-md-5">
-                                        <input type="text" name="buttons[${idx}][label]" class="form-control" placeholder="Label" value="${label}">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <input type="text" name="buttons[${idx}][url]" class="form-control" placeholder="URL" value="${url}">
-                                    </div>
-                                    <div class="col-md-1 text-end">
-                                        <button type="button" class="btn btn-sm btn-outline-danger remove-button">×</button>
-                                    </div>
-                                `;
-                                    return row;
-                                }
+                @include('back.content_management._form')
+                @include('back.content_management._details', ['content' => $content])
 
-                                generateBtn && generateBtn.addEventListener('click', function() {
-                                    const count = parseInt(buttonsCountEl.value) || 0;
-                                    buttonsList.innerHTML = '';
-                                    for (let i = 0; i < count; i++) {
-                                        buttonsList.appendChild(createButtonRow(i));
-                                    }
-                                });
-
-                                // delegate remove for buttons
-                                buttonsList && buttonsList.addEventListener('click', function(e) {
-                                    if (e.target && e.target.classList.contains('remove-button')) {
-                                        e.target.closest('.button-row').remove();
-                                    }
-                                });
-                            })();
-                        </script>
-                    @endpush
-
-
-                @endsection
-
-                <div class="mb-3">
-                    <label class="form-label small">Excerpt (for SEO)</label>
-                    <textarea name="excerpt" rows="3" class="form-control {{ $errors->has('excerpt') ? 'is-invalid' : '' }}">{{ old('excerpt', '') }}</textarea>
-                    @if ($errors->has('excerpt'))
-                        <div class="invalid-feedback">{{ $errors->first('excerpt') }}</div>
-                    @endif
+                <div class="mt-4 d-flex align-items-center gap-2">
+                    <button class="btn px-4 py-2 rounded-pill text-white"
+                        style="background: linear-gradient(135deg,#667EEA 0%,#764BA2 100%); border:none;">Save
+                        Changes</button>
+                    <a href="{{ url('content-management') }}" class="btn"
+                        style="background:transparent; color:#6B7280;">Cancel</a>
                 </div>
-
-                <div class="mb-3 text-muted small">
-                    <strong>Tip:</strong> Use buttons to add primary actions. Keep descriptions concise for best
-                    results.
-                </div>
-            </div>
+            </form>
+        </div>
     </div>
-</div>
-</div>
 
-</form>
-</div>
-</div>
-
-@push('scripts')
-    <script>
-        (function() {
+    @push('scripts')
+        <script>
+            (function() {
                 // Buttons area
                 const hasButtonEl = document.getElementById('has_button');
                 const buttonsArea = document.getElementById('buttons-area');
@@ -133,13 +84,13 @@
                 });
 
                 // delegate remove for buttons
-                buttonsList && buttonsList.addEventListener('click', function(e) {})();
-    </script>
-@endpush
-
-
-@endsection
-</script>
-@endpush
+                buttonsList && buttonsList.addEventListener('click', function(e) {
+                    if (e.target && e.target.classList.contains('remove-button')) {
+                        e.target.closest('.button-row').remove();
+                    }
+                });
+            })();
+        </script>
+    @endpush
 
 @endsection

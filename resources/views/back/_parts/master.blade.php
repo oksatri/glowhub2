@@ -25,8 +25,8 @@
     <!-- Custom CSS -->
     <link href="{{ asset('admin/assets/extra-libs/c3/c3.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/assets/libs/chartist/dist/chartist.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('admin/assets/extra-libs/jvector/jquery-jvectormap-2.0.2.css') }}" re <!-- Load Font Awesome
-        from CDN -->
+    <link href="{{ asset('admin/assets/extra-libs/jvector/jquery-jvectormap-2.0.2.css') }}" rel="stylesheet">
+    <!-- Load Font Awesome from CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Custom CSS -->
@@ -34,15 +34,6 @@
     <link href="{{ asset('admin/dist/css/custom-admin-override.css') }}" rel="stylesheet">
 
     <style>
-        /* Fix for Font Awesome icons */
-
-        .f a s,
-        . f ar,
-        .fa,
-        .fab {
-            font-family: "Font Awesome 6 Free" !important;
-        }
-
         /* Logo responsiveness fixes */
         .navbar-brand {
             display: flex;
@@ -70,12 +61,10 @@
 
         @media (max-width: 768px) {
             .navbar-header {
-
                 padding: 0 10px;
             }
 
             .logo-icon img {
-
                 max-width: 30px !important;
             }
 
@@ -86,7 +75,6 @@
 
         @media (max-width: 576px) {
             .logo-icon img {
-
                 max-width: 25px !important;
             }
 
@@ -95,18 +83,26 @@
             }
         }
 
+        /* Ensure FontAwesome icons use the correct font families (CDN provides fonts)
+           These are lightweight fallbacks; the CDN CSS will normally set these. */
+        .fa,
+        .fas,
+        .far {
+            font-family: "Font Awesome 6 Free" !important;
+        }
+
         .fab {
             font-family: "Font Awesome 6 Brands" !important;
         }
 
-        /* Mobile responsiveness fixes */
+        /* Mobile container fixes */
         @media (max-width: 768px) {
-            .container -fluid {
+            .container-fluid {
                 padding: 1rem !important;
             }
 
-            .car d-body {
-                pdding: 1.25rem !important;
+            .card-body {
+                padding: 1.25rem !important;
             }
 
             .page-wrapper>.container-fluid {
@@ -141,36 +137,37 @@
             <div class="container-fluid">
                 @if (session('success'))
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
-
-                        <button type="button" class="btn-c
-                           <i class="fas fa-times"></i>
-                            lose" data-bs-dismiss="alert" aria-label="Close"
-                            onclick="this.closest('.alert ').style.display='none';"></button>
+                        <i class="fas fa-check-circle me-2"></i>
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
+                            onclick="this.closest('.alert').style.display='none';">
+                            <i class="fas fa-times"></i>
+                        </button>
                     </div>
                 @endif
 
                 @if (session('error'))
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <i class="fas fa-exclamation-circle me-2"></i>{{ session('error
-                        ') }}
-                        <button type="button" cla <i class="fas fa-times"></i>
-                            ss="btn-close" data-bs-dismiss="alert" aria-label="Close"
-                            onclick="this.closes t('.alert').style.display='none';"></button>
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
+                            onclick="this.closest('.alert').style.display='none';">
+                            <i class="fas fa-times"></i>
+                        </button>
                     </div>
                 @endif
 
                 @if ($errors->any())
-                    <div class="alert alert-danger a lert-dismissible fade show" role="alert">
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
                         <ul class="mb-0">
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
                             @endforeach
-
                         </ul>
-                        <button type <i class="fas fa-times"></i>
-                            ="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
-                            onclick="this.closest('.alert').style.display='none';"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
+                            onclick="this.closest('.alert').style.display='none';">
+                            <i class="fas fa-times"></i>
+                        </button>
                     </div>
                 @endif
 

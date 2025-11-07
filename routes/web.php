@@ -68,8 +68,10 @@ Route::middleware('auth')->group(function () {
         Route::resource('muas', BackMuaController::class, ['as' => 'admin']);
         // Nested MUA services (muas/{mua}/services)
         Route::post('muas/{mua}/services', [BackMuaServiceController::class, 'store'])->name('admin.muas.services.store');
-        Route::put('muas/{mua}/services/{id}', [BackMuaServiceController::class, 'update'])->name('admin.muas.services.update');
         Route::delete('muas/{mua}/services/{id}', [BackMuaServiceController::class, 'destroy'])->name('admin.muas.services.destroy');
+        // Portfolios
+        Route::post('muas/{mua}/portfolios', [\App\Http\Controllers\Back\MuaPortfolioController::class, 'store'])->name('admin.muas.portfolios.store');
+        Route::delete('muas/{mua}/portfolios/{id}', [\App\Http\Controllers\Back\MuaPortfolioController::class, 'destroy'])->name('admin.muas.portfolios.destroy');
     });
 
     // MUA routes

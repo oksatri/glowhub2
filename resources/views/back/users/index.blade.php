@@ -9,8 +9,8 @@
                 their profile later.</p>
         </div>
         <a href="{{ url('users/create') }}" class="btn px-4 py-2 rounded-pill text-white"
-            style="background: linear-gradient(135deg,#6D28D9,#2563EB); border: none;"><i
-                class="fas fa-user-plus me-2"></i>New User</a>
+            style="background: linear-gradient(135deg,#6D28D9,#2563EB); border: none;"><i class="fas fa-user-plus me-2"></i>
+            Create New User</a>
     </div>
 
     <div class="card border-0 shadow-sm">
@@ -134,8 +134,15 @@
                 </tbody>
             </table>
 
-            <div class="mt-3">
-                {{ $users->appends(request()->query())->links() }}
+            <div class="mt-4 d-flex justify-content-between align-items-center">
+                <div style="color: #4B5563; font-size: 0.95rem;">
+                    Showing <span class="fw-medium">{{ $users->firstItem() ?? 0 }}</span> to
+                    <span class="fw-medium">{{ $users->lastItem() ?? 0 }}</span> of
+                    <span class="fw-medium">{{ $users->total() ?? 0 }}</span> entries
+                </div>
+                <div class="pagination-wrapper" style="margin: -0.25rem;">
+                    {{ $users->appends(request()->query())->links() }}
+                </div>
             </div>
         </div>
     </div>
