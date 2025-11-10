@@ -1,4 +1,7 @@
 @extends('front._parts.master')
+@section('meta_title', 'Find MUAs - ' . ($siteSetting->site_name ?? 'GlowHub'))
+@section('meta_description', $siteSetting->meta_description ?? ($siteSetting->site_tagline ?? 'Find professional makeup
+    artists in your area.'))
 @section('content')
     <!-- Hero Section -->
     <section class="py-5" style="background: linear-gradient(135deg, var(--bs-light) 0%, #fff4ed 100%);">

@@ -24,11 +24,13 @@
   const hamburger = document.querySelector(".hamburger");
   const navMenu = document.querySelector(".menu-list");
 
+  // Guard against missing DOM elements (prevents "hamburger is null" errors)
+  if (hamburger && navMenu) {
   hamburger.addEventListener("click", mobileMenu);
 
   function mobileMenu() {
-      hamburger.classList.toggle("active");
-      navMenu.classList.toggle("responsive");
+    hamburger.classList.toggle("active");
+    navMenu.classList.toggle("responsive");
   }
 
   const navLink = document.querySelectorAll(".nav-link");
@@ -36,8 +38,9 @@
   navLink.forEach(n => n.addEventListener("click", closeMenu));
 
   function closeMenu() {
-      hamburger.classList.remove("active");
-      navMenu.classList.remove("responsive");
+    hamburger.classList.remove("active");
+    navMenu.classList.remove("responsive");
+  }
   }
 
   var initScrollNav = function() {

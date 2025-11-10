@@ -21,7 +21,7 @@
         }
     @endphp
     <link rel="icon" type="image/png" sizes="16x16" href="{{ $__favicon }}">
-    <title>Admin GlowHub - @yield('page-title', 'Dashboard')</title>
+    <title>{{ ucfirst(strtolower(Auth::user()->role ?? '')) }} GlowHub - @yield('page-title', 'Dashboard')</title>
     <!-- Custom CSS -->
     <link href="{{ asset('admin/assets/extra-libs/c3/c3.min.css') }}" rel="stylesheet">
     <link href="{{ asset('admin/assets/libs/chartist/dist/chartist.min.css') }}" rel="stylesheet">

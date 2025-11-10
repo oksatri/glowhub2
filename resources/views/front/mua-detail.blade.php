@@ -1,4 +1,7 @@
 @extends('front._parts.master')
+@section('meta_title', ($mua['name'] ?? 'MUA Profile') . ' - ' . ($siteSetting->site_name ?? 'GlowHub'))
+@section('meta_description', ($mua['speciality'] ?? '') . ' • ' . ($siteSetting->meta_description ??
+    ($siteSetting->site_tagline ?? '')))
 @section('content')
     <!-- Stunning Hero Section -->
     <section class="hero-gradient position-relative overflow-hidden"

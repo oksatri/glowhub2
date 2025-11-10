@@ -75,7 +75,7 @@
             <div class="mb-3 d-flex gap-2 align-items-center">
                 <label class="form-label mb-0">Buttons count</label>
                 <input type="number" id="buttons_count" name="buttons_count" class="form-control w-auto ms-2"
-                    value="{{ old('buttons_count', 0) }}" min="0">
+                    value="{{ old('buttons_count', $content->buttons_count ?? 0) }}" min="0">
                 <button type="button" id="generate-buttons"
                     class="btn btn-sm btn-outline-primary ms-2">Generate</button>
             </div>
@@ -91,6 +91,22 @@
                             <div class="col-md-6">
                                 <input type="text" name="buttons[{{ $i }}][url]" class="form-control"
                                     placeholder="URL" value="{{ $b['url'] ?? '' }}">
+                            </div>
+                            <div class="col-md-1 text-end">
+                                <button type="button" class="btn btn-sm btn-outline-danger remove-button">×</button>
+                            </div>
+                        </div>
+                    @endforeach
+                @elseif(!empty($content->buttons) && is_array($content->buttons))
+                    @foreach ($content->buttons as $i => $b)
+                        <div class="row g-2 align-items-center mb-2 button-row">
+                            <div class="col-md-5">
+                                <input type="text" name="buttons[{{ $i }}][label]" class="form-control"
+                                    placeholder="Label" value="{{ $b['label'] ?? ($b['text'] ?? '') }}">
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" name="buttons[{{ $i }}][url]" class="form-control"
+                                    placeholder="URL" value="{{ $b['url'] ?? ($b['link'] ?? '') }}">
                             </div>
                             <div class="col-md-1 text-end">
                                 <button type="button" class="btn btn-sm btn-outline-danger remove-button">×</button>

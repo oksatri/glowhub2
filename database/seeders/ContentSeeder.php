@@ -28,8 +28,8 @@ class ContentSeeder extends Seeder
             'has_button' => true,
             'buttons_count' => 2,
             'buttons' => [
-                ['text' => 'Browse MUAs', 'link' => '/mua-listing'],
-                ['text' => 'How It Works', 'link' => '#how-it-works'],
+                ['label' => 'Browse MUAs', 'url' => '/mua-listing'],
+                ['label' => 'How It Works', 'url' => '#how-it-works'],
             ],
             'image' => 'images/main-banner1.jpg',
             'status' => 'publish',

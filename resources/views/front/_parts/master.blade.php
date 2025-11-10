@@ -2,32 +2,33 @@
 <html lang="en">
 
 <head>
-    <title>GlowHub</title>
+    <title>@yield('meta_title', $siteSetting->meta_title ?? ($siteSetting->site_name ?? 'GlowHub'))</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="format-detection" content="telephone=no">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="author" content="">
-    <meta name="keywords" content="">
-    <meta name="description" content="">
+    <meta name="author" content="{{ $siteSetting->site_name ?? '' }}">
+    <meta name="keywords" content="@yield('meta_keywords', $siteSetting->meta_keywords ?? '')">
+    <meta name="description" content="@yield('meta_description', $siteSetting->meta_description ?? ($siteSetting->site_tagline ?? ''))">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Favicon -->
     @php
-        $__settings = \App\Models\SiteSetting::first();
-        $__favicon = null;
-        if ($__settings && !empty($__settings->favicon)) {
-            $__favicon = asset('storage/' . $__settings->favicon);
-        } elseif ($__settings && !empty($__settings->logo)) {
-            $__favicon = asset('storage/' . $__settings->logo);
+        // Prefer the shared $siteSetting (provided by AppServiceProvider). If not available,
+        // fall back to loading the first SiteSetting record.
+        $settings = isset($siteSetting) ? $siteSetting : \App\Models\SiteSetting::first();
+        if ($settings && !empty($settings->favicon)) {
+            $favicon = asset('storage/' . $settings->favicon);
+        } elseif ($settings && !empty($settings->logo)) {
+            $favicon = asset('storage/' . $settings->logo);
         } else {
-            $__favicon = asset('images/logo/logo_saja.png');
+            $favicon = asset('images/logo/logo_saja.png');
         }
     @endphp
-    <link rel="icon" type="image/png" href="{{ $__favicon }}">
-    <link rel="shortcut icon" type="image/x-icon" href="{{ $__favicon }}">
-    <link rel="apple-touch-icon" href="{{ $__favicon }}">
+    <link rel="icon" type="image/png" href="{{ $favicon }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ $favicon }}">
+    <link rel="apple-touch-icon" href="{{ $favicon }}">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
@@ -51,6 +52,40 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('icomoon/icomoon.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/vendor.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('style.css') }}">
+    @php
+        // Determine primary color from site settings; normalize hex if needed and provide fallback.
+        $primary = null;
+        if (isset($siteSetting) && !empty($siteSetting->primary_color)) {
+            $primary = trim($siteSetting->primary_color);
+        } elseif (isset($settings) && !empty($settings->primary_color)) {
+            $primary = trim($settings->primary_color);
+        }
+        if (empty($primary)) {
+            $primary = '#845d70';
+        }
+        // Normalize: add '#' if value is 6 hex chars without leading '#'
+        if (!preg_match('/^#/', $primary) && preg_match('/^[0-9A-Fa-f]{6}$/', $primary)) {
+            $primary = '#' . $primary;
+        }
+    @endphp
+
+    <style>
+        :root {
+            --bs-primary: {{ $primary }};
+            --primary-color: {{ $primary }};
+        }
+
+        /* Quick overrides to make sure Bootstrap components use the admin primary color */
+
+        .bg-primary {
+            background-color: var(--bs-primary) !important;
+        }
+
+        .btn-primary {
+            background-color: var(--bs-primary) !important;
+            border-color: var(--bs-primary) !important;
+        }
+    </style>
 </head>
 
 <body data-bs-spy="scroll" data-bs-target="#header" tabindex="0">

@@ -55,7 +55,15 @@
                 <div class="col-md-2">
                     <div class="main-logo">
                         <a href="{{ url('/') }}">
-                            <img src="{{ asset('images/logo/Glowhub - Logo-2.png') }}" alt="logo"
+                            @php
+                                $logoUrl = null;
+                                if (isset($siteSetting) && !empty($siteSetting->logo)) {
+                                    $logoUrl = asset('storage/' . $siteSetting->logo);
+                                } else {
+                                    $logoUrl = asset('images/logo/logo_saja.png');
+                                }
+                            @endphp
+                            <img src="{{ $logoUrl }}" alt="{{ $siteSetting->site_name ?? 'GlowHub' }}"
                                 style="max-width: 100%; height: auto; max-height: 50px;">
                         </a>
                     </div>

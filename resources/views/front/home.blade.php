@@ -19,11 +19,10 @@
                                     @if ($section->has_button && is_array($section->buttons) && count($section->buttons) > 0)
                                         @foreach ($section->buttons as $btn)
                                             <a href="{{ $btn['url'] ?? '#' }}"
-                                                class="btn btn-primary btn-lg">{{ $btn['label'] ?? 'Learn More' }}</a>
+                                                class="btn btn-lg {{ isset($btn['url']) && strpos($btn['url'], '#') !== false ? 'btn-outline-primary' : 'btn-primary' }}">
+                                                {{ $btn['label'] ?? 'Learn More' }}
+                                            </a>
                                         @endforeach
-                                    @else
-                                        <a href="{{ url('mua-listing') }}" class="btn btn-primary btn-lg">Browse MUAs</a>
-                                        <a href="#how-it-works" class="btn btn-outline-primary btn-lg">How It Works</a>
                                     @endif
                                 </div>
                             </div>
@@ -62,7 +61,7 @@
                                 @if ($otherDetails->count() > 0)
                                     <div class="row g-4">
                                         @foreach ($otherDetails as $detail)
-                                            <div class="col-md-3 text-center">
+                                            <div class="col-md-{{ 12 / max(1, $otherDetails->count()) }} text-center">
                                                 <div class="p-4">
                                                     <div class="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center mb-3"
                                                         style="width: 80px; height: 80px;">
