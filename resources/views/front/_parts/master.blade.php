@@ -166,30 +166,21 @@
                 $('#' + tab).addClass('active');
             });
 
-            // Form validation and submission
-            $('form').submit(function(e) {
-                e.preventDefault();
-
-                // Simple validation
-                var isValid = true;
-                $(this).find('input[required], textarea[required], select[required]').each(function() {
-                    if ($(this).val() === '') {
-                        isValid = false;
-                        $(this).addClass('is-invalid');
-                    } else {
-                        $(this).removeClass('is-invalid');
-                    }
-                });
-
-                if (isValid) {
-                    alert('Message sent successfully! We will contact you soon.');
-                    $(this)[0].reset();
+            // Heart icon toggle with elegant animation
+            $('.fa-heart').on('click', function() {
+                const heart = $(this);
+                if (heart.hasClass('far')) {
+                    heart.removeClass('far').addClass('fas').css('color', '#ff6b6b');
+                    // Add heartbeat animation
+                    heart.addClass('animate__animated animate__heartBeat');
+                    setTimeout(() => heart.removeClass('animate__animated animate__heartBeat'), 1000);
                 } else {
-                    alert('Please fill in all required fields.');
+                    heart.removeClass('fas').addClass('far').css('color', '#845d70');
                 }
             });
         });
     </script>
+    @stack('scripts')
 </body>
 
 </html>

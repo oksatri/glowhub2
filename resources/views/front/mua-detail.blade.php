@@ -3,6 +3,108 @@
 @section('meta_description', ($mua['speciality'] ?? '') . ' • ' . ($siteSetting->meta_description ??
     ($siteSetting->site_tagline ?? '')))
 @section('content')
+    <style>
+        /* === CLEAN & PROFESSIONAL STYLING === */
+        .hero-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        }
+
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+        }
+
+        .floating-circle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .circle-1 {
+            width: 80px;
+            height: 80px;
+            top: 20%;
+            left: 10%;
+        }
+
+        .circle-2 {
+            width: 100px;
+            height: 100px;
+            top: 60%;
+            right: 15%;
+            animation-delay: 2s;
+        }
+
+        .circle-3 {
+            width: 60px;
+            height: 60px;
+            top: 40%;
+            left: 70%;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        .breadcrumb-elegant {
+            background: none !important;
+            padding: 0;
+        }
+
+        .breadcrumb-elegant .breadcrumb-item+.breadcrumb-item::before {
+            color: rgba(255, 255, 255, 0.7);
+            content: "›";
+        }
+
+        .hover-opacity:hover {
+            opacity: 1 !important;
+        }
+
+        .badge-glass {
+            background: rgba(255, 255, 255, 0.2) !important;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white !important;
+        }
+
+        .text-glow {
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        /* === SIMPLE INTERACTIONS === */
+        .day-btn:hover:not(.btn-primary) {
+            background-color: var(--bs-primary) !important;
+            color: white !important;
+        }
+
+        .time-slot:hover:not(:disabled):not(.btn-primary) {
+            background-color: var(--bs-primary) !important;
+            color: white !important;
+        }
+
+        .card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
+        }
+    </style>
     <!-- Stunning Hero Section -->
     <section class="hero-gradient position-relative overflow-hidden"
         style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
@@ -336,110 +438,7 @@
     </section>
 @endsection
 
-@section('scripts')
-    <style>
-        /* === CLEAN & PROFESSIONAL STYLING === */
-        .hero-gradient {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-        }
-
-        .floating-elements {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            overflow: hidden;
-        }
-
-        .floating-circle {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .circle-1 {
-            width: 80px;
-            height: 80px;
-            top: 20%;
-            left: 10%;
-        }
-
-        .circle-2 {
-            width: 100px;
-            height: 100px;
-            top: 60%;
-            right: 15%;
-            animation-delay: 2s;
-        }
-
-        .circle-3 {
-            width: 60px;
-            height: 60px;
-            top: 40%;
-            left: 70%;
-            animation-delay: 4s;
-        }
-
-        @keyframes float {
-
-            0%,
-            100% {
-                transform: translateY(0px);
-            }
-
-            50% {
-                transform: translateY(-15px);
-            }
-        }
-
-        .breadcrumb-elegant {
-            background: none !important;
-            padding: 0;
-        }
-
-        .breadcrumb-elegant .breadcrumb-item+.breadcrumb-item::before {
-            color: rgba(255, 255, 255, 0.7);
-            content: "›";
-        }
-
-        .hover-opacity:hover {
-            opacity: 1 !important;
-        }
-
-        .badge-glass {
-            background: rgba(255, 255, 255, 0.2) !important;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white !important;
-        }
-
-        .text-glow {
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-        }
-
-        /* === SIMPLE INTERACTIONS === */
-        .day-btn:hover:not(.btn-primary) {
-            background-color: var(--bs-primary) !important;
-            color: white !important;
-        }
-
-        .time-slot:hover:not(:disabled):not(.btn-primary) {
-            background-color: var(--bs-primary) !important;
-            color: white !important;
-        }
-
-        .card {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
-        }
-    </style>
-
+@push('scripts')
     <script>
         $(document).ready(function() {
             // Calendar day selection
@@ -573,4 +572,4 @@
             });
         });
     </script>
-@endsection
+@endpush

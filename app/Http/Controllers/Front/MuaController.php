@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers\Front;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Models\Booking;
 use App\Models\User;
-use App\Notifications\NewBookingNotification;
+use App\Models\Booking;
+use App\Models\RegRegency;
+use App\Models\RegDistrict;
+use App\Models\RegProvince;
+use Illuminate\Http\Request;
 use App\Events\BookingCreated;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Notification;
+use App\Notifications\NewBookingNotification;
 
 class MuaController extends Controller
 {
@@ -18,12 +21,22 @@ class MuaController extends Controller
     public function index(Request $request)
     {
         // Use real Mua records from database. Map them to the front-end shape expected by views.
-        $query = \App\Models\Mua::with('services');
+        $query = \App\Models\Mua::with('services', 'rel_province', 'rel_city', 'rel_district');
 
-        if ($q = $request->get('q')) {
+        if ($q = @$request->event_type) {
             $query->where(function ($sub) use ($q) {
-                $sub->where('name', 'like', "%{$q}%")->orWhere('specialty', 'like', "%{$q}%");
+                $sub->orWhere('name', 'like', "%{$q}%");
+                $sub->orWhere('specialty', 'like', "%{$q}%");
             });
+        }
+        if (@$request->province_id) {
+            $query->where('province', $request->province_id);
+        }
+        if (@$request->regency_id) {
+            $query->where('city', $request->regency_id);
+        }
+        if (@$request->district_id) {
+            $query->where('district', $request->district_id);
         }
 
         $perPage = 12;
@@ -35,8 +48,8 @@ class MuaController extends Controller
             return [
                 'id' => $mua->id,
                 'name' => $mua->name,
-                'location' => trim(implode(' | ', array_filter([$mua->city, $mua->district]))),
-                'rating' => (float) ($mua->rating ?? 4.5),
+                'location' => trim(implode(' | ', array_filter([$mua->rel_city->name ?? '', $mua->rel_district->name ?? '']))),
+                'rating' => (float) ($mua->rating ?? 0),
                 'reviews_count' => $mua->reviews_count ?? 0,
                 'price' => $firstService ? (int) $firstService->price : null,
                 'image' => $mua->image ? asset('storage/' . $mua->image) : asset('images/product-item1.jpg'),
@@ -54,12 +67,21 @@ class MuaController extends Controller
 
         $filterOptions = [
             'events' => ['Wedding', 'Party', 'Corporate', 'Fashion', 'Editorial'],
-            'cities' => [],
-            'dates' => ['Hari ini', 'Minggu ini', 'Bulan ini', 'Pilih tanggal'],
+            'provinces' => RegProvince::orderBy('name')->pluck('name', 'id')->toArray(),
+            'cities' => RegRegency::orderBy('name')->get()->groupBy('province_id')->map(function ($group) {
+                return $group->map(function ($r) {
+                    return ['id' => $r->id, 'name' => $r->name];
+                })->values()->toArray();
+            })->toArray(),
+            'districts' => RegDistrict::orderBy('name')->get()->groupBy('regency_id')->map(function ($group) {
+                return $group->map(function ($d) {
+                    return ['id' => $d->id, 'name' => $d->name];
+                })->values()->toArray();
+            })->toArray(),
             'times' => ['Pagi (06:00-12:00)', 'Siang (12:00-18:00)', 'Malam (18:00-24:00)']
         ];
 
-        return view('front.mua-listing', compact('items', 'pagination', 'filterOptions'));
+        return view('front.mua-listing', compact('items', 'pagination', 'filterOptions', 'request'));
     }
 
     /**

@@ -23,10 +23,7 @@
             <div class="col-md-4 mb-3">
                 <label class="form-label">Province</label>
                 @if (!empty($wilayahMissing) || empty($provinces))
-                    <div class="alert alert-warning small">Wilayah (province/city/district) data is not available.
-                        Please import wilayah data by placing <code>database/sql/wilayah_indonesia_pg.sql</code> in the
-                        project and running <code>php artisan db:seed --class=WilayahSeeder</code>, or contact the
-                        administrator.</div>
+                    <div class="alert alert-warning small">Wilayah (province/city/district)</div>
                     <select name="province" id="provinceSelect" class="form-select" disabled>
                         <option value="">No data</option>
                     </select>
