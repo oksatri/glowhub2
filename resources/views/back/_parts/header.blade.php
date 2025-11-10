@@ -39,72 +39,47 @@
             <ul class="navbar-nav float-left mr-auto ml-3 pl-1">
                 <!-- Notification -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle pl-md-3 position-relative" href="javascript:void(0)"
-                        id="bell" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    @php
+                        use App\Models\Booking;
+                        $pendingCount = Booking::where('status', 'pending')->count();
+                        $recent = Booking::where('status', 'pending')->latest()->take(5)->get();
+                    @endphp
+                    <a class="nav-link dropdown-toggle pl-md-3 position-relative" href="#" id="bell"
+                        role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span><i data-feather="bell" class="svg-icon"></i></span>
-                        <span class="badge badge-primary notify-no rounded-circle">5</span>
+                        @if ($pendingCount > 0)
+                            <span class="badge badge-primary notify-no rounded-circle">{{ $pendingCount }}</span>
+                        @endif
                     </a>
-                    <div class="dropdown-menu dropdown-menu-left mailbox animated bounceInDown">
-                        <ul class="list-style-none">
+                    <div class="dropdown-menu dropdown-menu-left mailbox animated bounceInDown" aria-labelledby="bell">
+                        <ul class="list-style-none mb-0">
                             <li>
                                 <div class="message-center notifications position-relative">
-                                    <!-- Message -->
-                                    <a href="javascript:void(0)"
-                                        class="message-item d-flex align-items-center border-bottom px-3 py-2">
-                                        <div class="btn btn-danger rounded-circle btn-circle"><i data-feather="airplay"
-                                                class="text-white"></i></div>
-                                        <div class="w-75 d-inline-block v-middle pl-2">
-                                            <h6 class="message-title mb-0 mt-1">Luanch Admin</h6>
-                                            <span class="font-12 text-nowrap d-block text-muted">Just see
-                                                the my new
-                                                admin!</span>
-                                            <span class="font-12 text-nowrap d-block text-muted">9:30 AM</span>
+                                    @forelse($recent as $r)
+                                        <div class="message-item d-flex align-items-center border-bottom px-3 py-2">
+                                            <div class="btn btn-warning rounded-circle btn-circle">
+                                                <i data-feather="calendar" class="text-white"></i>
+                                            </div>
+                                            <div class="w-75 d-inline-block v-middle pl-2">
+                                                <h6 class="message-title mb-0 mt-1">Booking #{{ $r->id }}</h6>
+                                                <span class="font-12 text-nowrap d-block text-muted">
+                                                    {{ $r->customer_name ?? optional($r->customer)->name }}
+                                                </span>
+                                                <span class="font-12 text-nowrap d-block text-muted">
+                                                    {{ optional($r->selected_date)->format('Y-m-d') }}
+                                                    {{ $r->selected_time }}
+                                                </span>
+                                            </div>
                                         </div>
-                                    </a>
-                                    <!-- Message -->
-                                    <a href="javascript:void(0)"
-                                        class="message-item d-flex align-items-center border-bottom px-3 py-2">
-                                        <span class="btn btn-success text-white rounded-circle btn-circle"><i
-                                                data-feather="calendar" class="text-white"></i></span>
-                                        <div class="w-75 d-inline-block v-middle pl-2">
-                                            <h6 class="message-title mb-0 mt-1">Event today</h6>
-                                            <span class="font-12 text-nowrap d-block text-muted text-truncate">Just
-                                                a reminder that you have event</span>
-                                            <span class="font-12 text-nowrap d-block text-muted">9:10 AM</span>
-                                        </div>
-                                    </a>
-                                    <!-- Message -->
-                                    <a href="javascript:void(0)"
-                                        class="message-item d-flex align-items-center border-bottom px-3 py-2">
-                                        <span class="btn btn-info rounded-circle btn-circle"><i data-feather="settings"
-                                                class="text-white"></i></span>
-                                        <div class="w-75 d-inline-block v-middle pl-2">
-                                            <h6 class="message-title mb-0 mt-1">Settings</h6>
-                                            <span class="font-12 text-nowrap d-block text-muted text-truncate">You
-                                                can customize this template
-                                                as you want</span>
-                                            <span class="font-12 text-nowrap d-block text-muted">9:08 AM</span>
-                                        </div>
-                                    </a>
-                                    <!-- Message -->
-                                    <a href="javascript:void(0)"
-                                        class="message-item d-flex align-items-center border-bottom px-3 py-2">
-                                        <span class="btn btn-primary rounded-circle btn-circle"><i data-feather="box"
-                                                class="text-white"></i></span>
-                                        <div class="w-75 d-inline-block v-middle pl-2">
-                                            <h6 class="message-title mb-0 mt-1">Pavan kumar</h6> <span
-                                                class="font-12 text-nowrap d-block text-muted">Just
-                                                see the my admin!</span>
-                                            <span class="font-12 text-nowrap d-block text-muted">9:02 AM</span>
-                                        </div>
-                                    </a>
+                                    @empty
+                                        <div class="px-3 py-2 text-muted">No new bookings</div>
+                                    @endforelse
                                 </div>
                             </li>
                             <li>
-                                <a class="nav-link pt-3 text-center text-dark" href="javascript:void(0);">
-                                    <strong>Check all notifications</strong>
-                                    <i class="fa fa-angle-right"></i>
-                                </a>
+                                <div class="nav-link pt-3 text-center text-dark mb-0" style="cursor: default;">
+                                    <strong>Total Pending: {{ $pendingCount }}</strong>
+                                </div>
                             </li>
                         </ul>
                     </div>
@@ -174,3 +149,108 @@
         </div>
     </nav>
 </header>
+
+@once
+    @push('scripts')
+        <script>
+            (function() {
+                // Wait until DOM ready
+                document.addEventListener('DOMContentLoaded', function() {
+                    if (typeof window.Echo === 'undefined') {
+                        // Echo not configured — nothing to do
+                        return;
+                    }
+
+                    try {
+                        // Listen on public 'bookings' channel for BookingCreated event
+                        window.Echo.channel('bookings')
+                            .listen('BookingCreated', function(e) {
+                                // e should contain booking data
+                                var booking = e.booking || e;
+
+                                // Update badge count
+                                var badge = document.querySelector('.notify-no');
+                                var count = 0;
+                                if (badge) {
+                                    count = parseInt(badge.textContent || '0', 10) || 0;
+                                    count = count + 1;
+                                    badge.textContent = count;
+                                } else {
+                                    // create badge and append to bell
+                                    var bell = document.querySelector('#bell');
+                                    if (bell) {
+                                        var span = document.createElement('span');
+                                        span.className = 'badge badge-primary notify-no rounded-circle';
+                                        span.textContent = '1';
+                                        bell.appendChild(span);
+                                    }
+                                }
+
+                                // Prepend new item to recent list (if exists)
+                                var container = document.querySelector('.message-center.notifications');
+                                if (container) {
+                                    var div = document.createElement('div');
+                                    div.className =
+                                        'message-item d-flex align-items-center border-bottom px-3 py-2';
+
+                                    var icon = document.createElement('div');
+                                    icon.className = 'btn btn-warning rounded-circle btn-circle';
+                                    icon.innerHTML = '<i data-feather="calendar" class="text-white"></i>';
+
+                                    var info = document.createElement('div');
+                                    info.className = 'w-75 d-inline-block v-middle pl-2';
+
+                                    var title = document.createElement('h6');
+                                    title.className = 'message-title mb-0 mt-1';
+                                    title.textContent = 'Booking #' + (booking.id || booking.booking_id || '');
+
+                                    var nameSpan = document.createElement('span');
+                                    nameSpan.className = 'font-12 text-nowrap d-block text-muted';
+                                    nameSpan.textContent = booking.customer_name || (booking.customer && booking
+                                        .customer.name) || '';
+
+                                    var dateSpan = document.createElement('span');
+                                    dateSpan.className = 'font-12 text-nowrap d-block text-muted';
+                                    var dateText = '';
+                                    if (booking.selected_date) dateText += booking.selected_date;
+                                    if (booking.selected_time) dateText += ' ' + booking.selected_time;
+                                    dateSpan.textContent = dateText;
+
+                                    info.appendChild(title);
+                                    info.appendChild(nameSpan);
+                                    info.appendChild(dateSpan);
+
+                                    div.appendChild(icon);
+                                    div.appendChild(info);
+
+                                    // If 'No new bookings' placeholder exists, remove it
+                                    var empty = container.querySelector('.px-3.py-2.text-muted');
+                                    if (empty) empty.remove();
+
+                                    // Prepend
+                                    if (container.firstChild) container.insertBefore(div, container.firstChild);
+                                    else container.appendChild(div);
+
+                                    // Update 'Total Pending' text
+                                    var totalElem = document.querySelector(
+                                        '.nav-link.pt-3.text-center.text-dark.mb-0 strong');
+                                    if (totalElem) {
+                                        var current = parseInt(totalElem.textContent.replace(/[^0-9]/g, ''),
+                                            10) || 0;
+                                        totalElem.textContent = 'Total Pending: ' + (current + 1);
+                                    }
+
+                                    // Re-run feather icons for newly added icon
+                                    if (window.feather) window.feather.replace();
+                                }
+                            });
+                    } catch (err) {
+                        // fail silently
+                        console.error('Echo booking listener error', err);
+                    }
+                });
+            })
+            ();
+        </script>
+    @endpush
+@endonce

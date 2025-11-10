@@ -121,7 +121,7 @@
         <div class="card border-0 shadow-sm">
             <div class="card-body">
                 <div class="mb-3">
-                    <label class="form-label small">Linked User (optional)</label>
+                    <label class="form-label small">Linked User</label>
                     <div class="d-flex gap-2 align-items-start">
                         <select name="user_id" id="userSelect"
                             class="form-select {{ $errors->has('user_id') ? 'is-invalid' : '' }}">

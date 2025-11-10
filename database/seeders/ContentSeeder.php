@@ -125,6 +125,38 @@ class ContentSeeder extends Seeder
             ]);
         }
 
+        // Add an 'about' detail block for the 'Join GlowHub as a Makeup Artist' section
+        ContentDetail::create([
+            'category' => 'about',
+            'content_id' => $services->id,
+            'image' => 'images/main-banner2.jpg',
+            'title' => 'Why Choose GlowHub?',
+            'description' => 'Kembangkan bisnis Anda dan terhubung dengan klien yang menghargai\n                    keahlian makeup profesional',
+            'additional' => [
+                [
+                    'icon' => 'fas fa-check-circle',
+                    'title' => 'Professional Profile',
+                    'description' => 'Tampilkan portfolio, sertifikat, dan ulasan klien Anda dalam halaman profil yang indah.'
+                ],
+                [
+                    'icon' => 'fas fa-check-circle',
+                    'title' => 'Set Your Own Rates',
+                    'description' => 'Anda mengontrol harga. Tidak ada biaya tersembunyi - hanya komisi kecil pada booking yang selesai.'
+                ],
+                [
+                    'icon' => 'fas fa-check-circle',
+                    'title' => 'Marketing Support',
+                    'description' => 'Kami menangani marketing dan akuisisi pelanggan. Anda fokus pada yang terbaik - menciptakan tampilan yang indah.'
+                ],
+                [
+                    'icon' => 'fas fa-check-circle',
+                    'title' => '24/7 Support',
+                    'description' => 'Our dedicated support team is always here to help you succeed on the platform.'
+                ],
+            ],
+            'order' => 4,
+        ]);
+
         // 5) Testimonials
         $testimonials = ContentSection::create([
             'slug' => 'testimonials',

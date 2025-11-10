@@ -239,26 +239,48 @@
                                 <h6 class="fw-bold mb-3 text-primary">Select Services</h6>
                                 <div class="row g-2">
                                     @php
-                                        $services = [
-                                            ['name' => 'Basic Makeup', 'price' => 200000, 'selected' => true],
-                                            ['name' => 'Wedding Makeup', 'price' => 500000, 'selected' => false],
-                                            ['name' => 'Party Makeup', 'price' => 350000, 'selected' => false],
-                                            ['name' => 'Photoshoot', 'price' => 400000, 'selected' => false],
+                                        // Use services passed from controller if available; otherwise fallback to sample list
+                                        $services = $services ?? [
+                                            [
+                                                'id' => null,
+                                                'name' => 'Basic Makeup',
+                                                'price' => 200000,
+                                                'selected' => true,
+                                            ],
+                                            [
+                                                'id' => null,
+                                                'name' => 'Wedding Makeup',
+                                                'price' => 500000,
+                                                'selected' => false,
+                                            ],
+                                            [
+                                                'id' => null,
+                                                'name' => 'Party Makeup',
+                                                'price' => 350000,
+                                                'selected' => false,
+                                            ],
+                                            [
+                                                'id' => null,
+                                                'name' => 'Photoshoot',
+                                                'price' => 400000,
+                                                'selected' => false,
+                                            ],
                                         ];
                                     @endphp
 
                                     @foreach ($services as $service)
                                         <div class="col-12">
                                             <div
-                                                class="form-check p-3 border rounded {{ $service['selected'] ? 'bg-primary bg-opacity-10 border-primary' : '' }}">
+                                                class="form-check p-3 border rounded {{ $service['selected'] ?? false ? 'bg-primary bg-opacity-10 border-primary' : '' }}">
                                                 <input class="form-check-input service-checkbox" type="checkbox"
-                                                    {{ $service['selected'] ? 'checked' : '' }}
+                                                    name="service_ids[]" value="{{ $service['id'] ?? $loop->index }}"
+                                                    {{ $service['selected'] ?? false ? 'checked' : '' }}
                                                     id="service{{ $loop->index }}">
                                                 <label class="form-check-label d-flex justify-content-between w-100"
                                                     for="service{{ $loop->index }}">
                                                     <span class="fw-semibold">{{ $service['name'] }}</span>
                                                     <span class="text-success fw-bold">Rp
-                                                        {{ number_format($service['price'], 0, ',', '.') }}</span>
+                                                        {{ number_format($service['price'] ?? 0, 0, ',', '.') }}</span>
                                                 </label>
                                             </div>
                                         </div>
@@ -266,11 +288,43 @@
                                 </div>
                             </div>
 
-                            <!-- Book Now Button -->
-                            <button type="button" id="bookNowBtn" class="btn w-100 btn-lg fw-bold"
-                                style="background: linear-gradient(135deg, #845d70 0%, #6d4c5a 100%); color: white; border: none; border-radius: 25px; padding: 15px;">
-                                <i class="fas fa-calendar-check me-2"></i>Book Now
-                            </button>
+                            <!-- Booking Form -->
+                            <form id="bookingForm" method="POST" action="{{ route('mua.book', $mua['id']) }}">
+                                @csrf
+
+                                <!-- Contact fields (prefilled if authenticated) -->
+                                <div class="mb-3">
+                                    <label class="form-label small">Your name</label>
+                                    <input type="text" name="name" id="bk_name" class="form-control"
+                                        value="{{ optional(auth()->user())->name ?? '' }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small">Email</label>
+                                    <input type="email" name="email" id="bk_email" class="form-control"
+                                        value="{{ optional(auth()->user())->email ?? '' }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small">WhatsApp</label>
+                                    <input type="text" name="whatsapp" id="bk_whatsapp" class="form-control"
+                                        value="{{ optional(auth()->user())->phone ?? '' }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small">Address</label>
+                                    <input type="text" name="address" id="bk_address" class="form-control" required>
+                                </div>
+
+                                <!-- Hidden inputs populated by JS -->
+                                <input type="hidden" name="distance" id="bk_distance">
+                                <input type="hidden" name="selected_date" id="bk_selected_date">
+                                <input type="hidden" name="selected_time" id="bk_selected_time">
+                                <input type="hidden" name="services" id="bk_services">
+                                <input type="hidden" name="mua_service_id" id="bk_mua_service_id">
+
+                                <button type="button" id="bookNowBtn" class="btn w-100 btn-lg fw-bold"
+                                    style="background: linear-gradient(135deg, #845d70 0%, #6d4c5a 100%); color: white; border: none; border-radius: 25px; padding: 15px;">
+                                    <i class="fas fa-calendar-check me-2"></i>Book Now
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -398,6 +452,121 @@
                         'btn-outline-primary');
                     $(this).removeClass('btn-outline-primary').addClass('btn-primary');
                 }
+            });
+
+            // Book Now handler - collects selected date/time/services and submits to server
+            $('#bookNowBtn').on('click', function() {
+                // selected day
+                var dayBtn = $('.day-btn.btn-primary');
+                if (dayBtn.length === 0) {
+                    alert('Please select a date first');
+                    return;
+                }
+                var day = dayBtn.data('day');
+
+                // parse month and year from calendar header (e.g. "October 2025")
+                var monthYear = $('.calendar-container h6').first().text().trim();
+                var parts = monthYear.split(' ');
+                var monthName = parts[0];
+                var year = parts[1] || new Date().getFullYear();
+                var monthMap = {
+                    January: 1,
+                    February: 2,
+                    March: 3,
+                    April: 4,
+                    May: 5,
+                    June: 6,
+                    July: 7,
+                    August: 8,
+                    September: 9,
+                    October: 10,
+                    November: 11,
+                    December: 12
+                };
+                var month = monthMap[monthName] || (new Date().getMonth() + 1);
+                var dayP = ('0' + day).slice(-2);
+                var monthP = ('0' + month).slice(-2);
+                var selectedDate = year + '-' + monthP + '-' + dayP;
+
+                // selected time
+                var timeBtn = $('.time-slot.btn-primary');
+                if (timeBtn.length === 0) {
+                    alert('Please select a time slot');
+                    return;
+                }
+                var selectedTime = timeBtn.data('time');
+
+                // services (collect ids)
+                var services = [];
+                $('.service-checkbox:checked').each(function() {
+                    var val = $(this).val();
+                    if (val !== undefined && val !== null) services.push(val);
+                });
+
+                // set selected mua_service_id as first selected service id (if any)
+                var muaServiceId = services.length ? services[0] : null;
+                $('#bk_mua_service_id').val(muaServiceId);
+                $('#bk_services').val(JSON.stringify(services));
+
+                // contact
+                var name = $('#bk_name').val();
+                var email = $('#bk_email').val();
+                var whatsapp = $('#bk_whatsapp').val();
+                var address = $('#bk_address').val();
+                if (!name || !email || !whatsapp || !address) {
+                    alert('Please complete your contact information');
+                    return;
+                }
+
+                var url = $('#bookingForm').attr('action');
+
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                        name: name,
+                        email: email,
+                        whatsapp: whatsapp,
+                        address: address,
+                        distance: $('#bk_distance').val() || null,
+                        selected_date: selectedDate,
+                        selected_time: selectedTime,
+                        services: services,
+                        mua_service_id: $('#bk_mua_service_id').val() || null
+                    },
+                    success: function(res) {
+                        if (res.status === 'success') {
+                            var html = '<div class="alert alert-success">' + res.message +
+                                '<br>Booking ID: <strong>' + res.booking_id + '</strong></div>';
+                            // prepend message and reset selections
+                            $('.card-body').first().prepend(html);
+                            $('.day-btn').removeClass('btn-primary').addClass(
+                                'btn-outline-secondary');
+                            $('.time-slot').removeClass('btn-primary').addClass(
+                                'btn-outline-primary');
+                            $('.service-checkbox').prop('checked', false);
+                            $('#bk_selected_date, #bk_selected_time, #bk_services, #bk_mua_service_id')
+                                .val('');
+                            // reset form fields except prefilled auth info
+                            $('#bk_address').val('');
+                        } else {
+                            alert(res.message || 'Booking failed');
+                        }
+                    },
+                    error: function(xhr) {
+                        var msg = 'Booking failed.';
+                        if (xhr.responseJSON && xhr.responseJSON.message) msg = xhr.responseJSON
+                            .message;
+                        if (xhr.responseJSON && xhr.responseJSON.errors) {
+                            var err = xhr.responseJSON.errors;
+                            msg += '\n' + Object.values(err).map(function(v) {
+                                return v.join(', ');
+                            }).join('\n');
+                        }
+                        alert(msg);
+                    }
+                });
             });
         });
     </script>

@@ -4,22 +4,23 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\Front\MuaController;
+use App\Http\Controllers\Back\UserController;
+use App\Http\Controllers\Front\MuaController as FrontMuaController;
+use App\Http\Controllers\Front\HomeController;
 use App\Http\Controllers\Back\ContentController;
+use App\Http\Controllers\Back\ProfileController;
+use App\Http\Controllers\Back\DashboardController;
+use App\Http\Controllers\Back\SiteSettingController;
+use App\Http\Controllers\Back\TestimonialController;
+use App\Http\Controllers\Back\MuaPortfolioController as BackMuaPortfolioController;
 use App\Http\Controllers\Back\MuaController as BackMuaController;
 use App\Http\Controllers\Back\MuaServiceController as BackMuaServiceController;
-use App\Http\Controllers\Back\DashboardController;
-use App\Http\Controllers\Back\ProfileController;
-use App\Http\Controllers\Back\TestimonialController;
-use App\Http\Controllers\Back\SiteSettingController;
-use App\Http\Controllers\Back\UserController;
-use App\Http\Controllers\Front\HomeController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 // Routes yang bisa diakses oleh semua role
-Route::get('/mua-listing', [MuaController::class, 'index'])->name('mua.listing');
-Route::get('/mua/{id}', [MuaController::class, 'show'])->name('mua.detail');
-Route::post('/mua/{id}/book', [MuaController::class, 'book'])->name('mua.book');
+Route::get('/mua-listing', [FrontMuaController::class, 'index'])->name('mua.listing');
+Route::get('/mua/{id}', [FrontMuaController::class, 'show'])->name('mua.detail');
+Route::post('/mua/{id}/book', [FrontMuaController::class, 'book'])->name('mua.book');
 
 
 // Guest routes
@@ -70,8 +71,11 @@ Route::middleware('auth')->group(function () {
         Route::post('muas/{mua}/services', [BackMuaServiceController::class, 'store'])->name('admin.muas.services.store');
         Route::delete('muas/{mua}/services/{id}', [BackMuaServiceController::class, 'destroy'])->name('admin.muas.services.destroy');
         // Portfolios
-        Route::post('muas/{mua}/portfolios', [\App\Http\Controllers\Back\MuaPortfolioController::class, 'store'])->name('admin.muas.portfolios.store');
-        Route::delete('muas/{mua}/portfolios/{id}', [\App\Http\Controllers\Back\MuaPortfolioController::class, 'destroy'])->name('admin.muas.portfolios.destroy');
+        Route::post('muas/{mua}/portfolios', [BackMuaPortfolioController::class, 'store'])->name('admin.muas.portfolios.store');
+        Route::delete('muas/{mua}/portfolios/{id}', [BackMuaPortfolioController::class, 'destroy'])->name('admin.muas.portfolios.destroy');
+        // Bookings
+        Route::get('bookings', [\App\Http\Controllers\Back\BookingController::class, 'index'])->name('admin.bookings.index');
+        Route::put('bookings/{id}', [\App\Http\Controllers\Back\BookingController::class, 'update'])->name('admin.bookings.update');
     });
 
     // MUA routes

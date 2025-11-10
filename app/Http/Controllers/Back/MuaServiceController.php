@@ -16,11 +16,10 @@ class MuaServiceController extends Controller
         $data = $request->validate([
             'nama_service' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
-            'fitur' => 'nullable|string',
+            'fitur' => 'nullable',
             'harga' => 'nullable|numeric'
         ]);
 
-        // normalize incoming field names to model attributes
         $payload = [
             'mua_id' => $mua->id,
             'service_name' => $data['nama_service'],
@@ -28,13 +27,17 @@ class MuaServiceController extends Controller
             'price' => isset($data['harga']) && $data['harga'] !== '' ? (int) $data['harga'] : 0,
         ];
 
-        // allow comma-separated fitur or JSON string and store as array in 'features'
+        // fitur bisa berupa array atau string, simpan ke db sebagai JSON
         if (!empty($data['fitur'])) {
-            $decoded = json_decode($data['fitur'], true);
-            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
-                $payload['features'] = $decoded;
+            if (is_array($data['fitur'])) {
+                $payload['features'] = json_encode($data['fitur']);
             } else {
-                $payload['features'] = array_values(array_filter(array_map('trim', explode(',', $data['fitur']))));
+                $decoded = json_decode($data['fitur'], true);
+                if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                    $payload['features'] = json_encode($decoded);
+                } else {
+                    $payload['features'] = json_encode(array_values(array_filter(array_map('trim', explode(',', $data['fitur'])))));
+                }
             }
         } else {
             $payload['features'] = null;

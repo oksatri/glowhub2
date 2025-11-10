@@ -74,7 +74,8 @@ class MuaController extends Controller
         // provide existing specialties for datalist
         $specialties = Mua::whereNotNull('specialty')->distinct()->orderBy('specialty')->pluck('specialty')->filter()->values()->toArray();
         // load users for the linked user dropdown (limit for performance)
-        $users = User::where('role', 'MUA')->limit(50)->get();
+        // roles are stored lowercase in DB ('mua')
+        $users = User::where('role', 'mua')->limit(50)->get();
         return view('back.muas.create', compact('provinces', 'cities', 'districts', 'specialties', 'users'));
     }
 
@@ -169,7 +170,7 @@ class MuaController extends Controller
         $mua = Mua::with('services', 'portfolios')->findOrFail($id);
         [$provinces, $cities, $districts] = $this->getLocationData();
         $specialties = Mua::whereNotNull('specialty')->distinct()->orderBy('specialty')->pluck('specialty')->filter()->values()->toArray();
-        $users = User::where('role', 'MUA')->limit(50)->get();
+        $users = User::where('role', 'mua')->limit(50)->get();
         return view('back.muas.edit', compact('mua', 'provinces', 'cities', 'districts', 'specialties', 'users'));
     }
 

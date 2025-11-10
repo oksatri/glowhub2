@@ -115,8 +115,6 @@
                                     @endif
                                 </td>
                                 <td class="text-end">
-                                    <a href="{{ url('muas/' . $mua->id) }}"
-                                        class="btn btn-sm btn-outline-secondary">View</a>
                                     <a href="{{ url('muas/' . $mua->id . '/edit') }}"
                                         class="btn btn-sm btn-outline-primary">Edit</a>
                                     <form action="{{ url('muas/' . $mua->id) }}" method="POST" class="d-inline"

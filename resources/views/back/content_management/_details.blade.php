@@ -49,15 +49,6 @@
                                     <option value="feature"
                                         {{ isset($det['category']) && $det['category'] == 'feature' ? 'selected' : '' }}>
                                         Feature</option>
-                                    <option value="team"
-                                        {{ isset($det['category']) && $det['category'] == 'team' ? 'selected' : '' }}>
-                                        Team</option>
-                                    <option value="faq"
-                                        {{ isset($det['category']) && $det['category'] == 'faq' ? 'selected' : '' }}>FAQ
-                                    </option>
-                                    <option value="custom"
-                                        {{ isset($det['category']) && $det['category'] == 'custom' ? 'selected' : '' }}>
-                                        Custom</option>
                                 </select>
                             </div>
 
@@ -71,8 +62,11 @@
                                 <label class="form-label small">Image (for About)</label>
                                 <input type="file" name="details[{{ $i }}][image]" class="form-control">
                                 @if (!empty($det['image']))
-                                    <div class="small mt-1">Current: <a href="{{ asset('storage/' . $det['image']) }}"
-                                            class="btn btn-sm btn-outline-primary" target="_blank">view</a></div>
+                                    <div class="small mt-1">
+                                        <span>Preview:</span><br>
+                                        <img src="{{ asset('storage/' . $det['image']) }}" alt="Image Preview"
+                                            style="max-width: 120px; max-height: 80px;">
+                                    </div>
                                 @endif
                             </div>
 
@@ -159,9 +153,6 @@
                                     <select name="details[${idx}][category]" class="form-select detail-category">
                                         <option value="about" ${category==='about'? 'selected':''}>About</option>
                                         <option value="feature" ${category==='feature'? 'selected':''}>Feature</option>
-                                        <option value="team" ${category==='team'? 'selected':''}>Team</option>
-                                        <option value="faq" ${category==='faq'? 'selected':''}>FAQ</option>
-                                        <option value="custom" ${category==='custom'? 'selected':''}>Custom</option>
                                     </select>
                                 </div>
 

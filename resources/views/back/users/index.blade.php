@@ -15,10 +15,6 @@
 
     <div class="card border-0 shadow-sm">
         <div class="card-body px-4 py-4">
-            @if (session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
-            @endif
-
             <!-- Search & Filter Card -->
             <div class="card border-0 shadow-sm mb-4" style="background: linear-gradient(to right, #F9FAFB, #F3F4F6);">
                 <div class="card-body px-4 py-4">
@@ -101,7 +97,6 @@
                             <td>{{ $user->role }}</td>
                             <td>{{ $user->created_at->format('Y-m-d') }}</td>
                             <td class="text-end">
-                                <a href="{{ url('users/' . $user->id) }}" class="btn btn-sm btn-outline-secondary">View</a>
                                 <a href="{{ url('users/' . $user->id . '/edit') }}"
                                     class="btn btn-sm btn-outline-primary">Edit</a>
                                 <form action="{{ url('users/' . $user->id) }}" method="POST" class="d-inline"

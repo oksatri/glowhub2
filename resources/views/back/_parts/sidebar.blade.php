@@ -36,6 +36,20 @@
                 </li>
 
                 <li class="sidebar-item">
+                    @php
+                        $pendingCount = \App\Models\Booking::where('status', 'pending')->count();
+                    @endphp
+                    <a class="sidebar-link {{ request()->is('bookings*') ? 'active' : '' }}"
+                        href="{{ route('admin.bookings.index') }}" aria-expanded="false">
+                        <i data-feather="calendar" class="feather-icon"></i>
+                        <span class="hide-menu">Bookings</span>
+                        @if ($pendingCount > 0)
+                            <span class="badge bg-danger text-white rounded-pill ms-2">{{ $pendingCount }}</span>
+                        @endif
+                    </a>
+                </li>
+
+                <li class="sidebar-item">
                     <a class="sidebar-link {{ request()->is('users*') ? 'active' : '' }}" href="{{ url('users') }}"
                         aria-expanded="false">
                         <i data-feather="users" class="feather-icon"></i>

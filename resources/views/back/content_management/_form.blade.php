@@ -117,6 +117,13 @@
                     @if ($errors->has('image'))
                         <div class="invalid-feedback">{{ $errors->first('image') }}</div>
                     @endif
+
+                    @if (!empty($content->image))
+                        <div class="mt-2">
+                            <img src="{{ asset('storage/' . $content->image) }}" alt="Image Preview"
+                                class="img-fluid rounded" style="max-height: 180px;">
+                        </div>
+                    @endif
                 </div>
 
                 <hr>
@@ -185,4 +192,3 @@
         });
     </script>
 @endpush
-<input type="text" name="slug" class="form-control"

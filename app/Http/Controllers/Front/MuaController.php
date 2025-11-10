@@ -4,6 +4,11 @@ namespace App\Http\Controllers\Front;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Booking;
+use App\Models\User;
+use App\Notifications\NewBookingNotification;
+use App\Events\BookingCreated;
+use Illuminate\Support\Facades\Notification;
 
 class MuaController extends Controller
 {
@@ -12,130 +17,44 @@ class MuaController extends Controller
      */
     public function index(Request $request)
     {
-        // Sample MUA data - in real application this would come from database
-        $muas = collect([
-            [
-                'id' => 1,
-                'name' => 'Sarah Martinez',
-                'location' => 'Malang | Lowokwaru',
-                'rating' => 4.8,
-                'reviews_count' => 19,
-                'price' => 270000,
-                'image' => asset('images/product-item1.jpg'),
-                'speciality' => 'Bridal'
-            ],
-            [
-                'id' => 2,
-                'name' => 'Maria Johnson',
-                'location' => 'Malang | Klojen',
-                'rating' => 5.0,
-                'reviews_count' => 0,
-                'price' => 250000,
-                'image' => asset('images/product-item2.jpg'),
-                'speciality' => 'Event'
-            ],
-            [
-                'id' => 3,
-                'name' => 'Emma Chen',
-                'location' => 'Malang | Lowokwaru',
-                'rating' => 4.3,
-                'reviews_count' => 12,
-                'price' => 290000,
-                'image' => asset('images/product-item3.jpg'),
-                'speciality' => 'Fashion'
-            ],
-            [
-                'id' => 4,
-                'name' => 'Jessica Liu',
-                'location' => 'Malang | Lowokwaru',
-                'rating' => 4.8,
-                'reviews_count' => 4,
-                'price' => 350000,
-                'image' => asset('images/product-item4.jpg'),
-                'speciality' => 'Editorial'
-            ],
-            [
-                'id' => 5,
-                'name' => 'Rachel Adams',
-                'location' => 'Surabaya | Gubeng',
-                'rating' => 4.9,
-                'reviews_count' => 25,
-                'price' => 320000,
-                'image' => asset('images/product-item5.jpg'),
-                'speciality' => 'Wedding'
-            ],
-            [
-                'id' => 6,
-                'name' => 'Linda Wong',
-                'location' => 'Jakarta | Kemang',
-                'rating' => 4.2,
-                'reviews_count' => 8,
-                'price' => 380000,
-                'image' => asset('images/product-item6.jpg'),
-                'speciality' => 'Party'
-            ],
-            [
-                'id' => 7,
-                'name' => 'Diana Sari',
-                'location' => 'Bandung | Dago',
-                'rating' => 5.0,
-                'reviews_count' => 15,
-                'price' => 450000,
-                'image' => asset('images/product-item7.jpg'),
-                'speciality' => 'Bridal'
-            ],
-            [
-                'id' => 8,
-                'name' => 'Sari Dewi',
-                'location' => 'Yogya | Sleman',
-                'rating' => 4.7,
-                'reviews_count' => 11,
-                'price' => 280000,
-                'image' => asset('images/product-item8.jpg'),
-                'speciality' => 'Event'
-            ],
-            // Add more MUAs for pagination demo
-            [
-                'id' => 9,
-                'name' => 'Anya Putri',
-                'location' => 'Jakarta | Senayan',
-                'rating' => 4.6,
-                'reviews_count' => 22,
-                'price' => 420000,
-                'image' => asset('images/product-item1.jpg'),
-                'speciality' => 'Fashion'
-            ],
-            [
-                'id' => 10,
-                'name' => 'Maya Sinta',
-                'location' => 'Surabaya | Tunjungan',
-                'rating' => 4.9,
-                'reviews_count' => 18,
-                'price' => 390000,
-                'image' => asset('images/product-item2.jpg'),
-                'speciality' => 'Editorial'
-            ]
-        ]);
+        // Use real Mua records from database. Map them to the front-end shape expected by views.
+        $query = \App\Models\Mua::with('services');
 
-        // Pagination logic
-        $perPage = 8; // Show 8 MUAs per page
-        $currentPage = $request->get('page', 1);
-        $total = $muas->count();
-        $items = $muas->forPage($currentPage, $perPage);
+        if ($q = $request->get('q')) {
+            $query->where(function ($sub) use ($q) {
+                $sub->where('name', 'like', "%{$q}%")->orWhere('specialty', 'like', "%{$q}%");
+            });
+        }
 
-        // Create pagination info
+        $perPage = 12;
+        $muas = $query->orderBy('created_at', 'desc')->paginate($perPage)->withQueryString();
+
+        // Map to array shape used by existing front templates
+        $items = $muas->map(function ($mua) {
+            $firstService = $mua->services->first();
+            return [
+                'id' => $mua->id,
+                'name' => $mua->name,
+                'location' => trim(implode(' | ', array_filter([$mua->city, $mua->district]))),
+                'rating' => (float) ($mua->rating ?? 4.5),
+                'reviews_count' => $mua->reviews_count ?? 0,
+                'price' => $firstService ? (int) $firstService->price : null,
+                'image' => $mua->image ? asset('storage/' . $mua->image) : asset('images/product-item1.jpg'),
+                'speciality' => $mua->specialty ?? '',
+            ];
+        });
+
         $pagination = [
-            'current_page' => $currentPage,
-            'per_page' => $perPage,
-            'total' => $total,
-            'last_page' => ceil($total / $perPage),
-            'has_more' => ($currentPage * $perPage) < $total
+            'current_page' => $muas->currentPage(),
+            'per_page' => $muas->perPage(),
+            'total' => $muas->total(),
+            'last_page' => $muas->lastPage(),
+            'has_more' => $muas->hasMorePages(),
         ];
 
-        // Filter options
         $filterOptions = [
             'events' => ['Wedding', 'Party', 'Corporate', 'Fashion', 'Editorial'],
-            'cities' => ['Jakarta', 'Surabaya', 'Bandung', 'Medan', 'Yogyakarta', 'Malang'],
+            'cities' => [],
             'dates' => ['Hari ini', 'Minggu ini', 'Bulan ini', 'Pilih tanggal'],
             'times' => ['Pagi (06:00-12:00)', 'Siang (12:00-18:00)', 'Malam (18:00-24:00)']
         ];
@@ -148,70 +67,38 @@ class MuaController extends Controller
      */
     public function show($id)
     {
-        // Sample MUA data - in real application this would come from database
-        $muas = collect([
-            [
-                'id' => 1,
-                'name' => 'Alia',
-                'location' => 'Malang | Lowokwaru',
-                'rating' => 4.8,
-                'reviews_count' => 19,
-                'price' => 270000,
-                'image' => asset('images/product-item1.jpg'),
-                'speciality' => 'soft glam & bridesmaid look'
-            ],
-            [
-                'id' => 2,
-                'name' => 'Maria Johnson',
-                'location' => 'Malang | Klojen',
-                'rating' => 5.0,
-                'reviews_count' => 15,
-                'price' => 250000,
-                'image' => asset('images/product-item2.jpg'),
-                'speciality' => 'Event makeup'
-            ],
-            [
-                'id' => 3,
-                'name' => 'Emma Chen',
-                'location' => 'Malang | Lowokwaru',
-                'rating' => 4.3,
-                'reviews_count' => 12,
-                'price' => 290000,
-                'image' => asset('images/product-item3.jpg'),
-                'speciality' => 'Fashion makeup'
-            ],
-            [
-                'id' => 4,
-                'name' => 'Jessica Liu',
-                'location' => 'Malang | Sukun',
-                'rating' => 4.7,
-                'reviews_count' => 28,
-                'price' => 320000,
-                'image' => asset('images/product-item4.jpg'),
-                'speciality' => 'Bridal & party makeup'
-            ]
-        ]);
-
-        $mua = $muas->where('id', $id)->first();
-
-        if (!$mua) {
+        $mua = \App\Models\Mua::with(['services', 'portfolios'])->find($id);
+        if (! $mua) {
             abort(404, 'MUA not found');
         }
 
-        // Add reviews key for compatibility
-        $mua['reviews'] = $mua['reviews_count'];
+        $firstService = $mua->services->first();
 
-        // Sample portfolio images
-        $portfolio = [
-            asset('images/product-item1.jpg'),
-            asset('images/product-item2.jpg'),
-            asset('images/product-item3.jpg'),
-            asset('images/product-item4.jpg'),
-            asset('images/product-item5.jpg'),
-            asset('images/product-item6.jpg')
+        $muaArr = [
+            'id' => $mua->id,
+            'name' => $mua->name,
+            'location' => trim(implode(' | ', array_filter([$mua->city, $mua->district]))),
+            'rating' => (float) ($mua->rating ?? 4.5),
+            'reviews' => $mua->reviews_count ?? 0,
+            'price' => $firstService ? (int) $firstService->price : null,
+            'image' => $mua->image ? asset('storage/' . $mua->image) : asset('images/product-item1.jpg'),
+            'speciality' => $mua->specialty ?? '',
         ];
 
-        return view('front.mua-detail', compact('mua', 'portfolio'));
+        $portfolio = $mua->portfolios->map(function ($p) {
+            return $p->image ? asset('storage/' . $p->image) : asset('images/product-item1.jpg');
+        })->toArray();
+
+        $services = $mua->services->map(function ($s) {
+            return [
+                'id' => $s->id,
+                'name' => $s->service_name ?? $s->name ?? 'Service',
+                'price' => $s->price,
+                'description' => $s->description,
+            ];
+        })->toArray();
+
+        return view('front.mua-detail', ['mua' => $muaArr, 'portfolio' => $portfolio, 'services' => $services]);
     }
 
     /**
@@ -228,16 +115,40 @@ class MuaController extends Controller
             'distance' => 'nullable|numeric',
             'selected_date' => 'required|date',
             'selected_time' => 'required|string',
-            'services' => 'array'
+            'services' => 'nullable|array',
+            'mua_service_id' => 'nullable|integer'
         ]);
 
-        // In real application, save booking to database
-        // For now, just return success response
+        // Persist booking
+        $booking = Booking::create([
+            'mua_id' => $id,
+            'mua_service_id' => $request->input('mua_service_id'),
+            'customer_id' => auth()->check() ? auth()->id() : null,
+            'customer_name' => $request->input('name'),
+            'customer_email' => $request->input('email'),
+            'customer_whatsapp' => $request->input('whatsapp'),
+            'customer_address' => $request->input('address'),
+            'distance_km' => $request->input('distance'),
+            'selected_date' => $request->input('selected_date'),
+            'selected_time' => $request->input('selected_time'),
+            'services' => $request->input('services') ?: null,
+            'status' => 'pending'
+        ]);
+
+        // Notify admins via Notification system and broadcast event
+        try {
+            $admins = User::where('role', 'admin')->get();
+            Notification::send($admins, new NewBookingNotification($booking));
+            event(new BookingCreated($booking));
+        } catch (\Exception $e) {
+            // don't fail booking if notification fails; log later
+            logger()->error('Failed to notify admins about booking: ' . $e->getMessage());
+        }
 
         return response()->json([
             'status' => 'success',
             'message' => 'Booking request submitted successfully! MUA will contact you soon.',
-            'booking_id' => 'BK' . time()
+            'booking_id' => 'BK' . $booking->id
         ]);
     }
 }
