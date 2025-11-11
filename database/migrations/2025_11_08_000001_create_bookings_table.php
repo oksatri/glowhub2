@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('selected_time')->nullable();
             $table->json('services')->nullable();
 
-            $table->enum('status', ['pending', 'confirmed', 'rejected', 'completed'])->default('pending');
+            $table->enum('status', ['pending', 'confirmed', 'rejected'])->default('pending');
             $table->text('admin_note')->nullable();
 
             $table->timestamps();

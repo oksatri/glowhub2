@@ -89,26 +89,32 @@ class MuaController extends Controller
      */
     public function show($id)
     {
-        $mua = \App\Models\Mua::with(['services', 'portfolios'])->find($id);
+        $mua = \App\Models\Mua::with(['services', 'portfolios' => function ($q) {
+            $q->with('service');
+        }, 'rel_province', 'rel_city', 'rel_district'])->find($id);
         if (! $mua) {
             abort(404, 'MUA not found');
         }
 
-        $firstService = $mua->services->first();
+        $firstService = $mua->services->sortBy('price')->first();
 
         $muaArr = [
             'id' => $mua->id,
             'name' => $mua->name,
-            'location' => trim(implode(' | ', array_filter([$mua->city, $mua->district]))),
+            'description' => $mua->description,
+            'location' => trim(implode(' | ', array_filter([$mua->rel_city->name ?? '', $mua->rel_district->name ?? '']))),
             'rating' => (float) ($mua->rating ?? 4.5),
-            'reviews' => $mua->reviews_count ?? 0,
             'price' => $firstService ? (int) $firstService->price : null,
             'image' => $mua->image ? asset('storage/' . $mua->image) : asset('images/product-item1.jpg'),
             'speciality' => $mua->specialty ?? '',
+            'experience' => $mua->experience ?? '',
         ];
 
         $portfolio = $mua->portfolios->map(function ($p) {
-            return $p->image ? asset('storage/' . $p->image) : asset('images/product-item1.jpg');
+            return [
+                'image' => $p->image ? asset('storage/' . $p->image) : asset('images/product-item1.jpg'),
+                'service_name' => $p->service->service_name ?? null,
+            ];
         })->toArray();
 
         $services = $mua->services->map(function ($s) {

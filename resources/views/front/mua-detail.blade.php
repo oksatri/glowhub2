@@ -156,7 +156,7 @@
                                     <h3 class="fw-bold text-primary mb-2">{{ $mua['name'] }}</h3>
                                     <p class="text-muted mb-2">{{ $mua['speciality'] }} Specialist</p>
                                     <p class="small text-secondary fst-italic">
-                                        "Membuat Anda terlihat natural namun bersinar di setiap kesempatan"
+                                        {{ $mua['description'] }}
                                     </p>
                                 </div>
 
@@ -189,7 +189,7 @@
                                     </div>
                                     <div class="col-6">
                                         <h6 class="fw-bold text-primary mb-1">Experience</h6>
-                                        <p class="fw-semibold text-dark mb-0">3+ Tahun</p>
+                                        <p class="fw-semibold text-dark mb-0">{{ $mua['experience'] }} Tahun</p>
                                     </div>
                                 </div>
                             </div>
@@ -203,27 +203,24 @@
                                 </h5>
                                 <div class="row g-3">
                                     @php
-                                        $portfolioImages = [
-                                            asset('images/product-item1.jpg'),
-                                            asset('images/product-item2.jpg'),
-                                            asset('images/product-item3.jpg'),
-                                            asset('images/product-item4.jpg'),
+                                        $badgeClasses = [
+                                            'bg-primary',
+                                            'bg-success',
+                                            'bg-danger',
+                                            'bg-warning',
+                                            'bg-info',
+                                            'bg-secondary',
                                         ];
                                     @endphp
-                                    @foreach ($portfolioImages as $index => $image)
+                                    @foreach ($portfolio as $index => $val)
                                         <div class="col-6">
                                             <div class="portfolio-item position-relative">
-                                                <img src="{{ $image }}" alt="Portfolio" class="img-fluid rounded"
+                                                <img src="{{ $val['image'] }}" alt="Portfolio" class="img-fluid rounded"
                                                     style="height: 120px; width: 100%; object-fit: cover; cursor: pointer;">
-                                                @if ($index == 0)
-                                                    <div class="position-absolute top-0 start-0 m-2">
-                                                        <span class="badge bg-primary">Wedding</span>
-                                                    </div>
-                                                @elseif($index == 1)
-                                                    <div class="position-absolute top-0 start-0 m-2">
-                                                        <span class="badge bg-success">Party</span>
-                                                    </div>
-                                                @endif
+                                                <div class="position-absolute top-0 start-0 m-2">
+                                                    <span
+                                                        class="badge {{ $badgeClasses[array_rand($badgeClasses)] }}">{{ $val['service_name'] }}</span>
+                                                </div>
                                             </div>
                                         </div>
                                     @endforeach

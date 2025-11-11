@@ -15,19 +15,62 @@ class BookingController extends Controller
             auth()->user()->unreadNotifications->markAsRead();
         }
 
-        $query = Booking::with(['mua', 'service', 'customer'])->orderByRaw("FIELD(status, 'pending','confirmed','rejected','completed')");
-        $bookings = $query->paginate(20);
+        // Use a portable CASE ordering instead of MySQL FIELD() which doesn't exist in PostgreSQL
+        $orderExpr = "CASE WHEN status = 'pending' THEN 1 WHEN status = 'confirmed' THEN 2 WHEN status = 'rejected' THEN 3 WHEN status = 'completed' THEN 4 ELSE 5 END";
 
-        return view('back.bookings.index', compact('bookings'));
+        $query = Booking::with(['mua', 'service', 'customer']);
+
+        // Filters: q (search across customer/mua/service), status, date
+        if ($q = $request->get('q')) {
+            $query->where(function ($sub) use ($q) {
+                $sub->where('customer_name', 'like', "%{$q}%")
+                    ->orWhereHas('mua', function ($qq) use ($q) {
+                        $qq->where('name', 'like', "%{$q}%");
+                    })
+                    ->orWhereHas('service', function ($qq) use ($q) {
+                        $qq->where('service_name', 'like', "%{$q}%");
+                    });
+            });
+        }
+
+        if ($status = $request->get('status')) {
+            $query->where('status', $status);
+        }
+
+        if ($date = $request->get('date')) {
+            $query->whereDate('selected_date', $date);
+        }
+
+        $query->orderByRaw($orderExpr);
+
+        $bookings = $query->paginate(20)->withQueryString();
+
+        // pass current filters to view for form prefill
+        $q = $request->get('q');
+        $status = $request->get('status');
+        $date = $request->get('date');
+
+        return view('back.bookings.index', compact('bookings', 'q', 'status', 'date'));
     }
 
     public function update(Request $request, $id)
     {
         $booking = Booking::findOrFail($id);
-        $validated = $request->validate([
+        // require admin_note when rejecting
+        $rules = [
             'status' => 'required|in:pending,confirmed,rejected,completed',
             'admin_note' => 'nullable|string'
-        ]);
+        ];
+        if ($request->input('status') === 'rejected') {
+            $rules['admin_note'] = 'required|string';
+        }
+
+        $validated = $request->validate($rules);
+
+        // Prevent changing a completed booking
+        if ($booking->status === 'completed' && ($validated['status'] ?? null) !== 'completed') {
+            return redirect()->back()->with('error', 'Completed bookings cannot be modified.');
+        }
 
         $booking->update([
             'status' => $validated['status'],
