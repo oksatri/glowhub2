@@ -100,9 +100,9 @@
                                     <a href="{{ $isHomePage ? '#contact' : url('/#contact') }}" class="nav-link">Contact
                                         Us</a>
                                 </li>
-                                <li class="menu-item">
+                                {{-- <li class="menu-item">
                                     <a href="{{ route('login') }}" class="nav-link">Login</a>
-                                </li>
+                                </li> --}}
                             </ul>
                         </div>
                     </nav>
