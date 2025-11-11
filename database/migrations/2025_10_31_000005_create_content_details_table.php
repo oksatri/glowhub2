@@ -21,6 +21,9 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->json('additional')->nullable()->comment('extra structured data');
             $table->integer('order')->default(0)->index();
+            $table->boolean('has_button')->default(false);
+            $table->unsignedSmallInteger('buttons_count')->default(0);
+            $table->json('buttons')->nullable()->comment('JSON array for button texts/links');
             $table->timestamps();
         });
     }
