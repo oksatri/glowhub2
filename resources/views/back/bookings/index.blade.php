@@ -45,8 +45,6 @@
                                     Confirmed</option>
                                 <option value="rejected" {{ isset($status) && $status == 'rejected' ? 'selected' : '' }}>
                                     Rejected</option>
-                                <option value="completed" {{ isset($status) && $status == 'completed' ? 'selected' : '' }}>
-                                    Completed</option>
                             </select>
                         </div>
 
