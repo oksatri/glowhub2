@@ -40,10 +40,18 @@ class BookingController extends Controller
         if ($date = $request->get('date')) {
             $query->whereDate('selected_date', $date);
         }
+        // Cek role auth, jika selain admin maka filter booking berdasarkan mua yang terhubung dengan user
+        $user = auth()->user();
+        if ($user && $user->role !== 'admin') {
+            // Cari booking berdasarkan mua yang user_id-nya sama dengan user saat ini
+            $query->whereHas('mua', function ($q) use ($user) {
+                $q->where('user_id', $user->id);
+            });
+        }
 
         $query->orderByRaw($orderExpr);
 
-        $bookings = $query->paginate(20)->withQueryString();
+        $bookings = $query->paginate(10)->withQueryString();
 
         // pass current filters to view for form prefill
         $q = $request->get('q');
@@ -78,5 +86,29 @@ class BookingController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Booking updated');
+    }
+
+    /**
+     * Return pending booking count and recent pending items (JSON).
+     * This endpoint is used by the admin header as a polling fallback when Echo is not available.
+     */
+    public function pending(Request $request)
+    {
+        $recent = Booking::where('status', 'pending')->latest()->take(5)->get();
+        $count = Booking::where('status', 'pending')->count();
+
+        $items = $recent->map(function ($r) {
+            return [
+                'id' => $r->id,
+                'customer_name' => $r->customer_name ?? optional($r->customer)->name,
+                'selected_date' => optional($r->selected_date)->format('Y-m-d'),
+                'selected_time' => $r->selected_time,
+            ];
+        });
+
+        return response()->json([
+            'count' => $count,
+            'recent' => $items,
+        ]);
     }
 }

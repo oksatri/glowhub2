@@ -61,7 +61,7 @@
                                                 <i data-feather="calendar" class="text-white"></i>
                                             </div>
                                             <div class="w-75 d-inline-block v-middle pl-2">
-                                                <h6 class="message-title mb-0 mt-1">Booking #{{ $r->id }}</h6>
+                                                <h6 class="message-title mb-0 mt-1">BK #{{ $r->id }}</h6>
                                                 <span class="font-12 text-nowrap d-block text-muted">
                                                     {{ $r->customer_name ?? optional($r->customer)->name }}
                                                 </span>
@@ -78,7 +78,7 @@
                             </li>
                             <li>
                                 <div class="nav-link pt-3 text-center text-dark mb-0" style="cursor: default;">
-                                    <strong>Total Pending: {{ $pendingCount }}</strong>
+                                    <a href="{{ route('admin.bookings.index') }}" class="d-block mt-2">See all</a>
                                 </div>
                             </li>
                         </ul>
@@ -156,37 +156,135 @@
             (function() {
                 // Wait until DOM ready
                 document.addEventListener('DOMContentLoaded', function() {
-                    if (typeof window.Echo === 'undefined') {
-                        // Echo not configured — nothing to do
-                        return;
-                    }
+                    var POLL_INTERVAL = 10000; // ms
 
-                    try {
-                        // Listen on public 'bookings' channel for BookingCreated event
-                        window.Echo.channel('bookings')
-                            .listen('BookingCreated', function(e) {
-                                // e should contain booking data
-                                var booking = e.booking || e;
+                    function applyItemsAndCount(data) {
+                        try {
+                            var count = parseInt(data.count || 0, 10) || 0;
 
-                                // Update badge count
-                                var badge = document.querySelector('.notify-no');
-                                var count = 0;
-                                if (badge) {
-                                    count = parseInt(badge.textContent || '0', 10) || 0;
-                                    count = count + 1;
-                                    badge.textContent = count;
-                                } else {
-                                    // create badge and append to bell
+                            // Update badge
+                            var badge = document.querySelector('.notify-no');
+                            if (count > 0) {
+                                if (badge) badge.textContent = count;
+                                else {
                                     var bell = document.querySelector('#bell');
                                     if (bell) {
                                         var span = document.createElement('span');
                                         span.className = 'badge badge-primary notify-no rounded-circle';
-                                        span.textContent = '1';
+                                        span.textContent = String(count);
+                                        bell.appendChild(span);
+                                    }
+                                }
+                            } else if (badge) {
+                                // remove badge when zero
+                                badge.remove();
+                            }
+
+                            // Replace recent list markup with latest items
+                            var container = document.querySelector('.message-center.notifications');
+                            if (container) {
+                                // clear
+                                container.innerHTML = '';
+
+                                if (data.recent && data.recent.length) {
+                                    data.recent.forEach(function(item) {
+                                        var div = document.createElement('div');
+                                        div.className =
+                                            'message-item d-flex align-items-center border-bottom px-3 py-2';
+
+                                        var icon = document.createElement('div');
+                                        icon.className = 'btn btn-warning rounded-circle btn-circle';
+                                        icon.innerHTML =
+                                            '<i data-feather="calendar" class="text-white"></i>';
+
+                                        var info = document.createElement('div');
+                                        info.className = 'w-75 d-inline-block v-middle pl-2';
+
+                                        var title = document.createElement('h6');
+                                        title.className = 'message-title mb-0 mt-1';
+                                        title.textContent = 'Booking #' + (item.id || '');
+
+                                        var nameSpan = document.createElement('span');
+                                        nameSpan.className = 'font-12 text-nowrap d-block text-muted';
+                                        nameSpan.textContent = item.customer_name || '';
+
+                                        var dateSpan = document.createElement('span');
+                                        dateSpan.className = 'font-12 text-nowrap d-block text-muted';
+                                        var dateText = '';
+                                        if (item.selected_date) dateText += item.selected_date;
+                                        if (item.selected_time) dateText += ' ' + item.selected_time;
+                                        dateSpan.textContent = dateText;
+
+                                        info.appendChild(title);
+                                        info.appendChild(nameSpan);
+                                        info.appendChild(dateSpan);
+
+                                        div.appendChild(icon);
+                                        div.appendChild(info);
+
+                                        container.appendChild(div);
+                                    });
+                                } else {
+                                    var empty = document.createElement('div');
+                                    empty.className = 'px-3 py-2 text-muted';
+                                    empty.textContent = 'No new bookings';
+                                    container.appendChild(empty);
+                                }
+
+                                // Update 'Total Pending' text
+                                var totalElem = document.querySelector(
+                                    '.nav-link.pt-3.text-center.text-dark.mb-0 strong');
+                                if (totalElem) totalElem.textContent = 'Total Pending: ' + count;
+
+                                // Refresh feather icons inside the newly built nodes
+                                if (window.feather) window.feather.replace();
+                            }
+                        } catch (err) {
+                            console.error('applyItemsAndCount error', err);
+                        }
+                    }
+
+                    function pollPending() {
+                        var url = "{{ route('admin.bookings.pending') }}";
+                        fetch(url, {
+                                credentials: 'same-origin',
+                                headers: {
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                }
+                            })
+                            .then(function(res) {
+                                return res.json();
+                            })
+                            .then(function(data) {
+                                applyItemsAndCount(data);
+                            })
+                            .catch(function(err) {
+                                // ignore network errors silently
+                            });
+                    }
+
+                    // If Echo is configured, use real-time listener. Otherwise fallback to polling.
+                    if (typeof window.Echo !== 'undefined') {
+                        try {
+                            window.Echo.channel('bookings').listen('BookingCreated', function(e) {
+                                var booking = e.booking || e;
+
+                                // increment badge or create
+                                var badge = document.querySelector('.notify-no');
+                                var current = badge ? (parseInt(badge.textContent || '0', 10) || 0) : 0;
+                                var newCount = current + 1;
+                                if (badge) badge.textContent = newCount;
+                                else {
+                                    var bell = document.querySelector('#bell');
+                                    if (bell) {
+                                        var span = document.createElement('span');
+                                        span.className = 'badge badge-primary notify-no rounded-circle';
+                                        span.textContent = String(newCount);
                                         bell.appendChild(span);
                                     }
                                 }
 
-                                // Prepend new item to recent list (if exists)
+                                // prepend item to recent list so user sees it instantly
                                 var container = document.querySelector('.message-center.notifications');
                                 if (container) {
                                     var div = document.createElement('div');
@@ -202,12 +300,12 @@
 
                                     var title = document.createElement('h6');
                                     title.className = 'message-title mb-0 mt-1';
-                                    title.textContent = 'Booking #' + (booking.id || booking.booking_id || '');
+                                    title.textContent = 'Booking #' + (booking.id || booking.booking_id ||
+                                        '');
 
                                     var nameSpan = document.createElement('span');
                                     nameSpan.className = 'font-12 text-nowrap d-block text-muted';
-                                    nameSpan.textContent = booking.customer_name || (booking.customer && booking
-                                        .customer.name) || '';
+                                    nameSpan.textContent = booking.customer_name || '';
 
                                     var dateSpan = document.createElement('span');
                                     dateSpan.className = 'font-12 text-nowrap d-block text-muted';
@@ -223,30 +321,33 @@
                                     div.appendChild(icon);
                                     div.appendChild(info);
 
-                                    // If 'No new bookings' placeholder exists, remove it
                                     var empty = container.querySelector('.px-3.py-2.text-muted');
                                     if (empty) empty.remove();
-
-                                    // Prepend
-                                    if (container.firstChild) container.insertBefore(div, container.firstChild);
+                                    if (container.firstChild) container.insertBefore(div, container
+                                        .firstChild);
                                     else container.appendChild(div);
 
-                                    // Update 'Total Pending' text
                                     var totalElem = document.querySelector(
                                         '.nav-link.pt-3.text-center.text-dark.mb-0 strong');
                                     if (totalElem) {
-                                        var current = parseInt(totalElem.textContent.replace(/[^0-9]/g, ''),
+                                        var cur = parseInt(totalElem.textContent.replace(/[^0-9]/g, ''),
                                             10) || 0;
-                                        totalElem.textContent = 'Total Pending: ' + (current + 1);
+                                        totalElem.textContent = 'Total Pending: ' + (cur + 1);
                                     }
 
-                                    // Re-run feather icons for newly added icon
                                     if (window.feather) window.feather.replace();
                                 }
                             });
-                    } catch (err) {
-                        // fail silently
-                        console.error('Echo booking listener error', err);
+                        } catch (err) {
+                            console.error('Echo booking listener error', err);
+                            // if Echo failed for some reason, fall back to polling
+                            pollPending();
+                            setInterval(pollPending, POLL_INTERVAL);
+                        }
+                    } else {
+                        // Poll every POLL_INTERVAL ms for pending updates if Echo not available
+                        pollPending();
+                        setInterval(pollPending, POLL_INTERVAL);
                     }
                 });
             })

@@ -75,6 +75,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('muas/{mua}/portfolios/{id}', [BackMuaPortfolioController::class, 'destroy'])->name('admin.muas.portfolios.destroy');
         // Bookings
         Route::get('bookings', [\App\Http\Controllers\Back\BookingController::class, 'index'])->name('admin.bookings.index');
+        Route::get('bookings/pending', [\App\Http\Controllers\Back\BookingController::class, 'pending'])->name('admin.bookings.pending');
         Route::put('bookings/{id}', [\App\Http\Controllers\Back\BookingController::class, 'update'])->name('admin.bookings.update');
     });
 

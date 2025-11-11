@@ -539,7 +539,7 @@
                             var html = '<div class="alert alert-success">' + res.message +
                                 '<br>Booking ID: <strong>' + res.booking_id + '</strong></div>';
                             // prepend message and reset selections
-                            $('.card-body').first().prepend(html);
+                            $('#bookNowBtn').after(html);
                             $('.day-btn').removeClass('btn-primary').addClass(
                                 'btn-outline-secondary');
                             $('.time-slot').removeClass('btn-primary').addClass(
@@ -549,6 +549,9 @@
                                 .val('');
                             // reset form fields except prefilled auth info
                             $('#bk_address').val('');
+                            setTimeout(function() {
+                                $('.alert.alert-success').remove();
+                            }, 5000);
                         } else {
                             alert(res.message || 'Booking failed');
                         }
