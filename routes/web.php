@@ -73,20 +73,20 @@ Route::middleware('auth')->group(function () {
         // Portfolios
         Route::post('muas/{mua}/portfolios', [BackMuaPortfolioController::class, 'store'])->name('admin.muas.portfolios.store');
         Route::delete('muas/{mua}/portfolios/{id}', [BackMuaPortfolioController::class, 'destroy'])->name('admin.muas.portfolios.destroy');
-        // Bookings
-        Route::get('bookings', [\App\Http\Controllers\Back\BookingController::class, 'index'])->name('admin.bookings.index');
-        Route::get('bookings/pending', [\App\Http\Controllers\Back\BookingController::class, 'pending'])->name('admin.bookings.pending');
-        Route::put('bookings/{id}', [\App\Http\Controllers\Back\BookingController::class, 'update'])->name('admin.bookings.update');
+    // Bookings (admin area) — use an explicit admin URI to avoid collision with MUA routes
+    Route::get('admin/bookings', [\App\Http\Controllers\Back\BookingController::class, 'index'])->name('admin.bookings.index');
+    Route::get('admin/bookings/pending', [\App\Http\Controllers\Back\BookingController::class, 'pending'])->name('admin.bookings.pending');
+    Route::put('admin/bookings/{id}', [\App\Http\Controllers\Back\BookingController::class, 'update'])->name('admin.bookings.update');
     });
 
     // MUA routes
-    Route::middleware([\App\Http\Middleware\RoleMiddleware::class . ':mua'])->group(function () {
+    Route::middleware([RoleMiddleware::class . ':mua'])->group(function () {
         // Tambahkan route khusus mua di sini
         // Contoh: Route::get('/mua/dashboard', [MuaController::class, 'dashboard'])->name('mua.dashboard');
         // Bookings (MUA-specific route names, under /mua prefix to avoid URI collision)
-        Route::get('mua/bookings', [\App\Http\Controllers\Back\BookingController::class, 'index'])->name('mua.bookings.index');
-        Route::get('mua/bookings/pending', [\App\Http\Controllers\Back\BookingController::class, 'pending'])->name('mua.bookings.pending');
-        Route::put('mua/bookings/{id}', [\App\Http\Controllers\Back\BookingController::class, 'update'])->name('mua.bookings.update');
+        Route::get('auth-mua/bookings', [\App\Http\Controllers\Back\BookingController::class, 'index'])->name('auth-mua.bookings.index');
+        Route::get('auth-mua/bookings/pending', [\App\Http\Controllers\Back\BookingController::class, 'pending'])->name('auth-mua.bookings.pending');
+        Route::put('auth-mua/bookings/{id}', [\App\Http\Controllers\Back\BookingController::class, 'update'])->name('auth-mua.bookings.update');
 
         // MUA management
         Route::resource('muas', BackMuaController::class, [
@@ -100,7 +100,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('muas/{mua}/portfolios/{id}', [BackMuaPortfolioController::class, 'destroy'])->name('muas.portfolios.destroy');
     });
     // Member routes
-    Route::middleware('role:member')->group(function () {
+    Route::middleware([RoleMiddleware::class . ':member'])->group(function () {
         // Tambahkan route khusus member di sini
         // Contoh: Route::get('/member/profile', [MemberController::class, 'profile'])->name('member.profile');
     });

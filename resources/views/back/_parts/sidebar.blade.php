@@ -47,7 +47,7 @@
                                 $pendingCount = $pendingCount->count();
                                 $bookingsRoute =
                                     auth()->check() && auth()->user()->role === 'mua'
-                                        ? route('mua.bookings.index')
+                                        ? route('auth-mua.bookings.index')
                                         : route('admin.bookings.index');
                             @endphp
                             <a class="sidebar-link {{ request()->is('bookings*') || request()->is('mua/bookings*') ? 'active' : '' }}"
@@ -101,7 +101,7 @@
                                 $pendingCount = $pendingCount->count();
                                 $bookingsRoute =
                                     auth()->check() && auth()->user()->role === 'mua'
-                                        ? route('mua.bookings.index')
+                                        ? route('auth-mua.bookings.index')
                                         : route('admin.bookings.index');
                             @endphp
                             <a class="sidebar-link {{ request()->is('bookings*') || request()->is('mua/bookings*') ? 'active' : '' }}"

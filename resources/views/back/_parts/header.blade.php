@@ -53,11 +53,11 @@
                         // choose routes depending on role (admin vs mua)
                         $bookingsIndexRoute =
                             auth()->check() && auth()->user()->role === 'mua'
-                                ? route('mua.bookings.index')
+                                ? route('auth-mua.bookings.index')
                                 : route('admin.bookings.index');
                         $bookingsPendingRoute =
                             auth()->check() && auth()->user()->role === 'mua'
-                                ? route('mua.bookings.pending')
+                                ? route('auth-mua.bookings.pending')
                                 : route('admin.bookings.pending');
                     @endphp
                     <a class="nav-link dropdown-toggle pl-md-3 position-relative" href="#" id="bell"

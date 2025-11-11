@@ -116,6 +116,13 @@
                             </div>
                             <div class="col-lg-12">
                                 <div class="form-group">
+                                    <input class="form-control" type="text" name="username" placeholder="Username (no spaces or special characters)"
+                                        pattern="^[a-zA-Z0-9_-]+$" title="Username can only contain letters, numbers, underscores, and hyphens"
+                                        required>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="form-group">
                                     <input class="form-control" type="email" name="email" placeholder="Email Address"
                                         required>
                                 </div>

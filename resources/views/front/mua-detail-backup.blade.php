@@ -888,8 +888,8 @@ from {
         timeSlots.forEach((slot, index) => {
             slotsHtml += `
                         <button class="btn w-100 mb-2 time-slot-btn ${!slot.available ? 'disabled' : ''}"
-                                style="padding: 12px; border-radius: 10px; border: 2px solid ${slot.available ? '#f8bbbd' : '#e9ecef'}; 
-                                       background: ${slot.available ? '#fff' : '#f8f9fa'}; 
+                                style="padding: 12px; border-radius: 10px; border: 2px solid ${slot.available ? '#f8bbbd' : '#e9ecef'};
+                                       background: ${slot.available ? '#fff' : '#f8f9fa'};
                                        color: ${slot.available ? '#845d70' : '#6c757d'};"
                                 ${!slot.available ? 'disabled' : ''}
                                 data-time="${slot.time}">
@@ -1013,7 +1013,7 @@ from {
         formData.append('services', JSON.stringify(selectedServices));
 
         // Submit booking
-        fetch(`{{ route('mua.book', $mua['id']) }}`, {
+        fetch(`{{ route('auth-mua.book', $mua['id']) }}`, {
                 method: 'POST',
                 body: formData,
                 headers: {
@@ -1068,10 +1068,10 @@ from {
                                 <i class="fas fa-check-circle" style="font-size: 4rem; color: #28a745;"></i>
                             </div>
                             <h4 class="fw-bold mb-3" style="color: #845d70;">Booking Successful!</h4>
-                            <p class="text-muted mb-4">Your booking request has been submitted successfully. 
+                            <p class="text-muted mb-4">Your booking request has been submitted successfully.
                                The MUA will contact you soon to confirm the details.</p>
                             <p class="small text-muted">Booking ID: <strong>${data.booking_id}</strong></p>
-                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" 
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
                                     style="background: #845d70; border: none; border-radius: 15px; padding: 10px 30px;">
                                 Got it!
                             </button>

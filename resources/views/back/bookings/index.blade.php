@@ -4,10 +4,10 @@
 @section('content')
     @php
         $bookingsIndexUrl = route(
-            auth()->check() && auth()->user()->role === 'mua' ? 'mua.bookings.index' : 'admin.bookings.index',
+            auth()->check() && auth()->user()->role === 'mua' ? 'auth-mua.bookings.index' : 'admin.bookings.index',
         );
         $bookingsUpdateName =
-            auth()->check() && auth()->user()->role === 'mua' ? 'mua.bookings.update' : 'admin.bookings.update';
+            auth()->check() && auth()->user()->role === 'mua' ? 'auth-mua.bookings.update' : 'admin.bookings.update';
     @endphp
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
