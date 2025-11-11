@@ -1,67 +1,82 @@
 @extends('back._parts.master')
 @section('page-title', 'Dashboard')
 @section('content')
+    {{-- Data provided by Back\DashboardController@index --}}
+
     <div class="card-group">
+        @php
+            $bookingsIndexRoute =
+                auth()->check() && auth()->user()->role === 'mua'
+                    ? route('mua.bookings.index')
+                    : route('admin.bookings.index');
+        @endphp
+
         <div class="card border-right">
             <div class="card-body">
-                <div class="d-flex d-lg-flex d-md-block align-items-center">
+                <div class="d-flex align-items-center">
                     <div>
-                        <div class="d-inline-flex align-items-center">
-                            <h2 class="text-dark mb-1 font-weight-medium">236</h2>
-                            <span
-                                class="badge bg-primary font-12 text-white font-weight-medium badge-pill ml-2 d-lg-block d-md-none">+18.33%</span>
-                        </div>
-                        <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">New Clients</h6>
+                        <h3 class="text-dark mb-1 font-weight-medium">{{ number_format($usersCount) }}</h3>
+                        <h6 class="text-muted mb-0">Total Users</h6>
                     </div>
-                    <div class="ml-auto mt-md-3 mt-lg-0">
-                        <span class="opacity-7 text-muted"><i data-feather="user-plus"></i></span>
+                    <div class="ml-auto text-right">
+                        @if (!is_null($usersCompare))
+                            <span
+                                class="badge badge-pill {{ $usersCompare >= 0 ? 'badge-success' : 'badge-danger' }}">{{ $usersCompare }}%</span>
+                            <div class="small text-muted">last 30 days</div>
+                        @else
+                            <div class="small text-muted">no comparison</div>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
         <div class="card border-right">
             <div class="card-body">
-                <div class="d-flex d-lg-flex d-md-block align-items-center">
+                <div class="d-flex align-items-center">
                     <div>
-                        <h2 class="text-dark mb-1 w-100 text-truncate font-weight-medium"><sup
-                                class="set-doller">$</sup>18,306</h2>
-                        <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Earnings of
-                            Month
-                        </h6>
+                        <h3 class="text-dark mb-1 font-weight-medium">{{ number_format($muasCount) }}</h3>
+                        <h6 class="text-muted mb-0">Total MUAs</h6>
                     </div>
-                    <div class="ml-auto mt-md-3 mt-lg-0">
-                        <span class="opacity-7 text-muted"><i data-feather="dollar-sign"></i></span>
+                    <div class="ml-auto text-right">
+                        @if (!is_null($muasCompare))
+                            <span
+                                class="badge badge-pill {{ $muasCompare >= 0 ? 'badge-success' : 'badge-danger' }}">{{ $muasCompare }}%</span>
+                            <div class="small text-muted">last 30 days</div>
+                        @else
+                            <div class="small text-muted">no comparison</div>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
         <div class="card border-right">
             <div class="card-body">
-                <div class="d-flex d-lg-flex d-md-block align-items-center">
+                <div class="d-flex align-items-center">
                     <div>
-                        <div class="d-inline-flex align-items-center">
-                            <h2 class="text-dark mb-1 font-weight-medium">1538</h2>
-                            <span
-                                class="badge bg-danger font-12 text-white font-weight-medium badge-pill ml-2 d-md-none d-lg-block">-18.33%</span>
-                        </div>
-                        <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">New Projects
-                        </h6>
+                        <h3 class="text-dark mb-1 font-weight-medium">{{ number_format($bookingsCount) }}</h3>
+                        <h6 class="text-muted mb-0">Total Bookings</h6>
                     </div>
-                    <div class="ml-auto mt-md-3 mt-lg-0">
-                        <span class="opacity-7 text-muted"><i data-feather="file-plus"></i></span>
+                    <div class="ml-auto text-right">
+                        @if (!is_null($bookingsCompare))
+                            <span
+                                class="badge badge-pill {{ $bookingsCompare >= 0 ? 'badge-success' : 'badge-danger' }}">{{ $bookingsCompare }}%</span>
+                            <div class="small text-muted">last 30 days</div>
+                        @else
+                            <div class="small text-muted">no comparison</div>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
         <div class="card">
             <div class="card-body">
-                <div class="d-flex d-lg-flex d-md-block align-items-center">
+                <div class="d-flex align-items-center">
                     <div>
-                        <h2 class="text-dark mb-1 font-weight-medium">864</h2>
-                        <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Projects</h6>
+                        <h3 class="text-dark mb-1 font-weight-medium">{{ number_format($pendingCount) }}</h3>
+                        <h6 class="text-muted mb-0">Pending Bookings</h6>
                     </div>
-                    <div class="ml-auto mt-md-3 mt-lg-0">
-                        <span class="opacity-7 text-muted"><i data-feather="globe"></i></span>
+                    <div class="ml-auto text-right">
+                        <a href="{{ $bookingsIndexRoute }}" class="btn btn-outline-primary btn-sm">View bookings</a>
                     </div>
                 </div>
             </div>
@@ -71,23 +86,25 @@
         <div class="col-lg-4 col-md-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Total Sales</h4>
-                    <div id="campaign-v2" class="mt-2" style="height:283px; width:100%;"></div>
-                    <ul class="list-style-none mb-0">
+                    <h4 class="card-title">Bookings Trend (7 days)</h4>
+                    <div class="mt-2" style="height:283px; width:100%;">
+                        <canvas id="bookingTrendChart" style="height:260px; width:100%;"></canvas>
+                    </div>
+                    <ul class="list-style-none mb-0 mt-3">
                         <li>
                             <i class="fas fa-circle text-primary font-10 mr-2"></i>
-                            <span class="text-muted">Direct Sales</span>
-                            <span class="text-dark float-right font-weight-medium">$2346</span>
+                            <span class="text-muted">Total (30 days)</span>
+                            <span class="text-dark float-right font-weight-medium">{{ $last30_bookings }}</span>
                         </li>
                         <li class="mt-3">
                             <i class="fas fa-circle text-danger font-10 mr-2"></i>
-                            <span class="text-muted">Referral Sales</span>
-                            <span class="text-dark float-right font-weight-medium">$2108</span>
+                            <span class="text-muted">Previous 30 days</span>
+                            <span class="text-dark float-right font-weight-medium">{{ $prev30_bookings }}</span>
                         </li>
                         <li class="mt-3">
                             <i class="fas fa-circle text-cyan font-10 mr-2"></i>
-                            <span class="text-muted">Affiliate Sales</span>
-                            <span class="text-dark float-right font-weight-medium">$1204</span>
+                            <span class="text-muted">Pending</span>
+                            <span class="text-dark float-right font-weight-medium">{{ $pendingCount }}</span>
                         </li>
                     </ul>
                 </div>
@@ -111,7 +128,7 @@
                     <div class="" style="height:180px">
                         <div id="visitbylocate" style="height:100%"></div>
                     </div>
-                    <div class="row mb-3 align-items-center mt-1 mt-5">
+                    <div class="row mb-3 align-items-center mt-5">
                         <div class="col-4 text-right">
                             <span class="text-muted font-14">India</span>
                         </div>
@@ -203,50 +220,33 @@
         <div class="col-md-6 col-lg-4">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Recent Activity</h4>
+                    <h4 class="card-title">Recent Bookings</h4>
                     <div class="mt-4 activity">
-                        <div class="d-flex align-items-start border-left-line pb-3">
-                            <div>
-                                <a href="javascript:void(0)" class="btn btn-info btn-circle mb-2 btn-item">
-                                    <i data-feather="shopping-cart"></i>
-                                </a>
+                        @forelse($recentBookings as $b)
+                            <div class="d-flex align-items-start border-left-line pb-3">
+                                <div>
+                                    <a href="{{ route('back.bookings.show', $b->id) }}"
+                                        class="btn btn-info btn-circle mb-2 btn-item">
+                                        <i data-feather="calendar"></i>
+                                    </a>
+                                </div>
+                                <div class="ml-3 mt-2">
+                                    <h5 class="text-dark font-weight-medium mb-2">{{ $b->customer_name ?? '—' }}
+                                        @if ($b->mua)
+                                            <small class="text-muted">with {{ $b->mua->name }}</small>
+                                        @endif
+                                    </h5>
+                                    <p class="font-14 mb-2 text-muted">{{ optional($b->created_at)->format('d M Y H:i') }}
+                                        — <strong class="text-capitalize">{{ $b->status }}</strong></p>
+                                    <span class="font-weight-light font-14 text-muted">{{ $b->selected_date ?? '' }}
+                                        {{ $b->selected_time ?? '' }}</span>
+                                </div>
                             </div>
-                            <div class="ml-3 mt-2">
-                                <h5 class="text-dark font-weight-medium mb-2">New Product Sold!</h5>
-                                <p class="font-14 mb-2 text-muted">John Musa just purchased <br> Cannon 5M
-                                    Camera.
-                                </p>
-                                <span class="font-weight-light font-14 text-muted">10 Minutes Ago</span>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-start border-left-line pb-3">
-                            <div>
-                                <a href="javascript:void(0)" class="btn btn-danger btn-circle mb-2 btn-item">
-                                    <i data-feather="message-square"></i>
-                                </a>
-                            </div>
-                            <div class="ml-3 mt-2">
-                                <h5 class="text-dark font-weight-medium mb-2">New Support Ticket</h5>
-                                <p class="font-14 mb-2 text-muted">Richardson just create support <br>
-                                    ticket</p>
-                                <span class="font-weight-light font-14 text-muted">25 Minutes Ago</span>
-                            </div>
-                        </div>
-                        <div class="d-flex align-items-start border-left-line">
-                            <div>
-                                <a href="javascript:void(0)" class="btn btn-cyan btn-circle mb-2 btn-item">
-                                    <i data-feather="bell"></i>
-                                </a>
-                            </div>
-                            <div class="ml-3 mt-2">
-                                <h5 class="text-dark font-weight-medium mb-2">Notification Pending Order!
-                                </h5>
-                                <p class="font-14 mb-2 text-muted">One Pending order from Ryne <br> Doe</p>
-                                <span class="font-weight-light font-14 mb-1 d-block text-muted">2 Hours
-                                    Ago</span>
-                                <a href="javascript:void(0)" class="font-14 border-bottom pb-1 border-info">Load More</a>
-                            </div>
-                        </div>
+                        @empty
+                            <div class="text-muted">No recent bookings</div>
+                        @endforelse
+                        <div class="mt-2"><a href="{{ $bookingsIndexRoute }}"
+                                class="font-14 border-bottom pb-1 border-info">Load More</a></div>
                     </div>
                 </div>
             </div>
@@ -431,4 +431,53 @@
             </div>
         </div>
     </div>
+
+    <!-- Chart script -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        (function() {
+            var ctx = document.getElementById('bookingTrendChart');
+            if (!ctx) return;
+            var labels = {!! json_encode($trendLabels) !!};
+            var data = {!! json_encode($trendData) !!};
+
+            new Chart(ctx.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Bookings',
+                        data: data,
+                        fill: true,
+                        backgroundColor: 'rgba(54,162,235,0.1)',
+                        borderColor: 'rgba(54,162,235,1)',
+                        tension: 0.3,
+                        pointRadius: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            }
+                        }
+                    }
+                }
+            });
+        })();
+    </script>
+
 @endsection

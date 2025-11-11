@@ -43,7 +43,7 @@
             @break
 
             @case('content')
-                <section id="how-it-works" class="py-5 section-bg-light">
+                <section id="{{ $section->slug }}" class="py-5 section-bg-light">
                     <div class="container">
                         <div class="text-center mb-5">
                             <h2 class="fw-bold mb-3">{{ $section->title ?? 'How GlowHub Works' }}</h2>
@@ -108,7 +108,7 @@
                                                 @endforeach
                                             @endif
                                             <div class="d-flex gap-3 mt-4">
-                                                <a href="#" class="btn btn-primary btn-lg">Join as MUA</a>
+                                                <a href="{{ route('register') }}" class="btn btn-primary btn-lg">Join as MUA</a>
                                             </div>
                                         </div>
                                     </div>

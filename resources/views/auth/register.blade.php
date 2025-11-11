@@ -1,7 +1,7 @@
 @extends('auth.master')
 
 @section('content')
-    <div class="auth-box row text-center">
+    <div class="auth-box row text-center" style="min-width: 800px;">
         <div class="col-lg-7 col-md-5 modal-bg-img" style="background-image: url(admin/assets/images/big/3.jpg);">
         </div>
         <div class="col-lg-5 col-md-7 bg-white">

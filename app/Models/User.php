@@ -57,4 +57,13 @@ class User extends Authenticatable
     {
         return $this->role === $role;
     }
+
+    /**
+     * One-to-one relation to Mua model.
+     * A user may have a single MUA profile.
+     */
+    public function mua()
+    {
+        return $this->hasOne(\App\Models\Mua::class, 'user_id');
+    }
 }

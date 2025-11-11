@@ -41,8 +41,24 @@
                 <li class="nav-item dropdown">
                     @php
                         use App\Models\Booking;
-                        $pendingCount = Booking::where('status', 'pending')->count();
-                        $recent = Booking::where('status', 'pending')->latest()->take(5)->get();
+                        $pendingQuery = Booking::where('status', 'pending');
+                        if (auth()->check() && auth()->user()->role === 'mua') {
+                            $pendingQuery->whereHas('mua', function ($q) {
+                                $q->where('user_id', auth()->user()->id);
+                            });
+                        }
+                        $pendingCount = $pendingQuery->count();
+                        $recent = (clone $pendingQuery)->latest()->take(5)->get();
+
+                        // choose routes depending on role (admin vs mua)
+                        $bookingsIndexRoute =
+                            auth()->check() && auth()->user()->role === 'mua'
+                                ? route('mua.bookings.index')
+                                : route('admin.bookings.index');
+                        $bookingsPendingRoute =
+                            auth()->check() && auth()->user()->role === 'mua'
+                                ? route('mua.bookings.pending')
+                                : route('admin.bookings.pending');
                     @endphp
                     <a class="nav-link dropdown-toggle pl-md-3 position-relative" href="#" id="bell"
                         role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -76,10 +92,8 @@
                                     @endforelse
                                 </div>
                             </li>
-                            <li>
-                                <div class="nav-link pt-3 text-center text-dark mb-0" style="cursor: default;">
-                                    <a href="{{ route('admin.bookings.index') }}" class="d-block mt-2">See all</a>
-                                </div>
+                            <li class="text-center">
+                                <a href="{{ $bookingsIndexRoute }}" class="d-block mt-2">See all</a>
                             </li>
                         </ul>
                     </div>
@@ -245,7 +259,7 @@
                     }
 
                     function pollPending() {
-                        var url = "{{ route('admin.bookings.pending') }}";
+                        var url = "{{ $bookingsPendingRoute }}";
                         fetch(url, {
                                 credentials: 'same-origin',
                                 headers: {

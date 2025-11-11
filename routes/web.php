@@ -80,9 +80,24 @@ Route::middleware('auth')->group(function () {
     });
 
     // MUA routes
-    Route::middleware('role:mua')->group(function () {
+    Route::middleware([\App\Http\Middleware\RoleMiddleware::class . ':mua'])->group(function () {
         // Tambahkan route khusus mua di sini
         // Contoh: Route::get('/mua/dashboard', [MuaController::class, 'dashboard'])->name('mua.dashboard');
+        // Bookings (MUA-specific route names, under /mua prefix to avoid URI collision)
+        Route::get('mua/bookings', [\App\Http\Controllers\Back\BookingController::class, 'index'])->name('mua.bookings.index');
+        Route::get('mua/bookings/pending', [\App\Http\Controllers\Back\BookingController::class, 'pending'])->name('mua.bookings.pending');
+        Route::put('mua/bookings/{id}', [\App\Http\Controllers\Back\BookingController::class, 'update'])->name('mua.bookings.update');
+
+        // MUA management
+        Route::resource('muas', BackMuaController::class, [
+            'as' => 'admin'
+        ])->only(['create', 'store', 'edit', 'update']);
+        // Nested MUA services (muas/{mua}/services)
+        Route::post('muas/{mua}/services', [BackMuaServiceController::class, 'store'])->name('muas.services.store');
+        Route::delete('muas/{mua}/services/{id}', [BackMuaServiceController::class, 'destroy'])->name('muas.services.destroy');
+        // Portfolios
+        Route::post('muas/{mua}/portfolios', [BackMuaPortfolioController::class, 'store'])->name('muas.portfolios.store');
+        Route::delete('muas/{mua}/portfolios/{id}', [BackMuaPortfolioController::class, 'destroy'])->name('muas.portfolios.destroy');
     });
     // Member routes
     Route::middleware('role:member')->group(function () {

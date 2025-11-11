@@ -2,6 +2,13 @@
 
 @section('page-title', 'Bookings')
 @section('content')
+    @php
+        $bookingsIndexUrl = route(
+            auth()->check() && auth()->user()->role === 'mua' ? 'mua.bookings.index' : 'admin.bookings.index',
+        );
+        $bookingsUpdateName =
+            auth()->check() && auth()->user()->role === 'mua' ? 'mua.bookings.update' : 'admin.bookings.update';
+    @endphp
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h1 class="h2 mb-2" style="color: #2D3748; font-weight: 600;">Bookings</h1>
@@ -22,7 +29,7 @@
         <!-- Search & Filter Card (aligned with content management) -->
         <div class="card border-0 shadow-sm mb-4" style="background: linear-gradient(to right, #F9FAFB, #F3F4F6);">
             <div class="card-body px-4 py-4">
-                <form method="GET" action="{{ url('bookings') }}" class="mb-0">
+                <form method="GET" action="{{ $bookingsIndexUrl }}" class="mb-0">
                     <div class="row g-3 align-items-center">
                         <div class="col-lg-5 col-md-6">
                             <div class="input-group input-group-lg">
@@ -59,7 +66,7 @@
                                 <i class="fas fa-filter me-2 opacity-75"></i>Apply Filter
                             </button>
                             @if (request()->hasAny(['q', 'status', 'date']))
-                                <a href="{{ url('bookings') }}" class="btn py-2 px-3"
+                                <a href="{{ $bookingsIndexUrl }}" class="btn py-2 px-3"
                                     style="background: white; border: 1px solid #E5E7EB; color: #4B5563;">
                                     <i class="fas fa-times opacity-50"></i>
                                 </a>
@@ -136,7 +143,7 @@
                                     <div class="d-flex justify-content-end gap-2">
                                         @if ($b->status != 'confirmed' && $b->status != 'rejected')
                                             {{-- Accept form: immediately mark as completed (with JS confirm) --}}
-                                            <form action="{{ route('admin.bookings.update', $b->id) }}" method="POST"
+                                            <form action="{{ route($bookingsUpdateName, $b->id) }}" method="POST"
                                                 class="d-inline"
                                                 onsubmit="return confirm('Are you sure you want to approve this request?');">
                                                 @csrf
@@ -150,7 +157,7 @@
                                             {{-- Reject: open modal to capture admin note (with confirm) --}}
                                             <button type="button"
                                                 class="btn btn-sm d-inline-flex align-items-center btn-reject"
-                                                onclick="$('#rejectModal').modal('show');$('#rejectForm').attr('action', '{{ route('admin.bookings.update', $b->id) }}');$('#admin_note').val('');"
+                                                onclick="$('#rejectModal').modal('show');$('#rejectForm').attr('action', '{{ route($bookingsUpdateName, $b->id) }}');$('#admin_note').val('');"
                                                 style="background:#FEE2E2; border:1px solid #EF4444; color:#991B1B; padding:0.5rem 1rem; font-weight:500;">
                                                 <i class="fas fa-times-circle me-2 opacity-70"></i> Reject
                                             </button>

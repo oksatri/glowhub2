@@ -15,9 +15,6 @@
 
     <div class="card border-0 shadow-sm">
         <div class="card-body px-4 py-4">
-            @if (session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
-            @endif
 
             <!-- Search & Filter Card -->
             <div class="card border-0 shadow-sm mb-4" style="background: linear-gradient(to right, #F9FAFB, #F3F4F6);">

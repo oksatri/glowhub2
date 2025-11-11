@@ -94,9 +94,14 @@ class BookingController extends Controller
      */
     public function pending(Request $request)
     {
-        $recent = Booking::where('status', 'pending')->latest()->take(5)->get();
-        $count = Booking::where('status', 'pending')->count();
-
+        $query = Booking::with(['mua'])->where('status', 'pending');
+        if (auth()->user() && auth()->user()->role !== 'admin') {
+            $query->whereHas('mua', function ($q) {
+                $q->where('user_id', auth()->user()->id);
+            });
+        }
+        $recent = $query->latest()->take(5)->get();
+        $count = $query->count();
         $items = $recent->map(function ($r) {
             return [
                 'id' => $r->id,
