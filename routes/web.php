@@ -28,11 +28,33 @@ Route::get('/glowhub-artisan', function (Request $request) {
 
     $command = $request->get('cmd'); // ambil command dari query string
 
-    try {
-        Artisan::call($command);
-        return "<pre>Command '{$command}' berhasil dijalankan ✅\n\n" . Artisan::output() . "</pre>";
-    } catch (Exception $e) {
-        return "<pre>Error: {$e->getMessage()}</pre>";
+    if ($command === 'pull') {
+        // 1. Tentukan path ke direktori root repositori Git Anda.
+        // Ini harus berupa path absolut di server Anda.
+        $repo_path = '/home/glowhubi/glowhub_back'; // Ganti dengan path yang sesuai
+
+        // 2. Tentukan perintah shell yang akan dijalankan.
+        // '2>&1' memastikan output dan error ditangkap.
+        $full_command = "cd $repo_path && /usr/bin/git pull origin main 2>&1";
+
+        try {
+            // Jalankan perintah sistem
+            $output = shell_exec($full_command);
+
+            return "<pre>Perintah 'git pull' berhasil dijalankan ✅\n\nOutput:\n{$output}</pre>";
+
+        } catch (\Exception $e) {
+            return "<pre>Error: {$e->getMessage()}</pre>";
+        }
+
+    } else {
+        // Jika perintah bukan 'pull', jalankan sebagai Artisan (sesuai kode asli Anda)
+        try {
+            \Artisan::call($command);
+            return "<pre>Command '{$command}' berhasil dijalankan ✅\n\n" . \Artisan::output() . "</pre>";
+        } catch (\Exception $e) {
+            return "<pre>Error: {$e->getMessage()}</pre>";
+        }
     }
 });
 Route::get('/', [HomeController::class, 'index'])->name('home');
