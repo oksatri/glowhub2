@@ -16,6 +16,25 @@ use App\Http\Controllers\Back\MuaPortfolioController as BackMuaPortfolioControll
 use App\Http\Controllers\Back\MuaController as BackMuaController;
 use App\Http\Controllers\Back\MuaServiceController as BackMuaServiceController;
 
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Http\Request;
+
+Route::get('/glowhub-artisan', function (Request $request) {
+    $secret = 'glowhub1607'; // ganti dengan token rahasia kamu sendiri
+
+    if ($request->get('key') !== $secret) {
+        abort(403, 'Unauthorized');
+    }
+
+    $command = $request->get('cmd'); // ambil command dari query string
+
+    try {
+        Artisan::call($command);
+        return "<pre>Command '{$command}' berhasil dijalankan ✅\n\n" . Artisan::output() . "</pre>";
+    } catch (Exception $e) {
+        return "<pre>Error: {$e->getMessage()}</pre>";
+    }
+});
 Route::get('/', [HomeController::class, 'index'])->name('home');
 // Routes yang bisa diakses oleh semua role
 Route::get('/mua-listing', [FrontMuaController::class, 'index'])->name('mua.listing');
