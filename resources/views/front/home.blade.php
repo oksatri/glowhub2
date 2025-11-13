@@ -105,7 +105,15 @@
                                                 @endforeach
                                             @endif
                                             <div class="d-flex gap-3 mt-4">
-                                                <a href="{{ route('register') }}" class="btn btn-primary btn-lg">Join as MUA</a>
+                                                @if ($section->has_button && is_array($section->buttons) && count($section->buttons) > 0)
+                                                    @foreach ($section->buttons as $btn)
+                                                        <a href="{{ $btn['url'] ?? '#' }}"
+                                                            class="btn btn-lg {{ isset($btn['url']) && strpos($btn['url'], '#') !== false ? 'btn-outline-primary' : 'btn-primary' }}">
+                                                            {{ $btn['label'] ?? 'Learn More' }}
+                                                        </a>
+                                                    @endforeach
+                                                @endif
+                                                {{-- <a href="{{ route('register') }}" class="btn btn-primary btn-lg">Join as MUA</a> --}}
                                             </div>
                                         </div>
                                     </div>
@@ -208,7 +216,15 @@
                         </div>
 
                         <div class="text-center mt-4">
-                            <a href="{{ route('mua.listing') }}" class="btn btn-primary">Find MUAs</a>
+                            @if ($section->has_button && is_array($section->buttons) && count($section->buttons) > 0)
+                                @foreach ($section->buttons as $btn)
+                                    <a href="{{ $btn['url'] ?? '#' }}"
+                                        class="btn btn-lg {{ isset($btn['url']) && strpos($btn['url'], '#') !== false ? 'btn-outline-primary' : 'btn-primary' }}">
+                                        {{ $btn['label'] ?? 'Learn More' }}
+                                    </a>
+                                @endforeach
+                            @endif
+                            {{-- <a href="{{ route('mua.listing') }}" class="btn btn-primary">Find MUAs</a> --}}
                         </div>
                     </div>
                 </section>
