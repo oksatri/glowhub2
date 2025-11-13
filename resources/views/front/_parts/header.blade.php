@@ -79,10 +79,10 @@
                 </div>
 
                 <!-- Navigation -->
-                <div class="col-md-10">
-                    <nav id="navbar" class="collapse collapse-horizontal" id="navbarMenu">
+                <div class="col-12 col-md-10 d-md-block">
+                    <nav id="navbar" class="navbar-menu collapse navbar-collapse" id="navbarMenu">
                         <div class="main-menu stellarnav">
-                            <ul class="menu-list d-flex flex-column flex-md-row list-unstyled mb-0">
+                            <ul class="menu-list list-unstyled mb-0 d-flex flex-column flex-md-row">
                                 @php
                                     $isHomePage =
                                         request()->is('/') ||
@@ -90,27 +90,23 @@
                                         request()->url() === url('/');
                                 @endphp
 
-                                <li class="menu-item me-md-3 mb-2 mb-md-0">
-                                    <a href="{{ $isHomePage ? '#home' : url('/#home') }}"
-                                        class="nav-link d-block py-2">Home</a>
+                                <li class="menu-item">
+                                    <a href="{{ $isHomePage ? '#home' : url('/#home') }}" class="nav-link">Home</a>
                                 </li>
-                                <li class="menu-item me-md-3 mb-2 mb-md-0">
+                                <li class="menu-item">
                                     <a href="{{ $isHomePage ? '#how-it-works' : url('/#how-it-works') }}"
-                                        class="nav-link d-block py-2">How It Works</a>
+                                        class="nav-link">How It Works</a>
                                 </li>
-                                <li class="menu-item me-md-3 mb-2 mb-md-0">
-                                    <a href="{{ $isHomePage ? '#find-mua' : url('/#find-mua') }}"
-                                        class="nav-link d-block py-2">Find
+                                <li class="menu-item">
+                                    <a href="{{ $isHomePage ? '#find-mua' : url('/#find-mua') }}" class="nav-link">Find
                                         MUA</a>
                                 </li>
-                                <li class="menu-item me-md-3 mb-2 mb-md-0">
-                                    <a href="{{ $isHomePage ? '#services' : url('/#services') }}"
-                                        class="nav-link d-block py-2">For
+                                <li class="menu-item">
+                                    <a href="{{ $isHomePage ? '#services' : url('/#services') }}" class="nav-link">For
                                         MUA</a>
                                 </li>
-                                <li class="menu-item mb-2 mb-md-0">
-                                    <a href="{{ $isHomePage ? '#contact' : url('/#contact') }}"
-                                        class="nav-link d-block py-2">Contact
+                                <li class="menu-item">
+                                    <a href="{{ $isHomePage ? '#contact' : url('/#contact') }}" class="nav-link">Contact
                                         Us</a>
                                 </li>
                             </ul>
@@ -122,28 +118,73 @@
     </header>
 
     <style>
+        /* Desktop Menu */
+        .navbar-menu {
+            display: block !important;
+        }
+
+        .menu-list {
+            gap: 0;
+        }
+
+        .menu-item {
+            display: list-item;
+        }
+
+        .menu-item .nav-link {
+            display: inline-block;
+            padding: 8px 12px;
+            color: #3d2a33;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .menu-item .nav-link:hover {
+            color: #845d70;
+        }
+
+        /* Mobile Menu */
         @media (max-width: 767.98px) {
+            .navbar-menu {
+                display: none !important;
+            }
+
+            .navbar-menu.show {
+                display: block !important;
+            }
+
             #navbarMenu {
                 background: #f8f9fa;
                 border-top: 1px solid #e9ecef;
                 margin-top: 10px;
+                padding: 10px 0;
             }
 
             .menu-list {
-                padding: 10px 0 !important;
+                flex-direction: column;
+                padding: 0;
             }
 
-            .menu-item a {
-                padding-left: 15px !important;
-                padding-right: 15px !important;
-                color: #3d2a33 !important;
-                font-weight: 500;
+            .menu-item {
+                display: block;
+                border-bottom: 1px solid #e9ecef;
             }
 
-            .menu-item a:hover {
+            .menu-item:last-child {
+                border-bottom: none;
+            }
+
+            .menu-item .nav-link {
+                display: block;
+                padding: 12px 15px;
+                color: #3d2a33;
+                width: 100%;
+            }
+
+            .menu-item .nav-link:hover {
                 background: rgba(132, 93, 112, 0.1);
-                border-radius: 4px;
-                color: #845d70 !important;
+                color: #845d70;
             }
         }
     </style>
