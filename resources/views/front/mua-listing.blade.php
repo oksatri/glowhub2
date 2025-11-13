@@ -267,7 +267,7 @@
                                                     </option>
                                                 @endforeach
                                             </select>
-                                            <small>Jam yang kamu pilih adalah waktu selesai makeup</small>
+                                            <code>Jam yang kamu pilih adalah waktu selesai makeup</code>
                                         </div>
                                     </div>
                                 </div>
