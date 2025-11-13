@@ -70,7 +70,7 @@
                 </div>
 
                 <!-- Navigation for Desktop -->
-                <div class="col-md-9 d-none d-md-block">
+                <div class="col-md-9 d-none d-md-block ms-auto">
                     <nav id="navbar">
                         <div class="main-menu">
                             <ul class="menu-list">
@@ -167,6 +167,7 @@
             display: flex;
             gap: 5px;
             align-items: center;
+            justify-content: flex-end;
         }
 
         .menu-item {
