@@ -19,8 +19,8 @@ use App\Http\Controllers\Back\MuaServiceController as BackMuaServiceController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Http\Request;
 
-Route::get('/glowhub-artisan', function (Request $request) {
-    $secret = 'glowhub1607'; // ganti dengan token rahasia kamu sendiri
+Route::get('/glowhub-cmd', function (Request $request) {
+    $secret = 'glowhub1607#'; // ganti dengan token rahasia kamu sendiri
 
     if ($request->get('key') !== $secret) {
         abort(403, 'Unauthorized');
