@@ -114,6 +114,7 @@
                         </div>
                     </div>
                 </section>
+                <div class="geometric-separator"></div>
             @break
 
             @case('testimonials')
@@ -156,6 +157,7 @@
                         </div>
                     </div>
                 </section>
+                <div class="geometric-separator"></div>
             @break
 
             @case('product')
