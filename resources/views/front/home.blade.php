@@ -208,7 +208,7 @@
                         </div>
 
                         <div class="text-center mt-4">
-                            <a href="{{ route('mua.listing') }}" class="btn btn-primary">View All Artists</a>
+                            <a href="{{ route('mua.listing') }}" class="btn btn-primary">Find MUAs</a>
                         </div>
                     </div>
                 </section>
