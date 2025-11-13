@@ -50,9 +50,9 @@
 
     <header id="header" style="padding: 10px 0px !important">
         <div class="container-fluid">
-            <div class="row">
-
-                <div class="col-xs-2">
+            <div class="row align-items-center">
+                <!-- Logo -->
+                <div class="col-6 col-md-2">
                     <div class="main-logo">
                         <a href="{{ url('/') }}">
                             @php
@@ -69,11 +69,20 @@
                     </div>
                 </div>
 
-                <div class="col-xs-10">
+                <!-- Mobile Menu Toggle -->
+                <div class="col-6 d-md-none text-end">
+                    <button class="btn btn-outline-primary btn-sm" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
 
-                    <nav id="navbar">
+                <!-- Navigation -->
+                <div class="col-md-10">
+                    <nav id="navbar" class="collapse collapse-horizontal" id="navbarMenu">
                         <div class="main-menu stellarnav">
-                            <ul class="menu-list">
+                            <ul class="menu-list d-flex flex-column flex-md-row list-unstyled mb-0">
                                 @php
                                     $isHomePage =
                                         request()->is('/') ||
@@ -81,35 +90,61 @@
                                         request()->url() === url('/');
                                 @endphp
 
-                                <li class="menu-item">
-                                    <a href="{{ $isHomePage ? '#home' : url('/#home') }}">Home</a>
+                                <li class="menu-item me-md-3 mb-2 mb-md-0">
+                                    <a href="{{ $isHomePage ? '#home' : url('/#home') }}"
+                                        class="nav-link d-block py-2">Home</a>
                                 </li>
-                                <li class="menu-item">
+                                <li class="menu-item me-md-3 mb-2 mb-md-0">
                                     <a href="{{ $isHomePage ? '#how-it-works' : url('/#how-it-works') }}"
-                                        class="nav-link">How It Works</a>
+                                        class="nav-link d-block py-2">How It Works</a>
                                 </li>
-                                <li class="menu-item">
-                                    <a href="{{ $isHomePage ? '#find-mua' : url('/#find-mua') }}" class="nav-link">Find
+                                <li class="menu-item me-md-3 mb-2 mb-md-0">
+                                    <a href="{{ $isHomePage ? '#find-mua' : url('/#find-mua') }}"
+                                        class="nav-link d-block py-2">Find
                                         MUA</a>
                                 </li>
-                                <li class="menu-item">
-                                    <a href="{{ $isHomePage ? '#services' : url('/#services') }}" class="nav-link">For
+                                <li class="menu-item me-md-3 mb-2 mb-md-0">
+                                    <a href="{{ $isHomePage ? '#services' : url('/#services') }}"
+                                        class="nav-link d-block py-2">For
                                         MUA</a>
                                 </li>
-                                <li class="menu-item">
-                                    <a href="{{ $isHomePage ? '#contact' : url('/#contact') }}" class="nav-link">Contact
+                                <li class="menu-item mb-2 mb-md-0">
+                                    <a href="{{ $isHomePage ? '#contact' : url('/#contact') }}"
+                                        class="nav-link d-block py-2">Contact
                                         Us</a>
                                 </li>
-                                {{-- <li class="menu-item">
-                                    <a href="{{ route('login') }}" class="nav-link">Login</a>
-                                </li> --}}
                             </ul>
                         </div>
                     </nav>
-
                 </div>
-
             </div>
         </div>
     </header>
+
+    <style>
+        @media (max-width: 767.98px) {
+            #navbarMenu {
+                background: #f8f9fa;
+                border-top: 1px solid #e9ecef;
+                margin-top: 10px;
+            }
+
+            .menu-list {
+                padding: 10px 0 !important;
+            }
+
+            .menu-item a {
+                padding-left: 15px !important;
+                padding-right: 15px !important;
+                color: #3d2a33 !important;
+                font-weight: 500;
+            }
+
+            .menu-item a:hover {
+                background: rgba(132, 93, 112, 0.1);
+                border-radius: 4px;
+                color: #845d70 !important;
+            }
+        }
+    </style>
 </div>
