@@ -66,7 +66,7 @@ class MuaController extends Controller
         ];
 
         $filterOptions = [
-            'events' => ['Wedding', 'Party', 'Corporate', 'Fashion', 'Editorial'],
+            'events' => ['Wedding', '⁠⁠Engagement/Lamaran', 'Wedding Guest', 'Party', 'Graduation','Graduation Companion'],
             'provinces' => RegProvince::orderBy('name')->pluck('name', 'id')->toArray(),
             'cities' => RegRegency::orderBy('name')->get()->groupBy('province_id')->map(function ($group) {
                 return $group->map(function ($r) {
@@ -78,7 +78,7 @@ class MuaController extends Controller
                     return ['id' => $d->id, 'name' => $d->name];
                 })->values()->toArray();
             })->toArray(),
-            'times' => ['Pagi (06:00-12:00)', 'Siang (12:00-18:00)', 'Malam (18:00-24:00)']
+            'times' => ['Pagi (02:00-11:00)', 'Siang (11:00-19:00)', 'Malam (19:00-22:00)']
         ];
 
         return view('front.mua-listing', compact('items', 'pagination', 'filterOptions', 'request'));

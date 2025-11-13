@@ -209,11 +209,9 @@
                 <div class="subtitle-wrapper mb-4">
                     <p class="lead text-muted" style="font-size: 1.1rem; line-height: 1.6;">
                         <span class="highlight-text"
-                            style="background: linear-gradient(120deg, rgba(248, 187, 189, 0.3) 0%, rgba(132, 93, 112, 0.1) 100%); padding: 2px 8px; border-radius: 6px; font-weight: 500;">Jelajahi
+                            style="background: linear-gradient(120deg, rgba(248, 187, 189, 0.3) 0%, rgba(132, 93, 112, 0.1) 100%); padding: 2px 8px; border-radius: 6px; font-weight: 500;">Temukan
                             makeup artist</span>
-                        profesional terverifikasi di area Anda. Bandingkan profil, baca ulasan, dan booking MUA yang
-                        sempurna
-                        untuk acara spesial Anda.
+                        profesional di dekatmu. Lihat portofolio, review, dan harga secara transparan sebelum booking.
                     </p>
                 </div>
             </div>
@@ -262,13 +260,14 @@
                                         <div class="custom-select-wrapper">
                                             <select name="time" class="form-select custom-select"
                                                 style="border: 2px solid #f8bbbd; border-radius: 15px; padding: 10px 14px; background: rgba(255,255,255,0.9); color: #3d2a33; font-weight: 500; font-size: 0.9rem;">
-                                                <option value="" selected>⏰ Semua Jam</option>
+                                                <option value="" selected>⏰ Jam acara kamu</option>
                                                 @foreach ($filterOptions['times'] as $time)
                                                     <option value="{{ $time }}"
                                                         {{ $request->time === $time ? 'selected' : '' }}>{{ $time }}
                                                     </option>
                                                 @endforeach
                                             </select>
+                                            <code>Jam yang kamu pilih adalah waktu selesai makeup</code>
                                         </div>
                                     </div>
                                 </div>

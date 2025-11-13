@@ -68,7 +68,7 @@
                                                             <i class="fas fa-check-circle text-white fs-3"></i>
                                                         @endif
                                                     </div>
-                                                    <h4 class="fw-bold" style="letter-spacing: -0.5px;">
+                                                    <h4 class="fw-bold" style="letter-spacing: 0px;">
                                                         {{ $detail->title ?? 'Step' }}</h4>
                                                     <p class="text-muted">{{ Str::limit($detail->description ?? '', 160) }}</p>
                                                 </div>
@@ -114,7 +114,6 @@
                         </div>
                     </div>
                 </section>
-                <div class="geometric-separator"></div>
             @break
 
             @case('testimonials')
@@ -157,7 +156,6 @@
                         </div>
                     </div>
                 </section>
-                <div class="geometric-separator"></div>
             @break
 
             @case('product')
