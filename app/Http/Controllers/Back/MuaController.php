@@ -165,10 +165,10 @@ class MuaController extends Controller
             collect($data)->only(['user_id', 'name', 'description', 'province', 'city', 'district', 'specialty', 'experience'])->toArray()
         );
 
-    // Redirect to the appropriate edit path depending on role to avoid
-    // hitting admin-only routes when a 'mua' user creates their profile.
-    $base = (Auth::check() && Auth::user()->role === 'mua') ? 'muas' : 'admin/muas';
-    return redirect(url($base . '/' . $mua->id . '/edit'))->with('success', 'MUA created');
+        // Redirect to the appropriate edit path depending on role to avoid
+        // hitting admin-only routes when a 'mua' user creates their profile.
+        $base = (Auth::check() && Auth::user()->role === 'mua') ? 'muas' : 'admin/muas';
+        return redirect(url($base . '/' . $mua->id . '/edit'))->with('success', 'MUA created');
     }
 
     public function edit($id)
@@ -256,8 +256,8 @@ class MuaController extends Controller
             collect($data)->only(['user_id', 'name', 'description', 'province', 'city', 'district', 'specialty', 'experience'])->toArray()
         );
 
-    $base = (Auth::check() && Auth::user()->role === 'mua') ? 'muas' : 'admin/muas';
-    return redirect(url($base . '/' . $mua->id . '/edit'))->with('success', 'MUA updated');
+        $base = (Auth::check() && Auth::user()->role === 'mua') ? 'muas' : 'admin/muas';
+        return redirect(url($base . '/' . $mua->id . '/edit'))->with('success', 'MUA updated');
     }
 
     public function show($id)
