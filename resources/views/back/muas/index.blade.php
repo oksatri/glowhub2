@@ -2,6 +2,7 @@
 @section('page-title', 'MUAs')
 @section('content')
 
+    @php $base = (Auth::check() && Auth::user()->role === 'admin') ? 'admin/muas' : 'muas'; @endphp
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h1 class="h2 mb-1" style="color: #2D3748; font-weight:600;">MUAs</h1>
@@ -19,7 +20,7 @@
             <!-- Search & Filter Card -->
             <div class="card border-0 shadow-sm mb-4" style="background: linear-gradient(to right, #F9FAFB, #F3F4F6);">
                 <div class="card-body px-4 py-4">
-                    <form method="GET" action="{{ url('muas') }}" class="mb-0">
+                    <form method="GET" action="{{ url($base) }}" class="mb-0">
                         <div class="row g-3 align-items-center">
                             <div class="col-lg-5 col-md-6">
                                 <div class="input-group input-group-lg">
@@ -53,7 +54,7 @@
                                     <i class="fas fa-filter me-2 opacity-75"></i>Apply Filter
                                 </button>
                                 @if (request()->hasAny(['q', 'specialty']))
-                                    <a href="{{ url('muas') }}" class="btn py-2 px-3"
+                                    <a href="{{ url($base) }}" class="btn py-2 px-3"
                                         style="background: white; border: 1px solid #E5E7EB; color: #4B5563;">
                                         <i class="fas fa-times opacity-50"></i>
                                     </a>
@@ -101,20 +102,14 @@
                                 </td>
                                 <td>{{ $mua->specialty }}</td>
                                 <td>
-                                    @if ($mua->district)
-                                        {{ App\Models\RegDistrict::find($mua->district)->name ?? $mua->district }},
-                                    @endif
                                     @if ($mua->city)
-                                        {{ App\Models\RegRegency::find($mua->city)->name ?? $mua->city }},
-                                    @endif
-                                    @if ($mua->province)
-                                        {{ App\Models\RegProvince::find($mua->province)->name ?? $mua->province }}
+                                        {{ App\Models\RegRegency::find($mua->city)->name ?? $mua->city }}
                                     @endif
                                 </td>
                                 <td class="text-end">
-                                    <a href="{{ url('muas/' . $mua->id . '/edit') }}"
+                                    <a href="{{ url($base . '/' . $mua->id . '/edit') }}"
                                         class="btn btn-sm btn-outline-primary">Edit</a>
-                                    <form action="{{ url('muas/' . $mua->id) }}" method="POST" class="d-inline"
+                                    <form action="{{ url($base . '/' . $mua->id) }}" method="POST" class="d-inline"
                                         onsubmit="return confirm('Delete this MUA?');">
                                         @csrf
                                         @method('DELETE')
@@ -134,7 +129,7 @@
                                         <p style="color: #6B7280; font-size: 1rem;" class="mb-4">Start by adding your
                                             first
                                             MUA</p>
-                                        <a href="{{ url('muas/create') }}" class="btn px-4 py-2 rounded-pill text-white"
+                                        <a href="{{ url($base . '/create') }}" class="btn px-4 py-2 rounded-pill text-white"
                                             style="background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%); border: none;">
                                             <i class="fas fa-plus me-2"></i> Create New MUA
                                         </a>

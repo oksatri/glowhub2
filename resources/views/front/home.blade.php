@@ -190,7 +190,7 @@
                                         <div class="card-body text-center p-4">
                                             <h5 class="fw-bold">{{ $m->name }}</h5>
                                             <p class="text-primary mb-2">{{ $m->specialty ?? '' }} •
-                                                {{ $m->city ?? ($m->province ?? '') }}</p>
+                                                {{ $m->city ?? '' }}</p>
                                             <div class="mb-2">
                                                 @for ($i = 1; $i <= 5; $i++)
                                                     <i class="fas fa-star text-warning" style="font-size: 0.9rem;"></i>

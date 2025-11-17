@@ -20,41 +20,14 @@
         </div>
 
         <div class="row gx-2">
-            <div class="col-md-4 mb-3">
-                <label class="form-label">Province</label>
-                @if (!empty($wilayahMissing) || empty($provinces))
-                    <div class="alert alert-warning small">Wilayah (province/city/district)</div>
-                    <select name="province" id="provinceSelect" class="form-select" disabled>
-                        <option value="">No data</option>
-                    </select>
-                @else
-                    <select name="province" id="provinceSelect"
-                        class="form-select {{ $errors->has('province') ? 'is-invalid' : '' }}">
-                        <option value="">Select Province</option>
-                        @foreach ($provinces as $key => $label)
-                            <option value="{{ $key }}"
-                                {{ old('province', $mua->province ?? '') == $key ? 'selected' : '' }}>
-                                {{ $label }}</option>
-                        @endforeach
-                    </select>
-                @endif
-                @if ($errors->has('province'))
-                    <div class="invalid-feedback d-block">{{ $errors->first('province') }}</div>
-                @endif
-            </div>
-
-            <div class="col-md-4 mb-3">
+            <div class="col-md-6 mb-3">
                 <label class="form-label">City / Regency</label>
                 <select name="city" id="citySelect"
                     class="form-select {{ $errors->has('city') ? 'is-invalid' : '' }}">
                     <option value="">Select City / Regency</option>
-                    @php
-                        $selectedProvince = old('province', $mua->province ?? '');
-                        $initialCities = $cities[$selectedProvince] ?? [];
-                    @endphp
-                    @foreach ($initialCities as $c)
-                        <option value="{{ $c['id'] }}"
-                            {{ old('city', $mua->city ?? '') == $c['id'] ? 'selected' : '' }}>{{ $c['name'] }}
+                    @foreach (($cities ?? []) as $c)
+                        <option value="{{ $c['id'] }}" {{ old('city', $mua->city ?? '') == $c['id'] ? 'selected' : '' }}>
+                            {{ $c['name'] }}
                         </option>
                     @endforeach
                 </select>
@@ -63,26 +36,7 @@
                 @endif
             </div>
 
-            <div class="col-md-4 mb-3">
-                <label class="form-label">District</label>
-                <select name="district" id="districtSelect"
-                    class="form-select {{ $errors->has('district') ? 'is-invalid' : '' }}">
-                    <option value="">Select District</option>
-                    @php
-                        $selectedCity = old('city', $mua->city ?? '');
-                        $initialDistricts = $districts[$selectedCity] ?? [];
-                    @endphp
-                    @foreach ($initialDistricts as $d)
-                        <option value="{{ $d['id'] }}"
-                            {{ old('district', $mua->district ?? '') == $d['id'] ? 'selected' : '' }}>
-                            {{ $d['name'] }}
-                        </option>
-                    @endforeach
-                </select>
-                @if ($errors->has('district'))
-                    <div class="invalid-feedback d-block">{{ $errors->first('district') }}</div>
-                @endif
-            </div>
+            <div class="col-md-6 mb-3"></div>
         </div>
 
         <div class="mb-3">
@@ -181,61 +135,16 @@
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const provinceSelect = document.getElementById('provinceSelect');
             const citySelect = document.getElementById('citySelect');
-            const districtSelect = document.getElementById('districtSelect');
             const cities = @json($cities ?? []);
-            const districts = @json($districts ?? []);
             const userSelect = document.getElementById('userSelect');
             const newUserFields = document.getElementById('newUserFields');
 
-            function populateCities(province) {
-                citySelect.innerHTML = '<option value="">Select City / Regency</option>';
-                if (!province || !cities[province]) return;
-                cities[province].forEach(function(city) {
-                    const opt = document.createElement('option');
-                    opt.value = city.id;
-                    opt.textContent = city.name;
-                    citySelect.appendChild(opt);
-                });
-                // preserve selected city when editing
+            // No province/district hierarchy any more. Cities are preloaded.
+            // Preserve selection when editing
+            if (citySelect) {
                 const selected = "{{ old('city', $mua->city ?? '') }}";
-                if (selected) {
-                    citySelect.value = selected;
-                }
-                // populate districts for the selected city (if any)
-                if (selected) populateDistricts(selected);
-            }
-
-            function populateDistricts(city) {
-                if (!districtSelect) return;
-                districtSelect.innerHTML = '<option value="">Select District</option>';
-                if (!city || !districts[city]) return;
-                districts[city].forEach(function(d) {
-                    const opt = document.createElement('option');
-                    opt.value = d.id;
-                    opt.textContent = d.name;
-                    districtSelect.appendChild(opt);
-                });
-                // preserve selected district when editing
-                const sel = "{{ old('district', $mua->district ?? '') }}";
-                if (sel) districtSelect.value = sel;
-            }
-
-            if (provinceSelect) {
-                provinceSelect.addEventListener('change', function() {
-                    populateCities(this.value);
-                });
-                // when city changes, populate districts
-                if (citySelect) {
-                    citySelect.addEventListener('change', function() {
-                        populateDistricts(this.value);
-                    });
-                }
-                // if a province is already selected on load, populate cities
-                if (provinceSelect.value) populateCities(provinceSelect.value);
-                // also if a city is already selected on load, populate districts
-                if (citySelect && citySelect.value) populateDistricts(citySelect.value);
+                if (selected) citySelect.value = selected;
             }
 
             // toggle new user fields when admin selects "Add new user..."

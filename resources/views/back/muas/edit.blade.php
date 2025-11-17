@@ -7,14 +7,15 @@
             <h1 class="h2 mb-1">Edit MUA</h1>
             <p class="text-muted small mb-0">Update MUA profile and manage services/portfolio.</p>
         </div>
-        <a href="{{ url('muas') }}" class="btn px-3 py-2" style="background:white; border:1px solid #E5E7EB; color:#374151;">
+            <a href="{{ url($base) }}" class="btn px-3 py-2" style="background:white; border:1px solid #E5E7EB; color:#374151;">
             <i class="fas fa-arrow-left me-2"></i>Back to list
         </a>
     </div>
 
     <div class="card border-0 shadow-sm">
         <div class="card-body p-4">
-            <form method="POST" action="{{ url('muas/' . $mua->id) }}" enctype="multipart/form-data">
+            @php $base = (Auth::check() && Auth::user()->role === 'admin') ? 'admin/muas' : 'muas'; @endphp
+            <form method="POST" action="{{ url($base . '/' . $mua->id) }}" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 @include('back.muas._form')
@@ -31,7 +32,7 @@
         </div>
         <div class="card-body p-4">
             <!-- Quick add service -->
-            <form method="POST" action="{{ url('muas/' . $mua->id . '/services') }}">
+            <form method="POST" action="{{ url($base . '/' . $mua->id . '/services') }}">
                 @csrf
                 <div class="row mb-3">
                     <div class="col-sm-6">
@@ -125,7 +126,7 @@
                                         </div>
                                     </div>
                                     <div class="text-end">
-                                        <form action="{{ url('muas/' . $mua->id . '/services/' . $s->id) }}" method="POST"
+                                        <form action="{{ url($base . '/' . $mua->id . '/services/' . $s->id) }}" method="POST"
                                             onsubmit="return confirm('Remove service?');">
                                             @csrf
                                             @method('DELETE')
@@ -178,7 +179,7 @@
                                                                 <div class="card-body p-2 small">
                                                                     <div class="text-truncate">{{ $p->description }}</div>
                                                                     <form
-                                                                        action="{{ url('muas/' . $mua->id . '/portfolios/' . $p->id) }}"
+                                                                        action="{{ url($base . '/' . $mua->id . '/portfolios/' . $p->id) }}"
                                                                         method="POST"
                                                                         onsubmit="return confirm('Remove?');">
                                                                         @csrf
@@ -198,7 +199,7 @@
 
                                         {{-- Upload form for this specific service --}}
                                         <div class="mt-3">
-                                            <form method="POST" action="{{ url('muas/' . $mua->id . '/portfolios') }}"
+                                            <form method="POST" action="{{ url($base . '/' . $mua->id . '/portfolios') }}"
                                                 enctype="multipart/form-data" class="d-flex gap-2 align-items-center">
                                                 @csrf
                                                 <input type="hidden" name="mua_service_id" value="{{ $s->id }}">
@@ -223,7 +224,7 @@
             @endif
         </div>
         <div class="card-footer">
-            <a href="{{ url('muas') }}" class="btn px-3 py-2"
+            <a href="{{ url($base) }}" class="btn px-3 py-2"
                 style="background:white; border:1px solid #E5E7EB; color:#374151;">
                 <i class="fas fa-arrow-left me-2"></i>Back to list
             </a>

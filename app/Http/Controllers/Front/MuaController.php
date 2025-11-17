@@ -20,8 +20,9 @@ class MuaController extends Controller
      */
     public function index(Request $request)
     {
-        // Use real Mua records from database. Map them to the front-end shape expected by views.
-        $query = \App\Models\Mua::with('services', 'rel_province', 'rel_city', 'rel_district');
+    // Use real Mua records from database. Map them to the front-end shape expected by views.
+    // Only load rel_city now; province/district are removed from filters.
+    $query = \App\Models\Mua::with('services', 'rel_city');
 
         if ($q = @$request->event_type) {
             $query->where(function ($sub) use ($q) {
@@ -29,14 +30,9 @@ class MuaController extends Controller
                 $sub->orWhere('specialty', 'like', "%{$q}%");
             });
         }
-        if (@$request->province_id) {
-            $query->where('province', $request->province_id);
-        }
+        // Filter only by city (regency)
         if (@$request->regency_id) {
             $query->where('city', $request->regency_id);
-        }
-        if (@$request->district_id) {
-            $query->where('district', $request->district_id);
         }
 
         $perPage = 12;
@@ -48,7 +44,7 @@ class MuaController extends Controller
             return [
                 'id' => $mua->id,
                 'name' => $mua->name,
-                'location' => trim(implode(' | ', array_filter([$mua->rel_city->name ?? '', $mua->rel_district->name ?? '']))),
+                'location' => trim($mua->rel_city->name ?? ''),
                 'rating' => (float) ($mua->rating ?? 0),
                 'reviews_count' => $mua->reviews_count ?? 0,
                 'price' => $firstService ? (int) $firstService->price : null,
@@ -67,17 +63,10 @@ class MuaController extends Controller
 
         $filterOptions = [
             'events' => ['Wedding', '⁠⁠Engagement/Lamaran', 'Wedding Guest', 'Party', 'Graduation','Graduation Companion'],
-            'provinces' => RegProvince::orderBy('name')->pluck('name', 'id')->toArray(),
-            'cities' => RegRegency::orderBy('name')->get()->groupBy('province_id')->map(function ($group) {
-                return $group->map(function ($r) {
-                    return ['id' => $r->id, 'name' => $r->name];
-                })->values()->toArray();
-            })->toArray(),
-            'districts' => RegDistrict::orderBy('name')->get()->groupBy('regency_id')->map(function ($group) {
-                return $group->map(function ($d) {
-                    return ['id' => $d->id, 'name' => $d->name];
-                })->values()->toArray();
-            })->toArray(),
+            // only provide cities filtered to Jabodetabek-area provinces and Jawa Timur
+            'cities' => RegRegency::whereIn('province_id', RegProvince::whereIn('name', ['DKI Jakarta', 'Banten', 'Jawa Barat', 'Jawa Timur'])->pluck('id'))->orderBy('name')->get()->map(function ($r) {
+                return ['id' => $r->id, 'name' => $r->name];
+            })->values()->toArray(),
             'times' => ['Pagi (02:00-11:00)', 'Siang (11:00-19:00)', 'Malam (19:00-22:00)']
         ];
 
@@ -91,7 +80,7 @@ class MuaController extends Controller
     {
         $mua = \App\Models\Mua::with(['services', 'portfolios' => function ($q) {
             $q->with('service');
-        }, 'rel_province', 'rel_city', 'rel_district'])->find($id);
+        }, 'rel_city'])->find($id);
         if (! $mua) {
             abort(404, 'MUA not found');
         }
@@ -102,7 +91,7 @@ class MuaController extends Controller
             'id' => $mua->id,
             'name' => $mua->name,
             'description' => $mua->description,
-            'location' => trim(implode(' | ', array_filter([$mua->rel_city->name ?? '', $mua->rel_district->name ?? '']))),
+            'location' => trim($mua->rel_city->name ?? ''),
             'rating' => (float) ($mua->rating ?? 4.5),
             'price' => $firstService ? (int) $firstService->price : null,
             'image' => $mua->image ? asset('storage/' . $mua->image) : asset('images/product-item1.jpg'),

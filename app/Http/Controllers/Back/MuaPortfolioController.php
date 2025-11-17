@@ -54,7 +54,8 @@ class MuaPortfolioController extends Controller
             $created++;
         }
 
-        return redirect(url('muas/' . $mua->id . '/edit'))->with('success', 'Portfolio uploaded');
+    $base = (auth()->check() && auth()->user()->role === 'admin') ? 'admin/muas' : 'muas';
+    return redirect(url($base . '/' . $mua->id . '/edit'))->with('success', 'Portfolio uploaded');
     }
 
     public function destroy($muaId, $id)
@@ -62,6 +63,7 @@ class MuaPortfolioController extends Controller
         $p = MuaPortfolio::where('mua_id', $muaId)->findOrFail($id);
         if ($p->image) Storage::disk('public')->delete($p->image);
         $p->delete();
-        return redirect(url('muas/' . $muaId . '/edit'))->with('success', 'Portfolio removed');
+    $base = (auth()->check() && auth()->user()->role === 'admin') ? 'admin/muas' : 'muas';
+    return redirect(url($base . '/' . $muaId . '/edit'))->with('success', 'Portfolio removed');
     }
 }

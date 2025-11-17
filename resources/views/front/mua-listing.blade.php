@@ -271,63 +271,16 @@
                                     </div>
                                 </div>
 
-                                <!-- City Filter -->
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="filter-group">
-                                        <div class="custom-select-wrapper">
-                                            <select name="province_id" class="form-select custom-select" id="provinceSelect"
-                                                style="border: 2px solid #f8bbbd; border-radius: 15px; padding: 10px 14px; background: rgba(255,255,255,0.9); color: #3d2a33; font-weight: 500; font-size: 0.9rem;">
-                                                <option value="" selected>📍 Semua Provinsi...</option>
-                                                @foreach ($filterOptions['provinces'] as $key => $province)
-                                                    <option value="{{ $key }}"
-                                                        {{ isset($request->province_id) && $request->province_id == $key ? 'selected' : '' }}>
-                                                        {{ $province }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
+                                <!-- City Filter (flat list) -->
                                 <div class="col-lg-4 col-md-6">
                                     <div class="filter-group">
                                         <div class="custom-select-wrapper">
                                             <select name="regency_id" class="form-select custom-select" id="citySelect"
                                                 style="border: 2px solid #f8bbbd; border-radius: 15px; padding: 10px 14px; background: rgba(255,255,255,0.9); color: #3d2a33; font-weight: 500; font-size: 0.9rem;">
                                                 <option value="" selected>📍 Semua Kota/Kabupaten...</option>
-                                                @php
-                                                    $selectedProvince = isset($request->province_id)
-                                                        ? $request->province_id
-                                                        : '';
-                                                    $initialCities = $filterOptions['cities'][$selectedProvince] ?? [];
-                                                @endphp
-                                                @foreach ($initialCities as $c)
-                                                    <option value="{{ $c['id'] }}"
-                                                        {{ isset($request->regency_id) && $request->regency_id == $c['id'] ? 'selected' : '' }}>
+                                                @foreach ($filterOptions['cities'] as $c)
+                                                    <option value="{{ $c['id'] }}" {{ isset($request->regency_id) && $request->regency_id == $c['id'] ? 'selected' : '' }}>
                                                         {{ $c['name'] }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="filter-group">
-                                        <div class="custom-select-wrapper">
-                                            <select name="district_id" class="form-select custom-select" id="districtSelect"
-                                                style="border: 2px solid #f8bbbd; border-radius: 15px; padding: 10px 14px; background: rgba(255,255,255,0.9); color: #3d2a33; font-weight: 500; font-size: 0.9rem;">
-                                                <option value="" selected>📍 Semua Kecamatan...</option>
-                                                @php
-                                                    $selectedRegency = isset($request->regency_id)
-                                                        ? $request->regency_id
-                                                        : '';
-                                                    $initialDistricts =
-                                                        $filterOptions['districts'][$selectedRegency] ?? [];
-                                                @endphp
-                                                @foreach ($initialDistricts as $d)
-                                                    <option value="{{ $d['id'] }}"
-                                                        {{ isset($request->district_id) && $request->district_id == $d['id'] ? 'selected' : '' }}>
-                                                        {{ $d['name'] }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -470,51 +423,13 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Preloaded hierarchical locations (provinces -> regencies -> districts)
-            const provinceSelect = document.getElementById('provinceSelect');
             const citySelect = document.getElementById('citySelect');
-            const districtSelect = document.getElementById('districtSelect');
             const cities = @json($filterOptions['cities'] ?? []);
-            const districts = @json($filterOptions['districts'] ?? []);
 
-            function populateCities(province) {
-                citySelect.innerHTML = '<option value="">📍 Semua Kota/Kabupaten...</option>';
-                if (!province || !cities[province]) return;
-
-                cities[province].forEach(function(city) {
-                    const opt = document.createElement('option');
-                    opt.value = city.id;
-                    opt.textContent = city.name;
-                    citySelect.appendChild(opt);
-                });
-            }
-
-            function populateDistricts(city) {
-                if (!districtSelect) return;
-                districtSelect.innerHTML = '<option value="">📍 Semua Kecamatan...</option>';
-                if (!city || !districts[city]) return;
-                districts[city].forEach(function(d) {
-                    const opt = document.createElement('option');
-                    opt.value = d.id;
-                    opt.textContent = d.name;
-                    districtSelect.appendChild(opt);
-                });
-            }
-
-
-            if (provinceSelect) {
-                provinceSelect.addEventListener('change', function() {
-                    populateCities(this.value);
-                });
-                // when city changes, populate districts
-                if (citySelect) {
-                    citySelect.addEventListener('change', function() {
-                        populateDistricts(this.value);
-                    });
-                }
-                // if a province is already selected on load, populate cities
-                if (provinceSelect.value) populateCities(provinceSelect.value);
-                // also if a city is already selected on load, populate districts
-                if (citySelect && citySelect.value) populateDistricts(citySelect.value);
+            // preserve selected city when editing/filtering
+            if (citySelect) {
+                const selected = "{{ isset($request->regency_id) ? $request->regency_id : '' }}";
+                if (selected) citySelect.value = selected;
             }
 
             function loadingPage() {

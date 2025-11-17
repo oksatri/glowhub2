@@ -45,13 +45,15 @@ class MuaServiceController extends Controller
 
         MuaService::create($payload);
 
-        return redirect(url('muas/' . $mua->id . '/edit'))->with('success', 'Service added');
+    $base = (auth()->check() && auth()->user()->role === 'admin') ? 'admin/muas' : 'muas';
+    return redirect(url($base . '/' . $mua->id . '/edit'))->with('success', 'Service added');
     }
 
     public function destroy($muaId, $id)
     {
         $service = MuaService::where('mua_id', $muaId)->findOrFail($id);
         $service->delete();
-        return redirect(url('muas/' . $muaId . '/edit'))->with('success', 'Service removed');
+    $base = (auth()->check() && auth()->user()->role === 'admin') ? 'admin/muas' : 'muas';
+    return redirect(url($base . '/' . $muaId . '/edit'))->with('success', 'Service removed');
     }
 }

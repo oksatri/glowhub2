@@ -21,29 +21,29 @@ use Illuminate\Support\Facades\Hash;
 class MuaController extends Controller
 {
     /**
-     * Return arrays of provinces and cities grouped by province.
-     * In a real app this would come from a DB or external service.
+     * Return a flat list of cities (regencies) to be used in MUA forms.
+     *
+     * The user requested cities limited to the Jabodetabek area and Jawa Timur.
+     * Jabodetabek is not a single province in the dataset — it spans several
+     * provinces (DKI Jakarta, Banten and parts of Jawa Barat). Here we include
+     * regencies whose province name matches a small set: DKI Jakarta, Banten,
+     * Jawa Barat (to cover Jabodetabek) and Jawa Timur.
+     *
+     * Returns an array of arrays: [ ['id' => '...', 'name' => '...'], ... ]
      */
     protected function getLocationData()
     {
-        // Load provinces keyed by id => name
-        $provinces = RegProvince::orderBy('name')->pluck('name', 'id')->toArray();
+        $provinceNames = ['DKI Jakarta', 'Banten', 'Jawa Barat', 'Jawa Timur'];
 
-        // Group regencies by province_id; each regency is an array of {id,name}
-        $cities = RegRegency::orderBy('name')->get()->groupBy('province_id')->map(function ($group) {
-            return $group->map(function ($r) {
-                return ['id' => $r->id, 'name' => $r->name];
-            })->values()->toArray();
-        })->toArray();
+        $provinceIds = RegProvince::whereIn('name', $provinceNames)->pluck('id')->toArray();
 
-        // Group districts by regency_id; each district is an array of {id,name}
-        $districts = RegDistrict::orderBy('name')->get()->groupBy('regency_id')->map(function ($group) {
-            return $group->map(function ($d) {
-                return ['id' => $d->id, 'name' => $d->name];
-            })->values()->toArray();
-        })->toArray();
+        $cities = RegRegency::whereIn('province_id', $provinceIds)->orderBy('name')->get()->map(function ($r) {
+            return ['id' => $r->id, 'name' => $r->name];
+        })->values()->toArray();
 
-        return [$provinces, $cities, $districts];
+        // For backward compatibility with views that expect 3 return values,
+        // return empty arrays for provinces and districts.
+        return [[], $cities, []];
     }
 
     public function index(Request $request)
@@ -79,12 +79,13 @@ class MuaController extends Controller
         $users = User::where('role', 'mua')
             ->whereDoesntHave('mua')
             ->get();
+        // We only need $cities in the form now. Keep provinces/districts for compatibility.
         return view('back.muas.create', compact('provinces', 'cities', 'districts', 'specialties', 'users'));
     }
 
     public function store(Request $request)
     {
-        [$provinces, $cities, $districts] = $this->getLocationData();
+    [$provinces, $cities, $districts] = $this->getLocationData();
 
         // If the form uses the sentinel value 'new' for inline user creation,
         // normalize it to null so the "exists:users,id" validation does not
@@ -97,10 +98,8 @@ class MuaController extends Controller
             'user_id' => 'nullable|exists:users,id',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'province' => ['nullable', Rule::in(array_keys($provinces))],
-            // regency/district ids are strings in wilayah tables (keyType = string)
+            // only city is used now
             'city' => ['nullable', 'string', 'exists:reg_regencies,id'],
-            'district' => ['nullable', 'string', 'exists:reg_districts,id'],
             'specialty' => 'nullable|string|max:255',
             'experience' => 'nullable|string|max:255',
             // optional new user fields (if admin wants to create user inline)
@@ -110,21 +109,7 @@ class MuaController extends Controller
             'new_user_password' => 'nullable|string|min:6',
         ]);
 
-        // validate city value if province provided (ensure regency belongs to province)
-        if (!empty($data['province']) && !empty($data['city'])) {
-            $exists = RegRegency::where('id', $data['city'])->where('province_id', $data['province'])->exists();
-            if (!$exists) {
-                return back()->withInput()->withErrors(['city' => 'Selected city is invalid for the chosen province.']);
-            }
-        }
-
-        // validate district if city provided (ensure district belongs to regency)
-        if (!empty($data['city']) && !empty($data['district'])) {
-            $exists = RegDistrict::where('id', $data['district'])->where('regency_id', $data['city'])->exists();
-            if (!$exists) {
-                return back()->withInput()->withErrors(['district' => 'Selected district is invalid for the chosen city.']);
-            }
-        }
+        // No province/district validation needed anymore — only city is used.
 
         // handle inline user creation: admin can create a linked user from the form
         if (empty($data['user_id']) && !empty($data['new_user_email'])) {
@@ -162,7 +147,7 @@ class MuaController extends Controller
         }
 
         $mua = Mua::create(
-            collect($data)->only(['user_id', 'name', 'description', 'province', 'city', 'district', 'specialty', 'experience'])->toArray()
+            collect($data)->only(['user_id', 'name', 'description', 'city', 'specialty', 'experience'])->toArray()
         );
 
         // Redirect to the appropriate edit path depending on role to avoid
@@ -196,33 +181,14 @@ class MuaController extends Controller
             'user_id' => 'nullable|exists:users,id',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'province' => ['nullable', Rule::in(array_keys($provinces))],
             'city' => ['nullable', 'string', 'exists:reg_regencies,id'],
-            'district' => ['nullable', 'string', 'exists:reg_districts,id'],
             'specialty' => 'nullable|string|max:255',
             'experience' => 'nullable|string|max:255',
             'new_user_name' => 'nullable|string|max:255',
             'new_user_email' => 'nullable|email|max:255|unique:users,email',
             'new_user_password' => 'nullable|string|min:6',
         ]);
-
-        if (!empty($data['province']) && !empty($data['city'])) {
-            // $cities is grouped as [province_id => [ ['id'=>..., 'name'=>...], ... ]]
-            // extract the id column for proper comparison with the scalar city id
-            $allowedCities = array_column($cities[$data['province']] ?? [], 'id');
-            if (!in_array($data['city'], $allowedCities)) {
-                return back()->withInput()->withErrors(['city' => 'Selected city is invalid for the chosen province.']);
-            }
-        }
-
-        // validate district if city provided
-        if (!empty($data['city']) && !empty($data['district'])) {
-            // $districts is grouped as [regency_id => [ ['id'=>..., 'name'=>...], ... ]]
-            $allowedDistricts = array_column($districts[$data['city']] ?? [], 'id');
-            if (!in_array($data['district'], $allowedDistricts)) {
-                return back()->withInput()->withErrors(['district' => 'Selected district is invalid for the chosen city.']);
-            }
-        }
+        // Only city is considered now; no province/district checks.
 
         // handle inline new user creation on update
         if (empty($data['user_id']) && !empty($data['new_user_email'])) {
@@ -253,7 +219,7 @@ class MuaController extends Controller
         }
 
         $mua->update(
-            collect($data)->only(['user_id', 'name', 'description', 'province', 'city', 'district', 'specialty', 'experience'])->toArray()
+            collect($data)->only(['user_id', 'name', 'description', 'city', 'specialty', 'experience'])->toArray()
         );
 
         $base = (Auth::check() && Auth::user()->role === 'mua') ? 'muas' : 'admin/muas';
@@ -278,6 +244,7 @@ class MuaController extends Controller
             if ($p->image) Storage::disk('public')->delete($p->image);
         }
         $mua->delete();
-        return redirect(url('muas'))->with('success', 'MUA removed');
+        $base = (Auth::check() && Auth::user()->role === 'mua') ? 'muas' : 'admin/muas';
+        return redirect(url($base))->with('success', 'MUA removed');
     }
 }

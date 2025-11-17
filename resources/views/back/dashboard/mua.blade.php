@@ -5,6 +5,7 @@
         return isset($b->mua_id) && $b->mua_id == $user->id;
     });
     $mua = \App\Models\Mua::where('user_id', auth()->user()->id)->first();
+    $muaBase = auth()->check() && auth()->user()->role === 'admin' ? 'admin/muas' : 'muas';
 @endphp
 
 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -71,7 +72,7 @@
                 <h4 class="card-title">Actions</h4>
                 <div class="d-grid gap-2">
                     <a href="{{ route('auth-mua.bookings.index') }}" class="btn btn-primary">Manage all bookings</a>
-                    <a href="{{ $mua ? url('muas/' . $mua->id . '/edit') : url('muas/create') }}" class="btn btn-outline-secondary">Manage Services</a>
+                    <a href="{{ $mua ? url($muaBase . '/' . $mua->id . '/edit') : url($muaBase . '/create') }}" class="btn btn-outline-secondary">Manage Services</a>
                 </div>
             </div>
         </div>

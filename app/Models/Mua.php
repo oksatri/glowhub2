@@ -13,9 +13,7 @@ class Mua extends Model
         'user_id',
         'name',
         'description',
-        'province',
         'city',
-        'district',
         'specialty',
         'rating',
         'experience',
@@ -37,18 +35,8 @@ class Mua extends Model
         return $this->hasMany(MuaPortfolio::class);
     }
 
-    public function rel_province()
-    {
-        return $this->belongsTo(RegProvince::class, 'province');
-    }
-
     public function rel_city()
     {
         return $this->belongsTo(RegRegency::class, 'city');
-    }
-
-    public function rel_district()
-    {
-        return $this->belongsTo(RegDistrict::class, 'district');
     }
 }

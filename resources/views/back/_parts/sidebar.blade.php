@@ -29,7 +29,7 @@
                         </li>
 
                         <li class="sidebar-item">
-                            <a class="sidebar-link {{ request()->is('muas*') ? 'active' : '' }}" href="{{ url('muas') }}"
+                            <a class="sidebar-link {{ request()->is('admin/muas*') ? 'active' : '' }}" href="{{ url('admin/muas') }}"
                                 aria-expanded="false">
                                 <i data-feather="box" class="feather-icon"></i>
                                 <span class="hide-menu">MUA Management</span>
@@ -79,16 +79,17 @@
 
                     @case('mua')
                         @php
-                            $mua = \App\Models\Mua::where('user_id', auth()->user()->id)->first();
-                        @endphp
-                        <li class="sidebar-item">
-                            <a class="sidebar-link {{ request()->is('muas*') ? 'active' : '' }}"
-                                href="{{ $mua ? url('muas/' . $mua->id . '/edit') : url('muas/create') }}"
-                                aria-expanded="false">
-                                <i data-feather="box" class="feather-icon"></i>
-                                <span class="hide-menu">MUA Management</span>
-                            </a>
-                        </li>
+                                $mua = \App\Models\Mua::where('user_id', auth()->user()->id)->first();
+                                $muaBase = 'muas';
+                            @endphp
+                            <li class="sidebar-item">
+                                <a class="sidebar-link {{ request()->is($muaBase.'*') ? 'active' : '' }}"
+                                    href="{{ $mua ? url($muaBase . '/' . $mua->id . '/edit') : url($muaBase . '/create') }}"
+                                    aria-expanded="false">
+                                    <i data-feather="box" class="feather-icon"></i>
+                                    <span class="hide-menu">MUA Management</span>
+                                </a>
+                            </li>
 
                         <li class="sidebar-item">
                             @php
