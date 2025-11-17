@@ -107,6 +107,12 @@ Route::middleware('auth')->group(function () {
         Route::resource('users', UserController::class, ['as' => 'admin']);
 
     // MUA management (admin area)
+    // Provide GET /muas that redirects to /admin/muas for admins so the
+    // GET method is available (previously only POST /muas existed because
+    // muas resource for MUA users registers only create/store/edit/update).
+    Route::get('muas', function () {
+        return redirect('admin/muas');
+    });
     Route::resource('admin/muas', BackMuaController::class, ['as' => 'admin']);
     // Nested MUA services (admin/muas/{mua}/services)
     Route::post('admin/muas/{mua}/services', [BackMuaServiceController::class, 'store'])->name('admin.muas.services.store');
