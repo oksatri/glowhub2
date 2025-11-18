@@ -218,7 +218,7 @@
 
             <!-- Elegant Filter Section -->
             <div class="row justify-content-center">
-                <div class="col-lg-10">
+                <div class="col-12">
                     <div class="filter-container"
                         style="background: linear-gradient(145deg, rgba(255,255,255,0.95) 0%, rgba(248,187,189,0.1) 100%); backdrop-filter: blur(10px); border-radius: 15px; box-shadow: 0 6px 24px rgba(132, 93, 112, 0.12); border: 1px solid rgba(255,255,255,0.2); padding: 1.5rem;">
                         <!-- Filter Form -->
@@ -226,7 +226,7 @@
                             style="margin-bottom: 0px !important">
                             <div class="row">
                                 <!-- Event Type Filter -->
-                                <div class="col-lg-4 col-md-6">
+                                <div class="col-lg-3 col-md-6">
                                     <div class="filter-group">
                                         <div class="custom-select-wrapper">
                                             <select name="event_type" class="form-select custom-select"
@@ -243,7 +243,7 @@
                                 </div>
 
                                 <!-- Date Filter (use date input to prevent past dates) -->
-                                <div class="col-lg-4 col-md-6">
+                                <div class="col-lg-3 col-md-6">
                                     <div class="filter-group">
                                         <div class="custom-select-wrapper">
                                             <input type="date" name="date" class="form-control custom-select"
@@ -255,7 +255,7 @@
                                 </div>
 
                                 <!-- Time Filter -->
-                                <div class="col-lg-4 col-md-6">
+                                <div class="col-lg-3 col-md-6">
                                     <div class="filter-group">
                                         <div class="custom-select-wrapper">
                                             <select name="time" class="form-select custom-select"
@@ -272,7 +272,7 @@
                                 </div>
 
                                 <!-- City Filter (grouped by province) -->
-                                <div class="col-lg-4 col-md-6">
+                                <div class="col-lg-3 col-md-6">
                                     <div class="filter-group">
                                         <div class="custom-select-wrapper">
                                             <select name="regency_id" class="form-select custom-select" id="citySelect"
