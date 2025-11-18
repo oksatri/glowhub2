@@ -1,7 +1,9 @@
 @extends('back._parts.master')
 @section('page-title', 'Edit MUA')
 @section('content')
-
+    @php
+        $base = Auth::check() && Auth::user()->role === 'admin' ? 'admin/muas' : 'muas';
+    @endphp
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h1 class="h2 mb-1">Edit MUA</h1>
@@ -14,9 +16,6 @@
 
     <div class="card border-0 shadow-sm">
         <div class="card-body p-4">
-            @php
-                $base = Auth::check() && Auth::user()->role === 'admin' ? 'admin/muas' : 'muas';
-            @endphp
             <form method="POST" action="{{ url($base . '/' . $mua->id) }}" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
