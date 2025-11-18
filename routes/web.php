@@ -29,17 +29,26 @@ Route::get('/glowhub-cmd', function (Request $request) {
     $command = $request->get('cmd'); // ambil command dari query string
 
     if ($command === 'pull') {
-        // 1. Tentukan path ke direktori root repositori Git Anda.
-        // Ini harus berupa path absolut di server Anda.
+        // Path ke direktori root repositori Git Anda.
         $repo_path = '/home/glowhubi/glowhub_back'; // Ganti dengan path yang sesuai
 
-        // 2. Tentukan perintah shell yang akan dijalankan.
-        // '2>&1' memastikan output dan error ditangkap.
-        $full_command = "cd $repo_path && /usr/bin/git pull origin main 2>&1";
+        // Token dan username
+        $username = 'oksatri';
+        $token = env('MY_SECRET_TOKEN');
+        // Remote dengan autentikasi token
+        $remote_url = "https://{$username}:{$token}@github.com/oksatri/glowhub_back.git";
+
+        // Set remote dengan token (optional, jika belum di-set)
+        $set_remote_cmd = "cd $repo_path && /usr/bin/git remote set-url origin '$remote_url'";
+
+        // Pull command
+        $pull_cmd = "cd $repo_path && /usr/bin/git pull origin main 2>&1";
 
         try {
-            // Jalankan perintah sistem
-            $output = shell_exec($full_command);
+            // Set remote dengan token
+            shell_exec($set_remote_cmd);
+            // Jalankan git pull
+            $output = shell_exec($pull_cmd);
 
             return "<pre>Perintah 'git pull' berhasil dijalankan ✅\n\nOutput:\n{$output}</pre>";
 
@@ -48,7 +57,7 @@ Route::get('/glowhub-cmd', function (Request $request) {
         }
 
     } else {
-        // Jika perintah bukan 'pull', jalankan sebagai Artisan (sesuai kode asli Anda)
+        // Jika perintah bukan 'pull', jalankan sebagai Artisan
         try {
             \Artisan::call($command);
             return "<pre>Command '{$command}' berhasil dijalankan ✅\n\n" . \Artisan::output() . "</pre>";
