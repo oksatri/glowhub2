@@ -271,18 +271,23 @@
                                     </div>
                                 </div>
 
-                                <!-- City Filter (flat list) -->
+                                <!-- City Filter (grouped by province) -->
                                 <div class="col-lg-4 col-md-6">
                                     <div class="filter-group">
                                         <div class="custom-select-wrapper">
                                             <select name="regency_id" class="form-select custom-select" id="citySelect"
                                                 style="border: 2px solid #f8bbbd; border-radius: 15px; padding: 10px 14px; background: rgba(255,255,255,0.9); color: #3d2a33; font-weight: 500; font-size: 0.9rem;">
                                                 <option value="" selected>📍 Semua Kota/Kabupaten...</option>
-                                                @foreach ($filterOptions['cities'] as $c)
-                                                    <option value="{{ $c['id'] }}" {{ isset($request->regency_id) && $request->regency_id == $c['id'] ? 'selected' : '' }}>
-                                                        {{ $c['name'] }}
-                                                    </option>
-                                                @endforeach
+                                                @if (is_array($filterOptions['cities']) && count($filterOptions['cities']) > 0)
+                                                    @foreach ($filterOptions['cities'] as $provinceId => $citiesByProvince)
+                                                        @foreach ($citiesByProvince as $c)
+                                                            <option value="{{ $c['id'] }}"
+                                                                {{ isset($request->regency_id) && $request->regency_id == $c['id'] ? 'selected' : '' }}>
+                                                                {{ $c['name'] }}
+                                                            </option>
+                                                        @endforeach
+                                                    @endforeach
+                                                @endif
                                             </select>
                                         </div>
                                     </div>

@@ -25,12 +25,16 @@
                 <select name="city" id="citySelect"
                     class="form-select {{ $errors->has('city') ? 'is-invalid' : '' }}">
                     <option value="">Select City / Regency</option>
-                    @foreach ($cities ?? [] as $c)
-                        <option value="{{ $c['id'] }}"
-                            {{ old('city', $mua->city ?? '') == $c['id'] ? 'selected' : '' }}>
-                            {{ $c['name'] }}
-                        </option>
-                    @endforeach
+                    @if (is_array($cities) && count($cities) > 0)
+                        @foreach ($cities as $provinceId => $citiesByProvince)
+                            @foreach ($citiesByProvince as $c)
+                                <option value="{{ $c['id'] }}"
+                                    {{ old('city', $mua->city ?? '') == $c['id'] ? 'selected' : '' }}>
+                                    {{ $c['name'] }}
+                                </option>
+                            @endforeach
+                        @endforeach
+                    @endif
                 </select>
                 @if ($errors->has('city'))
                     <div class="invalid-feedback d-block">{{ $errors->first('city') }}</div>
