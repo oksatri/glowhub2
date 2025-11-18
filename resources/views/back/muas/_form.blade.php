@@ -42,12 +42,12 @@
             </div>
 
             <div class="col-md-6 mb-3">
-                <label class="form-label">Link Map</label>
-                <input type="text" name="link_map"
-                    class="form-control {{ $errors->has('link_map') ? 'is-invalid' : '' }}"
-                    value="{{ old('link_map', $mua->link_map ?? '') }}" placeholder="e.g. Google Maps link">
-                @if ($errors->has('link_map'))
-                    <div class="invalid-feedback">{{ $errors->first('link_map') }}</div>
+                <label class="form-label">Experience</label>
+                <input type="text" name="experience"
+                    class="form-control {{ $errors->has('experience') ? 'is-invalid' : '' }}"
+                    value="{{ old('experience', $mua->experience ?? '') }}" placeholder="e.g. 3+ years">
+                @if ($errors->has('experience'))
+                    <div class="invalid-feedback">{{ $errors->first('experience') }}</div>
                 @endif
             </div>
         </div>
@@ -70,12 +70,12 @@
 
         <div class="row gx-2">
             <div class="col-md-12 mb-3">
-                <label class="form-label">Experience</label>
-                <input type="text" name="experience"
-                    class="form-control {{ $errors->has('experience') ? 'is-invalid' : '' }}"
-                    value="{{ old('experience', $mua->experience ?? '') }}" placeholder="e.g. 3+ years">
-                @if ($errors->has('experience'))
-                    <div class="invalid-feedback">{{ $errors->first('experience') }}</div>
+                <label class="form-label">Link Map</label>
+                <input type="text" name="link_map"
+                    class="form-control {{ $errors->has('link_map') ? 'is-invalid' : '' }}"
+                    value="{{ old('link_map', $mua->link_map ?? '') }}" placeholder="e.g. Google Maps link">
+                @if ($errors->has('link_map'))
+                    <div class="invalid-feedback">{{ $errors->first('link_map') }}</div>
                 @endif
             </div>
         </div>
