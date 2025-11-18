@@ -25,10 +25,7 @@
                 <select name="city" id="citySelect"
                     class="form-select {{ $errors->has('city') ? 'is-invalid' : '' }}">
                     <option value="">Select City / Regency</option>
-                    @php
-                        dd($filterOptions['cities']);
-                    @endphp
-                    @foreach ($filterOptions['cities'] ?? [] as $c)
+                    @foreach ($cities ?? [] as $c)
                         <option value="{{ $c['id'] }}"
                             {{ old('city', $mua->city ?? '') == $c['id'] ? 'selected' : '' }}>
                             {{ $c['name'] }}
