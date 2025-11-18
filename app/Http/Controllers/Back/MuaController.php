@@ -35,7 +35,11 @@ class MuaController extends Controller
     {
         $provinceNames = ['DKI Jakarta', 'Banten', 'Jawa Barat', 'Jawa Timur'];
 
-        $provinceIds = RegProvince::whereIn('name', $provinceNames)->pluck('id')->toArray();
+        $provinceIds = RegProvince::where(function ($q) use ($provinceNames) {
+            foreach ($provinceNames as $name) {
+            $q->orWhere('name', 'like', "%{$name}%");
+            }
+        })->pluck('id')->toArray();
 
         $cities = RegRegency::whereIn('province_id', $provinceIds)->orderBy('name')->get()->map(function ($r) {
             return ['id' => $r->id, 'name' => $r->name];

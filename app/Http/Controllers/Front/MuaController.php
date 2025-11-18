@@ -61,16 +61,10 @@ class MuaController extends Controller
             'has_more' => $muas->hasMorePages(),
         ];
 
-        $provinceNames = ['DKI Jakarta', 'Banten', 'Jawa Barat', 'Jawa Timur'];
-        $provinceIds = RegProvince::where(function ($q) use ($provinceNames) {
-            foreach ($provinceNames as $name) {
-            $q->orWhere('name', 'like', "%{$name}%");
-            }
-        })->pluck('id')->toArray();
         $filterOptions = [
             'events' => ['Wedding', '⁠⁠Engagement/Lamaran', 'Wedding Guest', 'Party', 'Graduation','Graduation Companion'],
             // only provide cities filtered to Jabodetabek-area provinces and Jawa Timur
-            'cities' => RegRegency::whereIn('province_id', $provinceIds)->orderBy('name')->get()->map(function ($r) {
+            'cities' => RegRegency::whereIn('province_id', RegProvince::whereIn('name', ['DKI Jakarta', 'Banten', 'Jawa Barat', 'Jawa Timur'])->pluck('id'))->orderBy('name')->get()->map(function ($r) {
                 return ['id' => $r->id, 'name' => $r->name];
             })->values()->toArray(),
             'times' => ['Pagi (02:00-11:00)', 'Siang (11:00-19:00)', 'Malam (19:00-22:00)']
