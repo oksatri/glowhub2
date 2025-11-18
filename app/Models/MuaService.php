@@ -11,7 +11,7 @@ class MuaService extends Model
 
     protected $table = 'mua_services';
 
-    protected $fillable = ['mua_id', 'service_name', 'description', 'features', 'price'];
+    protected $fillable = ['mua_id', 'service_name', 'description', 'features', 'price','categori_service'];
 
     protected $casts = [
         'features' => 'array',
