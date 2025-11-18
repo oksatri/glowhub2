@@ -136,17 +136,8 @@
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const citySelect = document.getElementById('citySelect');
-            const cities = @json($cities ?? []);
             const userSelect = document.getElementById('userSelect');
             const newUserFields = document.getElementById('newUserFields');
-
-            // No province/district hierarchy any more. Cities are preloaded.
-            // Preserve selection when editing
-            if (citySelect) {
-                const selected = "{{ old('city', $mua->city ?? '') }}";
-                if (selected) citySelect.value = selected;
-            }
 
             // toggle new user fields when admin selects "Add new user..."
             function toggleNewUserFields() {
