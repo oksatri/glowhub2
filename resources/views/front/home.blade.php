@@ -28,10 +28,8 @@
                             </div>
                             <div class="col-lg-6">
                                 @if ($section->image)
-                                    @php
-                                        $section_image = 'storage/' . $section->image;
-                                    @endphp
-                                    <img src="{{ $section_image }}" alt="{{ $section->title }}" class="img-fluid rounded-3 shadow">
+                                    <img src="{{ asset('storage/' . $section->image) }}" alt="{{ $section->title }}"
+                                        class="img-fluid rounded-3 shadow">
                                 @else
                                     <img src="images/main-banner1.jpg" alt="Professional Makeup" class="img-fluid rounded-3 shadow">
                                 @endif
