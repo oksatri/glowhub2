@@ -17,6 +17,7 @@ class Mua extends Model
         'specialty',
         'rating',
         'experience',
+        'link_map',
         'image'
     ];
 
