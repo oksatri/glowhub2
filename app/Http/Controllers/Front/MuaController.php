@@ -63,7 +63,7 @@ class MuaController extends Controller
 
         $provinceNames = ['DKI Jakarta', 'Banten', 'Jawa Barat', 'Jawa Timur'];
         $provinceIds = RegProvince::whereIn('name', $provinceNames)->pluck('id')->toArray();
-
+        dd($provinceIds);
         $filterOptions = [
             'events' => ['Wedding', '⁠⁠Engagement/Lamaran', 'Wedding Guest', 'Party', 'Graduation','Graduation Companion'],
             // only provide cities filtered to Jabodetabek-area provinces and Jawa Timur
