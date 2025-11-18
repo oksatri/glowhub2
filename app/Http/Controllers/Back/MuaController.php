@@ -21,33 +21,53 @@ use Illuminate\Support\Facades\Hash;
 class MuaController extends Controller
 {
     /**
-     * Return a flat list of cities (regencies) to be used in MUA forms.
+     * Return location data grouped by province_id for backend forms.
      *
      * The user requested cities limited to the Jabodetabek area and Jawa Timur.
-     * Jabodetabek is not a single province in the dataset — it spans several
-     * provinces (DKI Jakarta, Banten and parts of Jawa Barat). Here we include
-     * regencies whose province name matches a small set: DKI Jakarta, Banten,
-     * Jawa Barat (to cover Jabodetabek) and Jawa Timur.
+     * Jabodetabek spans several provinces (DKI Jakarta, Banten and parts of Jawa Barat).
+     * Province names in the Wilayah SQL are uppercase.
      *
-     * Returns an array of arrays: [ ['id' => '...', 'name' => '...'], ... ]
+     * Returns an array: [ 'provinces' => [...], 'cities' => [...], 'districts' => [...] ]
+     * where cities and districts are grouped by their parent province_id / regency_id.
      */
     protected function getLocationData()
     {
-        $provinceNames = ['Jakarta', 'Banten', 'Jawa Barat', 'Jawa Timur'];
+        // Province names from Wilayah SQL are uppercase
+        $provinceNames = ['DKI JAKARTA', 'BANTEN', 'JAWA BARAT', 'JAWA TIMUR'];
 
-        $provinceIds = RegProvince::where(function ($q) use ($provinceNames) {
-            foreach ($provinceNames as $name) {
-            $q->orWhere('name', 'like', "%{$name}%");
-            }
-        })->pluck('id')->toArray();
+        $provinceIds = RegProvince::whereIn('name', $provinceNames)->pluck('id')->toArray();
 
-        $cities = RegRegency::whereIn('province_id', $provinceIds)->orderBy('name')->get()->map(function ($r) {
-            return ['id' => $r->id, 'name' => $r->name];
-        })->values()->toArray();
+        // Group regencies (cities) by province_id
+        $cities = RegRegency::whereIn('province_id', $provinceIds)
+            ->orderBy('name')
+            ->get()
+            ->groupBy('province_id')
+            ->map(function ($group) {
+                return $group->map(function ($r) {
+                    return ['id' => $r->id, 'name' => $r->name];
+                })->values()->toArray();
+            })->toArray();
 
-        // For backward compatibility with views that expect 3 return values,
-        // return empty arrays for provinces and districts.
-        return [[], $cities, []];
+        // Group districts by regency_id for completeness
+        $allRegencyIds = RegRegency::whereIn('province_id', $provinceIds)->pluck('id')->toArray();
+        $districts = RegDistrict::whereIn('regency_id', $allRegencyIds)
+            ->orderBy('name')
+            ->get()
+            ->groupBy('regency_id')
+            ->map(function ($group) {
+                return $group->map(function ($d) {
+                    return ['id' => $d->id, 'name' => $d->name];
+                })->values()->toArray();
+            })->toArray();
+
+        // Return all three for compatibility with views
+        return [
+            'provinces' => RegProvince::whereIn('id', $provinceIds)->orderBy('name')->get()->map(function ($p) {
+                return ['id' => $p->id, 'name' => $p->name];
+            })->values()->toArray(),
+            'cities' => $cities,
+            'districts' => $districts
+        ];
     }
 
     public function index(Request $request)
@@ -74,7 +94,10 @@ class MuaController extends Controller
 
     public function create()
     {
-        [$provinces, $cities, $districts] = $this->getLocationData();
+        $locationData = $this->getLocationData();
+        $provinces = $locationData['provinces'];
+        $cities = $locationData['cities'];
+        $districts = $locationData['districts'];
         // provide existing specialties for datalist
         $specialties = Mua::whereNotNull('specialty')->distinct()->orderBy('specialty')->pluck('specialty')->filter()->values()->toArray();
         // load users for the linked user dropdown (limit for performance)
@@ -89,7 +112,10 @@ class MuaController extends Controller
 
     public function store(Request $request)
     {
-    [$provinces, $cities, $districts] = $this->getLocationData();
+        $locationData = $this->getLocationData();
+        $provinces = $locationData['provinces'];
+        $cities = $locationData['cities'];
+        $districts = $locationData['districts'];
 
         // If the form uses the sentinel value 'new' for inline user creation,
         // normalize it to null so the "exists:users,id" validation does not
@@ -163,7 +189,10 @@ class MuaController extends Controller
     public function edit($id)
     {
         $mua = Mua::with('services', 'portfolios')->findOrFail($id);
-        [$provinces, $cities, $districts] = $this->getLocationData();
+        $locationData = $this->getLocationData();
+        $provinces = $locationData['provinces'];
+        $cities = $locationData['cities'];
+        $districts = $locationData['districts'];
         $specialties = Mua::whereNotNull('specialty')->distinct()->orderBy('specialty')->pluck('specialty')->filter()->values()->toArray();
         $users = User::where('role', 'mua')
             ->whereDoesntHave('mua')
@@ -174,7 +203,10 @@ class MuaController extends Controller
     public function update(Request $request, $id)
     {
         $mua = Mua::findOrFail($id);
-        [$provinces, $cities, $districts] = $this->getLocationData();
+        $locationData = $this->getLocationData();
+        $provinces = $locationData['provinces'];
+        $cities = $locationData['cities'];
+        $districts = $locationData['districts'];
 
         // Normalize 'new' sentinel like in store() so validation won't query 'new'.
         if ($request->input('user_id') === 'new') {

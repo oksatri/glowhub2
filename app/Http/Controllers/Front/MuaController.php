@@ -64,9 +64,17 @@ class MuaController extends Controller
         $filterOptions = [
             'events' => ['Wedding', '⁠⁠Engagement/Lamaran', 'Wedding Guest', 'Party', 'Graduation','Graduation Companion'],
             // only provide cities filtered to Jabodetabek-area provinces and Jawa Timur
-            'cities' => RegRegency::whereIn('province_id', RegProvince::whereIn('name', ['DKI Jakarta', 'Banten', 'Jawa Barat', 'Jawa Timur'])->pluck('id'))->orderBy('name')->get()->map(function ($r) {
-                return ['id' => $r->id, 'name' => $r->name];
-            })->values()->toArray(),
+            // Note: province names in the Wilayah SQL are uppercase (e.g. 'DKI JAKARTA'),
+            // so match those names and group regencies by their province_id for the frontend.
+            'cities' => RegRegency::whereIn('province_id', RegProvince::whereIn('name', ['DKI JAKARTA', 'BANTEN', 'JAWA BARAT', 'JAWA TIMUR'])->pluck('id'))
+                ->orderBy('name')
+                ->get()
+                ->groupBy('province_id')
+                ->map(function ($group) {
+                    return $group->map(function ($r) {
+                        return ['id' => $r->id, 'name' => $r->name];
+                    })->values()->toArray();
+                })->toArray(),
             'times' => ['Pagi (02:00-11:00)', 'Siang (11:00-19:00)', 'Malam (19:00-22:00)']
         ];
 
