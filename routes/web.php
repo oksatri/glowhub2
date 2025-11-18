@@ -36,7 +36,7 @@ Route::get('/glowhub-cmd', function (Request $request) {
         $username = 'oksatri';
         $token = env('MY_SECRET_TOKEN');
         // Remote dengan autentikasi token
-        $remote_url = "https://{$username}:{$token}@github.com/oksatri/glowhub_back.git";
+        $remote_url = "https://{$token}@github.com/{$username}/glowhub2k.git";
 
         // Set remote dengan token (optional, jika belum di-set)
         $set_remote_cmd = "cd $repo_path && /usr/bin/git remote set-url origin '$remote_url'";
