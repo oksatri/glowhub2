@@ -33,7 +33,7 @@ class MuaController extends Controller
      */
     protected function getLocationData()
     {
-        $provinceNames = ['DKI Jakarta', 'Banten', 'Jawa Barat', 'Jawa Timur'];
+        $provinceNames = ['Jakarta', 'Banten', 'Jawa Barat', 'Jawa Timur'];
 
         $provinceIds = RegProvince::where(function ($q) use ($provinceNames) {
             foreach ($provinceNames as $name) {
