@@ -49,7 +49,7 @@
                         <textarea name="deskripsi" class="form-control" placeholder="Description" rows="3"></textarea>
                     </div>
                     <div class="col-sm-12">
-                        <label class="form-label small">Features</label>
+                        <label class="form-label small">Brands Used</label>
                         <div id="features-list">
                             <div class="input-group mb-2 feature-item">
                                 <input type="text" name="features[]" class="form-control" placeholder="Feature">

@@ -19,8 +19,13 @@ class Mua extends Model
         'operational_hours',
         'additional_charge',
         'availability_hours',
+        'categori_service',
         'link_map',
         'image'
+    ];
+
+    protected $casts = [
+        'categori_service' => 'array',
     ];
 
     public function user()

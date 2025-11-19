@@ -26,7 +26,12 @@ class MuaController extends Controller
 
         if ($q = @$request->event_type) {
             $query->where(function ($sub) use ($q) {
+                // match by name for backward compatibility
                 $sub->orWhere('name', 'like', "%{$q}%");
+
+                // match by occasions (stored as JSON array in categori_service)
+                // this requires the categori_service JSON column to exist
+                $sub->orWhereJsonContains('categori_service', $q);
             });
         }
         // Filter only by city (regency)
@@ -64,7 +69,21 @@ class MuaController extends Controller
         ];
 
         $filterOptions = [
-            'events' => ['Wedding', '⁠⁠Engagement/Lamaran', 'Wedding Guest', 'Party', 'Graduation','Graduation Companion'],
+            'events' => [
+                'Akad',
+                'Wedding (Resepsi)',
+                'Prewedding',
+                '⁠⁠Engagement/Lamaran',
+                'Wedding Guest',
+                'Party',
+                'Bridesmaid',
+                'Graduation',
+                'Graduation Companion',
+                'Maternity Shoot',
+                'Photoshoot',
+                'Family Makeup',
+                'Event',
+            ],
             // only provide cities filtered to Jabodetabek-area provinces and Jawa Timur
             // Note: province names in the Wilayah SQL are uppercase (e.g. 'DKI JAKARTA'),
             // so match those names and group regencies by their province_id for the frontend.

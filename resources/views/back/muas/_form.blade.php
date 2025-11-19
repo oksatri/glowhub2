@@ -78,6 +78,42 @@
         </div>
 
         <div class="mb-3">
+            <label class="form-label">Occasions</label>
+            @php
+                $occasionOptions = [
+                    'Akad',
+                    'Wedding (Resepsi)',
+                    'Prewedding',
+                    '⁠⁠Engagement/Lamaran',
+                    'Wedding Guest',
+                    'Party',
+                    'Bridesmaid',
+                    'Graduation',
+                    'Graduation Companion',
+                    'Maternity Shoot',
+                    'Photoshoot',
+                    'Family Makeup',
+                    'Event',
+                ];
+                $selectedOccasions = old('categori_service', $mua->categori_service ?? []);
+                if (!is_array($selectedOccasions)) {
+                    $selectedOccasions = (array) $selectedOccasions;
+                }
+            @endphp
+            <select name="categori_service[]" class="form-select" multiple size="6">
+                @foreach ($occasionOptions as $opt)
+                    <option value="{{ $opt }}" {{ in_array($opt, $selectedOccasions, true) ? 'selected' : '' }}>
+                        {{ $opt }}
+                    </option>
+                @endforeach
+            </select>
+            <small class="text-muted d-block mt-1">Hold Ctrl/Command to select more than one occasion.</small>
+            @if ($errors->has('categori_service'))
+                <div class="invalid-feedback d-block">{{ $errors->first('categori_service') }}</div>
+            @endif
+        </div>
+
+        <div class="mb-3">
             <label class="form-label">Availability Hours</label>
             <input type="text" name="availability_hours"
                 class="form-control {{ $errors->has('availability_hours') ? 'is-invalid' : '' }}"
