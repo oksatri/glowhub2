@@ -20,4 +20,3 @@ return Application::configure(basePath: dirname(__DIR__))
         'path.public' => fn () => base_path('../public_html'),
     ])
     ->create();
-
