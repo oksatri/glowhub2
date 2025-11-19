@@ -336,7 +336,15 @@
                             <!-- Card Body -->
                             <div class="card-body text-center p-4">
                                 <h5 class="fw-bold">{{ $mua['name'] }}</h5>
-                                <p class="text-primary mb-2">{{ $mua['speciality'] }} • {{ $mua['location'] }}</p>
+                                <p class="text-primary mb-2">
+                                    @if (!empty($mua['max_distance']))
+                                        Up to {{ $mua['max_distance'] }} km
+                                        @if (!empty($mua['location']))
+                                            •
+                                        @endif
+                                    @endif
+                                    {{ $mua['location'] }}
+                                </p>
 
                                 <!-- Rating -->
                                 <div class="mb-2">
@@ -353,8 +361,23 @@
                                         reviews)</span>
                                 </div>
 
-                                <p class="text-muted small mb-3">From Rp. {{ number_format($mua['price'], 0, ',', '.') }}
+                                <p class="text-muted small mb-1">From Rp. {{ number_format($mua['price'], 0, ',', '.') }}
                                 </p>
+                                @if (!empty($mua['operational_hours']) || !empty($mua['availability_hours']))
+                                    <p class="text-muted small mb-3">
+                                        @if (!empty($mua['operational_hours']))
+                                            Hours: {{ $mua['operational_hours'] }}
+                                        @endif
+                                        @if (!empty($mua['availability_hours']))
+                                            @if (!empty($mua['operational_hours']))
+                                                •
+                                            @endif
+                                            Availability: {{ $mua['availability_hours'] }}
+                                        @endif
+                                    </p>
+                                @else
+                                    <p class="text-muted small mb-3">&nbsp;</p>
+                                @endif
                                 <a href="{{ route('mua.detail', $mua['id']) }}"
                                     class="btn btn-outline-primary btn-sm">View
                                     Profile</a>

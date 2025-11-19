@@ -27,7 +27,6 @@ class MuaController extends Controller
         if ($q = @$request->event_type) {
             $query->where(function ($sub) use ($q) {
                 $sub->orWhere('name', 'like', "%{$q}%");
-                $sub->orWhere('specialty', 'like', "%{$q}%");
             });
         }
         // Filter only by city (regency)
@@ -49,7 +48,10 @@ class MuaController extends Controller
                 'reviews_count' => $mua->reviews_count ?? 0,
                 'price' => $firstService ? (int) $firstService->price : null,
                 'image' => $mua->image ? asset('uploads/' . $mua->image) : asset('images/product-item1.jpg'),
-                'speciality' => $mua->specialty ?? '',
+                'max_distance' => $mua->max_distance,
+                'operational_hours' => $mua->operational_hours,
+                'availability_hours' => $mua->availability_hours,
+                'additional_charge' => $mua->additional_charge,
             ];
         });
 
@@ -103,8 +105,10 @@ class MuaController extends Controller
             'rating' => (float) ($mua->rating ?? 4.5),
             'price' => $firstService ? (int) $firstService->price : null,
             'image' => $mua->image ? asset('uploads/' . $mua->image) : asset('images/product-item1.jpg'),
-            'speciality' => $mua->specialty ?? '',
-            'experience' => $mua->experience ?? '',
+            'max_distance' => $mua->max_distance,
+            'operational_hours' => $mua->operational_hours,
+            'availability_hours' => $mua->availability_hours,
+            'additional_charge' => $mua->additional_charge,
         ];
 
         $portfolio = $mua->portfolios->map(function ($p) {

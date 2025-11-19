@@ -42,29 +42,49 @@
             </div>
 
             <div class="col-md-6 mb-3">
-                <label class="form-label">Experience</label>
-                <input type="text" name="experience"
-                    class="form-control {{ $errors->has('experience') ? 'is-invalid' : '' }}"
-                    value="{{ old('experience', $mua->experience ?? '') }}" placeholder="e.g. 3+ years">
-                @if ($errors->has('experience'))
-                    <div class="invalid-feedback">{{ $errors->first('experience') }}</div>
+                <label class="form-label">Max Distance (km)</label>
+                <input type="number" name="max_distance"
+                    class="form-control {{ $errors->has('max_distance') ? 'is-invalid' : '' }}"
+                    value="{{ old('max_distance', $mua->max_distance ?? '') }}" min="0"
+                    placeholder="e.g. 20">
+                @if ($errors->has('max_distance'))
+                    <div class="invalid-feedback">{{ $errors->first('max_distance') }}</div>
+                @endif
+            </div>
+        </div>
+
+        <div class="row gx-2">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Operational Hours</label>
+                <input type="text" name="operational_hours"
+                    class="form-control {{ $errors->has('operational_hours') ? 'is-invalid' : '' }}"
+                    value="{{ old('operational_hours', $mua->operational_hours ?? '') }}"
+                    placeholder="e.g. 09:00 - 18:00">
+                @if ($errors->has('operational_hours'))
+                    <div class="invalid-feedback">{{ $errors->first('operational_hours') }}</div>
+                @endif
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Additional Charge</label>
+                <input type="number" step="0.01" name="additional_charge"
+                    class="form-control {{ $errors->has('additional_charge') ? 'is-invalid' : '' }}"
+                    value="{{ old('additional_charge', $mua->additional_charge ?? '') }}" min="0"
+                    placeholder="e.g. 50000">
+                @if ($errors->has('additional_charge'))
+                    <div class="invalid-feedback">{{ $errors->first('additional_charge') }}</div>
                 @endif
             </div>
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Specialty</label>
-            <input list="specialties" name="specialty"
-                class="form-control {{ $errors->has('specialty') ? 'is-invalid' : '' }}"
-                value="{{ old('specialty', $mua->specialty ?? '') }}" placeholder="e.g. bridal, editorial">
-            <datalist id="specialties">
-                @foreach ($specialties ?? [] as $s)
-                    <option value="{{ $s }}"></option>
-                @endforeach
-            </datalist>
-            <small class="form-text text-muted">Choose existing specialty or type a new one.</small>
-            @if ($errors->has('specialty'))
-                <div class="invalid-feedback">{{ $errors->first('specialty') }}</div>
+            <label class="form-label">Availability Hours</label>
+            <input type="text" name="availability_hours"
+                class="form-control {{ $errors->has('availability_hours') ? 'is-invalid' : '' }}"
+                value="{{ old('availability_hours', $mua->availability_hours ?? '') }}"
+                placeholder="e.g. Weekdays only, Weekend">
+            @if ($errors->has('availability_hours'))
+                <div class="invalid-feedback">{{ $errors->first('availability_hours') }}</div>
             @endif
         </div>
 

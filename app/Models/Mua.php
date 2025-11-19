@@ -14,9 +14,11 @@ class Mua extends Model
         'name',
         'description',
         'city',
-        'specialty',
         'rating',
-        'experience',
+        'max_distance',
+        'operational_hours',
+        'additional_charge',
+        'availability_hours',
         'link_map',
         'image'
     ];

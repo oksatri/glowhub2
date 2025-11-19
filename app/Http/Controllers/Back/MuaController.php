@@ -74,17 +74,11 @@ class MuaController extends Controller
     {
         $query = Mua::with('user');
 
-        // search query: match name or specialty
+        // search query: match name
         if ($q = $request->get('q')) {
             $query->where(function ($sub) use ($q) {
-                $sub->where('name', 'like', "%{$q}%")
-                    ->orWhere('specialty', 'like', "%{$q}%");
+                $sub->where('name', 'like', "%{$q}%");
             });
-        }
-
-        // specialty filter (exact match)
-        if ($specialty = $request->get('specialty')) {
-            $query->where('specialty', $specialty);
         }
 
         $muas = $query->orderBy('created_at', 'desc')->paginate(12)->withQueryString();
@@ -98,8 +92,6 @@ class MuaController extends Controller
         $provinces = $locationData['provinces'];
         $cities = $locationData['cities'];
         $districts = $locationData['districts'];
-        // provide existing specialties for datalist
-        $specialties = Mua::whereNotNull('specialty')->distinct()->orderBy('specialty')->pluck('specialty')->filter()->values()->toArray();
         // load users for the linked user dropdown (limit for performance)
         // roles are stored lowercase in DB ('mua')
         // Ambil user dengan role 'mua' yang belum memiliki relasi Mua (satu user hanya satu mua)
@@ -107,7 +99,7 @@ class MuaController extends Controller
             ->whereDoesntHave('mua')
             ->get();
         // We only need $cities in the form now. Keep provinces/districts for compatibility.
-        return view('back.muas.create', compact('provinces', 'cities', 'districts', 'specialties', 'users'));
+        return view('back.muas.create', compact('provinces', 'cities', 'districts', 'users'));
     }
 
     public function store(Request $request)
@@ -130,8 +122,10 @@ class MuaController extends Controller
             'description' => 'nullable|string',
             // only city is used now
             'city' => ['nullable', 'string', 'exists:reg_regencies,id'],
-            'specialty' => 'nullable|string|max:255',
-            'experience' => 'nullable|string|max:255',
+            'max_distance' => 'nullable|integer|min:0',
+            'operational_hours' => 'nullable|string|max:255',
+            'additional_charge' => 'nullable|numeric|min:0',
+            'availability_hours' => 'nullable|string|max:255',
             // optional new user fields (if admin wants to create user inline)
             'new_user_name' => 'nullable|string|max:255',
             'new_user_email' => 'nullable|email|max:255|unique:users,email',
@@ -177,7 +171,16 @@ class MuaController extends Controller
         }
 
         $mua = Mua::create(
-            collect($data)->only(['user_id', 'name', 'description', 'city', 'specialty', 'experience'])->toArray()
+            collect($data)->only([
+                'user_id',
+                'name',
+                'description',
+                'city',
+                'max_distance',
+                'operational_hours',
+                'additional_charge',
+                'availability_hours',
+            ])->toArray()
         );
 
         // Redirect to the appropriate edit path depending on role to avoid
@@ -193,11 +196,10 @@ class MuaController extends Controller
         $provinces = $locationData['provinces'];
         $cities = $locationData['cities'];
         $districts = $locationData['districts'];
-        $specialties = Mua::whereNotNull('specialty')->distinct()->orderBy('specialty')->pluck('specialty')->filter()->values()->toArray();
         $users = User::where('role', 'mua')
             ->whereDoesntHave('mua')
             ->get();
-        return view('back.muas.edit', compact('mua', 'provinces', 'cities', 'districts', 'specialties', 'users'));
+        return view('back.muas.edit', compact('mua', 'provinces', 'cities', 'districts', 'users'));
     }
 
     public function update(Request $request, $id)
@@ -218,8 +220,10 @@ class MuaController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'city' => ['nullable', 'string', 'exists:reg_regencies,id'],
-            'specialty' => 'nullable|string|max:255',
-            'experience' => 'nullable|string|max:255',
+            'max_distance' => 'nullable|integer|min:0',
+            'operational_hours' => 'nullable|string|max:255',
+            'additional_charge' => 'nullable|numeric|min:0',
+            'availability_hours' => 'nullable|string|max:255',
             'new_user_name' => 'nullable|string|max:255',
             'new_user_email' => 'nullable|email|max:255|unique:users,email',
             'new_user_password' => 'nullable|string|min:6',
@@ -255,7 +259,16 @@ class MuaController extends Controller
         }
 
         $mua->update(
-            collect($data)->only(['user_id', 'name', 'description', 'city', 'specialty', 'experience'])->toArray()
+            collect($data)->only([
+                'user_id',
+                'name',
+                'description',
+                'city',
+                'max_distance',
+                'operational_hours',
+                'additional_charge',
+                'availability_hours',
+            ])->toArray()
         );
 
         $base = (Auth::check() && Auth::user()->role === 'mua') ? 'muas' : 'admin/muas';

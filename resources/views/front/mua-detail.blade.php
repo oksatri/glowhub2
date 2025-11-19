@@ -1,6 +1,6 @@
 @extends('front._parts.master')
 @section('meta_title', ($mua['name'] ?? 'MUA Profile') . ' - ' . ($siteSetting->site_name ?? 'GlowHub'))
-@section('meta_description', ($mua['speciality'] ?? '') . ' • ' . ($siteSetting->meta_description ??
+@section('meta_description', ($mua['description'] ?? '') . ' • ' . ($siteSetting->meta_description ??
     ($siteSetting->site_tagline ?? '')))
 @section('content')
     <style>
@@ -154,7 +154,13 @@
                             <div class="card-body p-4">
                                 <div class="text-center mb-4">
                                     <h3 class="fw-bold text-primary mb-2">{{ $mua['name'] }}</h3>
-                                    <p class="text-muted mb-2">{{ $mua['speciality'] }} Specialist</p>
+                                    <p class="text-muted mb-2">
+                                        @if (!empty($mua['max_distance']))
+                                            Available within {{ $mua['max_distance'] }} km radius
+                                        @else
+                                            {{ $mua['location'] }}
+                                        @endif
+                                    </p>
                                     <p class="small text-secondary fst-italic">
                                         {{ $mua['description'] }}
                                     </p>
@@ -188,8 +194,21 @@
                                         </div>
                                     </div>
                                     <div class="col-6">
-                                        <h6 class="fw-bold text-primary mb-1">Experience</h6>
-                                        <p class="fw-semibold text-dark mb-0">{{ $mua['experience'] }} Tahun</p>
+                                        <h6 class="fw-bold text-primary mb-1">Schedule</h6>
+                                        <p class="fw-semibold text-dark mb-0">
+                                            @if (!empty($mua['operational_hours']))
+                                                {{ $mua['operational_hours'] }}
+                                            @endif
+                                            @if (!empty($mua['availability_hours']))
+                                                @if (!empty($mua['operational_hours']))
+                                                    •
+                                                @endif
+                                                {{ $mua['availability_hours'] }}
+                                            @endif
+                                            @if (empty($mua['operational_hours']) && empty($mua['availability_hours']))
+                                                —
+                                            @endif
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -413,6 +432,12 @@
                                 <div class="mb-3">
                                     <label class="form-label small">Address</label>
                                     <input type="text" name="address" id="bk_address" class="form-control" required>
+                                    @if (!empty($mua['max_distance']) && !empty($mua['additional_charge']))
+                                        <small class="text-muted d-block mt-1">
+                                            Locations beyond {{ $mua['max_distance'] }} km from the MUA may incur an
+                                            additional charge of Rp {{ number_format($mua['additional_charge'], 0, ',', '.') }}.
+                                        </small>
+                                    @endif
                                 </div>
 
                                 <!-- Hidden inputs populated by JS -->

@@ -16,9 +16,11 @@ return new class extends Migration
             $table->string('province')->nullable();
             $table->string('city')->nullable();
             $table->string('district')->nullable();
-            $table->string('specialty')->nullable();
             $table->decimal('rating', 3, 2)->default(0);
-            $table->string('experience')->nullable();
+            $table->unsignedInteger('max_distance')->nullable();
+            $table->string('operational_hours')->nullable();
+            $table->decimal('additional_charge', 10, 2)->default(0);
+            $table->string('availability_hours')->nullable();
             $table->string('image')->nullable();
             $table->timestamps();
         });
