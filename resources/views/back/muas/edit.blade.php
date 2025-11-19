@@ -86,14 +86,16 @@
                                 $selectedOccasions = (array) $selectedOccasions;
                             }
                         @endphp
-                        <select name="categori_service[]" class="form-select" multiple style="height: 150px; width: 100%;">
+                        <div class="form-check-inline">
                             @foreach ($occasionOptions as $opt)
-                                <option value="{{ $opt }}" {{ in_array($opt, $selectedOccasions, true) ? 'selected' : '' }}>
-                                    {{ $opt }}
-                                </option>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="categori_service[]" id="occasion-{{ $loop->iteration }}" value="{{ $opt }}" {{ in_array($opt, $selectedOccasions, true) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="occasion-{{ $loop->iteration }}">
+                                        {{ $opt }}
+                                    </label>
+                                </div>
                             @endforeach
-                        </select>
-                        <small class="text-muted d-block mt-1">Hold Ctrl/Command to select more than one occasion.</small>
+                        </div>
                         @if ($errors->has('categori_service'))
                             <div class="invalid-feedback d-block">{{ $errors->first('categori_service') }}</div>
                         @endif
