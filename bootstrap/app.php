@@ -16,10 +16,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })
-
-    // 🔥 Tambahkan bagian ini
-    ->afterResolving('path.public', function ($object, $app) {
-        $app->instance('path.public', base_path('../public_html'));
-    })
-
+    ->withBindings([
+        'path.public' => fn () => base_path('../public_html'),
+    ])
     ->create();
+
