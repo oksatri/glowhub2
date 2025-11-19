@@ -86,7 +86,7 @@
                                 $selectedOccasions = (array) $selectedOccasions;
                             }
                         @endphp
-                        <select name="categori_service[]" class="form-select" multiple size="20">
+                        <select name="categori_service[]" class="form-select" multiple style="height: 150px; width: 100%;">
                             @foreach ($occasionOptions as $opt)
                                 <option value="{{ $opt }}" {{ in_array($opt, $selectedOccasions, true) ? 'selected' : '' }}>
                                     {{ $opt }}
