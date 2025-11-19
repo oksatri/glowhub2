@@ -13,9 +13,9 @@
         $__settings = \App\Models\SiteSetting::first();
         $__favicon = null;
         if ($__settings && !empty($__settings->favicon)) {
-            $__favicon = asset('storage/' . $__settings->favicon);
+            $__favicon = asset('uploads/' . $__settings->favicon);
         } elseif ($__settings && !empty($__settings->logo)) {
-            $__favicon = asset('storage/' . $__settings->logo);
+            $__favicon = asset('uploads/' . $__settings->logo);
         } else {
             $__favicon = asset('images/logo/logo_saja.png');
         }

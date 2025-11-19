@@ -28,7 +28,7 @@
                             </div>
                             <div class="col-lg-6">
                                 @if ($section->image)
-                                    <img src="{{ asset('storage/' . $section->image) }}" alt="{{ $section->title }}"
+                                    <img src="{{ asset('uploads/' . $section->image) }}" alt="{{ $section->title }}"
                                         class="img-fluid rounded-3 shadow">
                                 @else
                                     <img src="images/main-banner1.jpg" alt="Professional Makeup" class="img-fluid rounded-3 shadow">
@@ -148,7 +148,7 @@
                                                 </div>
                                                 <p class="mb-3">{{ $t->quote ?? '' }}</p>
                                                 <div class="d-flex align-items-center">
-                                                    <img src="{{ $t->image ? asset('storage/' . $t->image) : asset('images/default.png') }}"
+                                                    <img src="{{ $t->image ? asset('uploads/' . $t->image) : asset('images/default.png') }}"
                                                         alt="{{ $t->name ?? 'User' }}" class="rounded-circle me-3" width="50"
                                                         height="50">
                                                     <div>
@@ -183,7 +183,7 @@
                                             <i class="far fa-heart text-primary" style="font-size: 1.2rem; cursor: pointer;"></i>
                                         </div>
                                         <div class="position-relative">
-                                            <img src="{{ $m->image ? asset('storage/' . $m->image) : asset('images/product-item1.jpg') }}"
+                                            <img src="{{ $m->image ? asset('uploads/' . $m->image) : asset('images/product-item1.jpg') }}"
                                                 alt="{{ $m->name }}" class="card-img-top"
                                                 style="height: 200px; object-fit: cover;">
                                         </div>
@@ -337,7 +337,7 @@
                             <p class="lead text-muted">{{ $section->description }}</p>
                         </div>
                         @if ($section->image)
-                            <div class="text-center mb-4"><img src="{{ asset('storage/' . $section->image) }}"
+                            <div class="text-center mb-4"><img src="{{ asset('uploads/' . $section->image) }}"
                                     class="img-fluid rounded" alt="{{ $section->title }}" /></div>
                         @endif
                         <div class="text-center">

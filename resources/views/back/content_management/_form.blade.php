@@ -136,7 +136,7 @@
 
                     @if (!empty($content->image))
                         <div class="mt-2">
-                            <img src="{{ asset('storage/' . $content->image) }}" alt="Image Preview"
+                            <img src="{{ asset('uploads/' . $content->image) }}" alt="Image Preview"
                                 class="img-fluid rounded" style="max-height: 180px;">
                         </div>
                     @endif

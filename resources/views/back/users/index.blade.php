@@ -78,7 +78,7 @@
                             <td>
                                 <div class="d-flex align-items-center">
                                     @if ($user->profile_image)
-                                        <img src="{{ asset('storage/' . $user->profile_image) }}" alt=""
+                                        <img src="{{ asset('uploads/' . $user->profile_image) }}" alt=""
                                             class="rounded-circle me-2" style="width:36px; height:36px; object-fit:cover;">
                                     @else
                                         <div class="rounded-circle bg-light me-2"

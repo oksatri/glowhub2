@@ -38,13 +38,19 @@ return [
             'report' => false,
         ],
 
+        // 'public' => [
+        //     'driver' => 'local',
+        //     'root' => storage_path('app/public'),
+        //     'url' => env('APP_URL').'/storage',
+        //     'visibility' => 'public',
+        //     'throw' => false,
+        //     'report' => false,
+        // ],
         'public' => [
             'driver' => 'local',
-            'root' => public_path('uploads'),
-            'url' => env('APP_URL').'/uploads',
+            'root' => public_path('uploads'),    // arahkan ke folder public/uploads
+            'url' => env('APP_URL') . '/uploads', // sesuaikan dengan URL folder uploads
             'visibility' => 'public',
-            'throw' => false,
-            'report' => false,
         ],
 
         's3' => [

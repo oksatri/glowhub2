@@ -58,7 +58,7 @@
                                     <div class="d-flex align-items-center gap-2">
                                         <div style="width:32px; height:32px;">
                                             @if (!empty($settings->favicon))
-                                                <img src="{{ asset('storage/' . $settings->favicon) }}" alt="favicon"
+                                                <img src="{{ asset('uploads/' . $settings->favicon) }}" alt="favicon"
                                                     style="width:32px; height:32px; object-fit:cover; border-radius:6px;">
                                             @endif
                                         </div>
@@ -201,7 +201,7 @@
                                         <div class="bg-light d-flex align-items-center justify-content-center"
                                             style="width:64px; height:64px; border-radius:12px; border:1px solid #e5e7eb;">
                                             @if ($settings->logo)
-                                                <img src="{{ asset('storage/' . $settings->logo) }}" alt="logo"
+                                                <img src="{{ asset('uploads/' . $settings->logo) }}" alt="logo"
                                                     style="width:56px; height:56px; object-fit:cover; border-radius:10px;">
                                             @else
                                                 <i class="fas fa-palette fa-lg" style="color:#2563EB"></i>

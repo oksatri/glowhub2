@@ -58,7 +58,7 @@
                             @php
                                 $logoUrl = null;
                                 if (isset($siteSetting) && !empty($siteSetting->logo)) {
-                                    $logoUrl = asset('storage/' . $siteSetting->logo);
+                                    $logoUrl = asset('uploads/' . $siteSetting->logo);
                                 } else {
                                     $logoUrl = asset('images/logo/logo_saja.png');
                                 }

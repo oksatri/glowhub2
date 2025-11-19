@@ -19,9 +19,9 @@
         // fall back to loading the first SiteSetting record.
         $settings = isset($siteSetting) ? $siteSetting : \App\Models\SiteSetting::first();
         if ($settings && !empty($settings->favicon)) {
-            $favicon = asset('storage/' . $settings->favicon);
+            $favicon = asset('uploads/' . $settings->favicon);
         } elseif ($settings && !empty($settings->logo)) {
-            $favicon = asset('storage/' . $settings->logo);
+            $favicon = asset('uploads/' . $settings->logo);
         } else {
             $favicon = asset('images/logo/logo_saja.png');
         }

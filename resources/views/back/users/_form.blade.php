@@ -66,7 +66,7 @@
         <div class="card p-3">
             <label class="form-label small">Profile Image</label>
             @if (!empty($user->profile_image))
-                <img src="{{ asset('storage/' . $user->profile_image) }}" class="d-block mb-2"
+                <img src="{{ asset('uploads/' . $user->profile_image) }}" class="d-block mb-2"
                     style="width:100%; height: auto; object-fit:cover; border-radius:8px;">
             @endif
             <input type="file" name="profile_image" class="form-control">

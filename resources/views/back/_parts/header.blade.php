@@ -135,7 +135,7 @@
                                 // if it's a full URL use it, otherwise assume it's stored in storage/app/public
                                 $src = filter_var($profile, FILTER_VALIDATE_URL)
                                     ? $profile
-                                    : asset('storage/' . ltrim($profile, '/'));
+                                    : asset('uploads/' . ltrim($profile, '/'));
                             } else {
                                 $src = asset('admin/assets/images/users/profile-pic.jpg');
                             }

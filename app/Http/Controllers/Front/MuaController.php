@@ -48,7 +48,7 @@ class MuaController extends Controller
                 'rating' => (float) ($mua->rating ?? 0),
                 'reviews_count' => $mua->reviews_count ?? 0,
                 'price' => $firstService ? (int) $firstService->price : null,
-                'image' => $mua->image ? asset('storage/' . $mua->image) : asset('images/product-item1.jpg'),
+                'image' => $mua->image ? asset('uploads/' . $mua->image) : asset('images/product-item1.jpg'),
                 'speciality' => $mua->specialty ?? '',
             ];
         });
@@ -102,14 +102,14 @@ class MuaController extends Controller
             'location' => trim($mua->rel_city->name ?? ''),
             'rating' => (float) ($mua->rating ?? 4.5),
             'price' => $firstService ? (int) $firstService->price : null,
-            'image' => $mua->image ? asset('storage/' . $mua->image) : asset('images/product-item1.jpg'),
+            'image' => $mua->image ? asset('uploads/' . $mua->image) : asset('images/product-item1.jpg'),
             'speciality' => $mua->specialty ?? '',
             'experience' => $mua->experience ?? '',
         ];
 
         $portfolio = $mua->portfolios->map(function ($p) {
             return [
-                'image' => $p->image ? asset('storage/' . $p->image) : asset('images/product-item1.jpg'),
+                'image' => $p->image ? asset('uploads/' . $p->image) : asset('images/product-item1.jpg'),
                 'service_name' => $p->service->service_name ?? null,
             ];
         })->toArray();

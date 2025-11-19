@@ -23,7 +23,7 @@
                         <div class="row g-3">
                             <div class="col-md-4 text-center">
                                 <div class="mb-3">
-                                    @php $avatarUrl = $user->profile_image ? asset('storage/'.$user->profile_image) : asset('admin/assets/images/users/d1.jpg'); @endphp
+                                    @php $avatarUrl = $user->profile_image ? asset('uploads/'.$user->profile_image) : asset('admin/assets/images/users/d1.jpg'); @endphp
                                     <img src="{{ $avatarUrl }}" id="avatarPreview" alt="avatar" class="rounded-circle"
                                         style="width:140px;height:140px;object-fit:cover;border:1px solid #e9ecef;">
                                 </div>

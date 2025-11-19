@@ -64,7 +64,7 @@
                                 @if (!empty($det['image']))
                                     <div class="small mt-1">
                                         <span>Preview:</span><br>
-                                        <img src="{{ asset('storage/' . $det['image']) }}" alt="Image Preview"
+                                        <img src="{{ asset('uploads/' . $det['image']) }}" alt="Image Preview"
                                             style="max-width: 120px; max-height: 80px;">
                                     </div>
                                 @endif

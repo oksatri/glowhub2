@@ -112,7 +112,7 @@
                                         <div class="content-icon me-3 rounded-lg d-flex align-items-center justify-content-center"
                                             style="width: 48px; height: 48px;margin-right:10px">
                                             @if ($t->image)
-                                                <img src="{{ asset('storage/' . $t->image) }}" alt=""
+                                                <img src="{{ asset('uploads/' . $t->image) }}" alt=""
                                                     class="rounded-circle"
                                                     style="width:42px; height:42px; object-fit:cover;">
                                             @else

@@ -83,7 +83,7 @@
                                 <td>
                                     <div class="d-flex align-items-center">
                                         @if ($mua->image)
-                                            <img src="{{ asset('storage/' . $mua->image) }}" alt=""
+                                            <img src="{{ asset('uploads/' . $mua->image) }}" alt=""
                                                 class="rounded-circle me-2"
                                                 style="width:48px; height:48px; object-fit:cover;">
                                         @else
@@ -129,7 +129,8 @@
                                         <p style="color: #6B7280; font-size: 1rem;" class="mb-4">Start by adding your
                                             first
                                             MUA</p>
-                                        <a href="{{ url($base . '/create') }}" class="btn px-4 py-2 rounded-pill text-white"
+                                        <a href="{{ url($base . '/create') }}"
+                                            class="btn px-4 py-2 rounded-pill text-white"
                                             style="background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%); border: none;">
                                             <i class="fas fa-plus me-2"></i> Create New MUA
                                         </a>

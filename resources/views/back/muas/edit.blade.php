@@ -170,7 +170,7 @@
                                                         <div class="col-6 col-sm-4 col-md-3">
                                                             <div class="card border-0">
                                                                 @if ($p->image)
-                                                                    <img src="{{ asset('storage/' . $p->image) }}"
+                                                                    <img src="{{ asset('uploads/' . $p->image) }}"
                                                                         class="img-fluid rounded"
                                                                         style="object-fit:cover; height:120px; width:100%;">
                                                                 @else
