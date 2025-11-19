@@ -126,7 +126,6 @@ class MuaController extends Controller
             'operational_hours' => 'nullable|string|max:255',
             'additional_charge' => 'nullable|numeric|min:0',
             'availability_hours' => 'nullable|string|max:255',
-            'categori_service' => 'nullable|array',
             // optional new user fields (if admin wants to create user inline)
             'new_user_name' => 'nullable|string|max:255',
             'new_user_email' => 'nullable|email|max:255|unique:users,email',
@@ -181,7 +180,6 @@ class MuaController extends Controller
                 'operational_hours',
                 'additional_charge',
                 'availability_hours',
-                'categori_service',
             ])->toArray()
         );
 
@@ -226,7 +224,6 @@ class MuaController extends Controller
             'operational_hours' => 'nullable|string|max:255',
             'additional_charge' => 'nullable|numeric|min:0',
             'availability_hours' => 'nullable|string|max:255',
-            'categori_service' => 'nullable|array',
             'new_user_name' => 'nullable|string|max:255',
             'new_user_email' => 'nullable|email|max:255|unique:users,email',
             'new_user_password' => 'nullable|string|min:6',
@@ -271,7 +268,6 @@ class MuaController extends Controller
                 'operational_hours',
                 'additional_charge',
                 'availability_hours',
-                'categori_service',
             ])->toArray()
         );
 

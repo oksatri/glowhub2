@@ -29,9 +29,10 @@ class MuaController extends Controller
                 // match by name for backward compatibility
                 $sub->orWhere('name', 'like', "%{$q}%");
 
-                // match by occasions (stored as JSON array in categori_service)
-                // this requires the categori_service JSON column to exist
-                $sub->orWhereJsonContains('categori_service', $q);
+                // match by occasions on related services (string column, comma-separated)
+                $sub->orWhereHas('services', function ($qService) use ($q) {
+                    $qService->where('categori_service', 'like', "%{$q}%");
+                });
             });
         }
         // Filter only by city (regency)

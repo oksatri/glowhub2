@@ -17,7 +17,8 @@ class MuaServiceController extends Controller
             'nama_service' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
             'fitur' => 'nullable',
-            'harga' => 'nullable|numeric'
+            'harga' => 'nullable|numeric',
+            'categori_service' => 'nullable|array',
         ]);
 
         $payload = [
@@ -26,6 +27,11 @@ class MuaServiceController extends Controller
             'description' => $data['deskripsi'] ?? null,
             'price' => isset($data['harga']) && $data['harga'] !== '' ? (int) $data['harga'] : 0,
         ];
+
+        // map selected occasions into a single string (e.g. "Akad,Wedding (Resepsi)")
+        if (!empty($data['categori_service']) && is_array($data['categori_service'])) {
+            $payload['categori_service'] = implode(',', $data['categori_service']);
+        }
 
         // fitur bisa berupa array atau string, simpan ke db sebagai JSON
         if (!empty($data['fitur'])) {
