@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Back;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Mua;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
@@ -40,7 +41,14 @@ class UserController extends Controller
 
         $data['password'] = Hash::make($data['password']);
 
-        User::create($data);
+        $user = User::create($data);
+
+        if ($user->role === 'mua') {
+            Mua::create([
+                'user_id' => $user->id,
+                'name' => $user->name,
+            ]);
+        }
 
         return redirect()->route('admin.users.index')->with('success', 'User created.');
     }
@@ -78,7 +86,26 @@ class UserController extends Controller
             unset($data['password']);
         }
 
+        $previousRole = $user->role;
+
         $user->update($data);
+
+        if ($user->role === 'mua') {
+            $mua = $user->mua()->first();
+
+            if (! $mua) {
+                Mua::create([
+                    'user_id' => $user->id,
+                    'name' => $user->name,
+                ]);
+            } else {
+                $mua->update([
+                    'name' => $user->name,
+                ]);
+            }
+        } elseif ($previousRole === 'mua' && $user->role !== 'mua') {
+            $user->mua()->delete();
+        }
 
         return redirect()->route('admin.users.index')->with('success', 'User updated.');
     }
@@ -94,6 +121,9 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         if ($user->profile_image && Storage::disk('public')->exists($user->profile_image)) {
             Storage::disk('public')->delete($user->profile_image);
+        }
+        if ($user->mua) {
+            $user->mua()->delete();
         }
         $user->delete();
         return redirect()->route('admin.users.index')->with('success', 'User deleted.');
