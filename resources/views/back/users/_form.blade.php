@@ -50,7 +50,7 @@
         <div class="mb-3">
             <label class="form-label">Role</label>
             <select name="role" class="form-select {{ $errors->has('role') ? 'is-invalid' : '' }}">
-                @php $roles = ['admin','mua','member']; @endphp
+                @php $roles = ['mua','member']; @endphp
                 @foreach ($roles as $r)
                     <option value="{{ $r }}" {{ old('role', $user->role) == $r ? 'selected' : '' }}>
                         {{ ucfirst($r) }}</option>
