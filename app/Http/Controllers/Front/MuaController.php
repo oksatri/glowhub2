@@ -16,57 +16,70 @@ use App\Notifications\NewBookingNotification;
 class MuaController extends Controller
 {
     /**
-     * Display a listing of MUAs
+     * Display a listing of MUAs (service-based cards)
      */
     public function index(Request $request)
     {
-    // Use real Mua records from database. Map them to the front-end shape expected by views.
-    // Only load rel_city now; province/district are removed from filters.
-    $query = \App\Models\Mua::with('services', 'rel_city');
+        // Base listing on MuaService so each card represents a concrete service,
+        // similar to the home page featured services.
+        $query = \App\Models\MuaService::with(['mua.rel_city', 'portfolios']);
 
+        // Filter by event type -> match categori_service on services
         if ($q = @$request->event_type) {
-            $query->where(function ($sub) use ($q) {
-                // match by name for backward compatibility
-                $sub->orWhere('name', 'like', "%{$q}%");
-
-                // match by occasions on related services (string column, comma-separated)
-                $sub->orWhereHas('services', function ($qService) use ($q) {
-                    $qService->where('categori_service', 'like', "%{$q}%");
-                });
-            });
+            $query->where('categori_service', 'like', "%{$q}%");
         }
-        // Filter only by city (regency)
+
+        // Filter by city (regency) via related MUA
         if (@$request->regency_id) {
-            $query->where('city', $request->regency_id);
+            $regencyId = $request->regency_id;
+            $query->whereHas('mua', function ($sub) use ($regencyId) {
+                $sub->where('city', $regencyId);
+            });
         }
 
         $perPage = 12;
-        $muas = $query->orderBy('created_at', 'desc')->paginate($perPage)->withQueryString();
+        $services = $query->orderBy('price')->paginate($perPage)->withQueryString();
 
         // Map to array shape used by existing front templates
-        $items = $muas->map(function ($mua) {
-            $firstService = $mua->services->first();
+        $items = $services->map(function ($service) {
+            $mua = $service->mua;
+
+            // choose one portfolio image for this service (fallback to MUA image or default)
+            $portfolioImage = null;
+            if ($service->portfolios && $service->portfolios->count() > 0) {
+                $portfolioImage = $service->portfolios->first()->image;
+            } elseif ($mua && $mua->portfolios && $mua->portfolios->count() > 0) {
+                $portfolioImage = $mua->portfolios->first()->image;
+            }
+
+            $imageUrl = $portfolioImage
+                ? asset('uploads/' . $portfolioImage)
+                : ($mua && $mua->image
+                    ? asset('uploads/' . $mua->image)
+                    : asset('images/product-item1.jpg'));
+
             return [
-                'id' => $mua->id,
-                'name' => $mua->name,
-                'location' => trim($mua->rel_city->name ?? ''),
-                'rating' => (float) ($mua->rating ?? 0),
+                // keep id as MUA id for detail route
+                'id' => $mua ? $mua->id : null,
+                'name' => $mua->name ?? $service->service_name,
+                'location' => $mua ? trim(optional($mua->rel_city)->name ?: ($mua->city ?? '')) : '',
+                'rating' => $mua ? (float) ($mua->rating ?? 0) : 0,
                 'reviews_count' => $mua->reviews_count ?? 0,
-                'price' => $firstService ? (int) $firstService->price : null,
-                'category' => $firstService ? ($firstService->categori_service ?? null) : null,
-                'image' => $mua->image ? asset('uploads/' . $mua->image) : asset('images/product-item1.jpg'),
-                'max_distance' => $mua->max_distance,
-                'operational_hours' => $mua->operational_hours,
-                'additional_charge' => $mua->additional_charge,
+                'price' => (int) ($service->price ?? 0),
+                'category' => $service->categori_service ?? null,
+                'image' => $imageUrl,
+                'max_distance' => $mua->max_distance ?? null,
+                'operational_hours' => $mua->operational_hours ?? null,
+                'additional_charge' => $mua->additional_charge ?? null,
             ];
         });
 
         $pagination = [
-            'current_page' => $muas->currentPage(),
-            'per_page' => $muas->perPage(),
-            'total' => $muas->total(),
-            'last_page' => $muas->lastPage(),
-            'has_more' => $muas->hasMorePages(),
+            'current_page' => $services->currentPage(),
+            'per_page' => $services->perPage(),
+            'total' => $services->total(),
+            'last_page' => $services->lastPage(),
+            'has_more' => $services->hasMorePages(),
         ];
 
         $filterOptions = [
@@ -127,7 +140,6 @@ class MuaController extends Controller
             'image' => $mua->image ? asset('uploads/' . $mua->image) : asset('images/product-item1.jpg'),
             'max_distance' => $mua->max_distance,
             'operational_hours' => $mua->operational_hours,
-            'availability_hours' => $mua->availability_hours,
             'additional_charge' => $mua->additional_charge,
         ];
 
