@@ -151,7 +151,7 @@
             @if ($mua->services->count())
                 <div class="row row-cols-1 row-cols-md-2 g-3">
                     @foreach ($mua->services as $s)
-                        <div class="col">
+                        <div class="col-12">
                             <div class="card h-100 shadow-sm border-0">
                                 {{-- compact header with toggle --}}
                                 <div
