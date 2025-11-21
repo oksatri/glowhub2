@@ -77,17 +77,6 @@
             </div>
         </div>
 
-        <div class="mb-3">
-            <label class="form-label">Availability Hours</label>
-            <input type="text" name="availability_hours"
-                class="form-control {{ $errors->has('availability_hours') ? 'is-invalid' : '' }}"
-                value="{{ old('availability_hours', $mua->availability_hours ?? '') }}"
-                placeholder="e.g. Weekdays only, Weekend">
-            @if ($errors->has('availability_hours'))
-                <div class="invalid-feedback">{{ $errors->first('availability_hours') }}</div>
-            @endif
-        </div>
-
         <div class="row gx-2">
             <div class="col-md-12 mb-3">
                 <label class="form-label">Link Map</label>

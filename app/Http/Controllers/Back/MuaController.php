@@ -125,7 +125,6 @@ class MuaController extends Controller
             'max_distance' => 'nullable|integer|min:0',
             'operational_hours' => 'nullable|string|max:255',
             'additional_charge' => 'nullable|numeric|min:0',
-            'availability_hours' => 'nullable|string|max:255',
             // optional new user fields (if admin wants to create user inline)
             'new_user_name' => 'nullable|string|max:255',
             'new_user_email' => 'nullable|email|max:255|unique:users,email',
@@ -179,7 +178,6 @@ class MuaController extends Controller
                 'max_distance',
                 'operational_hours',
                 'additional_charge',
-                'availability_hours',
             ])->toArray()
         );
 
