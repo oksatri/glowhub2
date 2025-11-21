@@ -1,5 +1,5 @@
 <div class="row gx-4">
-    <div class="col-lg-8">
+    <div class="col-12">
         <div class="mb-3">
             <label class="form-label">MUA Name</label>
             <input type="text" name="name"
@@ -97,69 +97,6 @@
                 @if ($errors->has('link_map'))
                     <div class="invalid-feedback">{{ $errors->first('link_map') }}</div>
                 @endif
-            </div>
-        </div>
-    </div>
-
-    <div class="col-lg-4">
-        <div class="card border-0 shadow-sm">
-            <div class="card-body">
-                <div class="mb-3">
-                    <label class="form-label small">Linked User</label>
-                    <div class="d-flex gap-2 align-items-start">
-                        <select name="user_id" id="userSelect"
-                            class="form-select {{ $errors->has('user_id') ? 'is-invalid' : '' }}">
-                            <option value="">-- None --</option>
-                            @foreach ($users ?? [] as $u)
-                                <option value="{{ $u->id }}"
-                                    {{ old('user_id', $mua->user_id ?? '') == $u->id ? 'selected' : '' }}>
-                                    {{ $u->name }} ({{ $u->email }})
-                                </option>
-                            @endforeach
-                            <option value="new" {{ old('user_id') === 'new' ? 'selected' : '' }}>+ Add new user...
-                            </option>
-                        </select>
-                    </div>
-                    @if ($errors->has('user_id'))
-                        <div class="invalid-feedback d-block">{{ $errors->first('user_id') }}</div>
-                    @endif
-
-                    <div id="newUserFields" style="display: none; margin-top: .75rem;">
-                        <div class="mb-2">
-                            <input type="text" name="new_user_name" placeholder="User full name"
-                                class="form-control {{ $errors->has('new_user_name') ? 'is-invalid' : '' }}"
-                                value="{{ old('new_user_name') }}">
-                            @if ($errors->has('new_user_name'))
-                                <div class="invalid-feedback">{{ $errors->first('new_user_name') }}</div>
-                            @endif
-                        </div>
-                        <div class="mb-2">
-                            <input type="text" name="new_user_username" placeholder="Username"
-                                class="form-control {{ $errors->has('new_user_username') ? 'is-invalid' : '' }}"
-                                value="{{ old('new_user_username') }}">
-                            @if ($errors->has('new_user_username'))
-                                <div class="invalid-feedback">{{ $errors->first('new_user_username') }}</div>
-                            @endif
-                        </div>
-                        <div class="mb-2">
-                            <input type="email" name="new_user_email" placeholder="Email"
-                                class="form-control {{ $errors->has('new_user_email') ? 'is-invalid' : '' }}"
-                                value="{{ old('new_user_email') }}">
-                            @if ($errors->has('new_user_email'))
-                                <div class="invalid-feedback">{{ $errors->first('new_user_email') }}</div>
-                            @endif
-                        </div>
-                        <div class="mb-2">
-                            <input type="password" name="new_user_password" placeholder="Password"
-                                class="form-control {{ $errors->has('new_user_password') ? 'is-invalid' : '' }}">
-                            @if ($errors->has('new_user_password'))
-                                <div class="invalid-feedback">{{ $errors->first('new_user_password') }}</div>
-                            @endif
-                        </div>
-                        <small class="text-muted">New user will be created with role=MUA.</small>
-                    </div>
-                </div>
-
             </div>
         </div>
     </div>
