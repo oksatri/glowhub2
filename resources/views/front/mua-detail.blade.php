@@ -358,54 +358,31 @@
                                 </div>
                             </div>
 
-                            <!-- Services Selection -->
+                            <!-- Features Selection for the active service -->
                             <div class="services-section mb-4">
-                                <h6 class="fw-bold mb-3 text-primary">Select Services</h6>
+                                <h6 class="fw-bold mb-3 text-primary">Select Features for This Service</h6>
                                 <div class="row g-2">
                                     @php
-                                        // Use services passed from controller if available; otherwise fallback to sample list
-                                        $services = $services ?? [
-                                            [
-                                                'id' => null,
-                                                'name' => 'Basic Makeup',
-                                                'price' => 200000,
-                                                'selected' => true,
-                                            ],
-                                            [
-                                                'id' => null,
-                                                'name' => 'Wedding Makeup',
-                                                'price' => 500000,
-                                                'selected' => false,
-                                            ],
-                                            [
-                                                'id' => null,
-                                                'name' => 'Party Makeup',
-                                                'price' => 350000,
-                                                'selected' => false,
-                                            ],
-                                            [
-                                                'id' => null,
-                                                'name' => 'Photoshoot',
-                                                'price' => 400000,
-                                                'selected' => false,
-                                            ],
-                                        ];
+                                        $features = $features ?? [];
                                     @endphp
 
-                                    @foreach ($services as $service)
+                                    @foreach ($features as $idx => $feature)
                                         <div class="col-12">
                                             <div
-                                                class="form-check p-3 border rounded {{ $service['selected'] ?? false ? 'bg-primary bg-opacity-10 border-primary' : '' }}">
+                                                class="form-check p-3 border rounded">
                                                 <input class="form-check-input service-checkbox" type="checkbox"
-                                                    name="service_ids[]" value="{{ $service['id'] ?? $loop->index }}"
-                                                    data-price="{{ $service['price'] ?? 0 }}"
-                                                    {{ $service['selected'] ?? false ? 'checked' : '' }}
-                                                    id="service{{ $loop->index }}">
+                                                    name="feature_names[]" value="{{ $feature['name'] }}"
+                                                    data-price="{{ $feature['extra_price'] ?? 0 }}"
+                                                    id="feature{{ $idx }}">
                                                 <label class="form-check-label d-flex justify-content-between w-100"
-                                                    for="service{{ $loop->index }}">
-                                                    <span class="fw-semibold">{{ $service['name'] }}</span>
-                                                    <span class="text-success fw-bold">Rp
-                                                        {{ number_format($service['price'] ?? 0, 0, ',', '.') }}</span>
+                                                    for="feature{{ $idx }}">
+                                                    <span class="fw-semibold">{{ $feature['name'] }}</span>
+                                                    @if (!empty($feature['extra_price']))
+                                                        <span class="text-success small">+ Rp
+                                                            {{ number_format($feature['extra_price'], 0, ',', '.') }}</span>
+                                                    @else
+                                                        <span class="text-muted small">Included</span>
+                                                    @endif
                                                 </label>
                                             </div>
                                         </div>
@@ -487,16 +464,19 @@
         $(document).ready(function() {
             var maxDistance = {{ $mua['max_distance'] ?? 'null' }};
             var additionalPerKm = {{ $mua['additional_charge'] ?? 'null' }};
+            var basePrice = {{ $mua['price'] ?? 0 }};
             function formatRupiah(num) {
                 num = num || 0;
                 return 'Rp ' + num.toLocaleString('id-ID');
             }
 
             function updateEstimatedPrice() {
-                var totalServices = 0;
+                var totalServices = basePrice || 0;
+
+                // add extra price from selected features
                 $('.service-checkbox:checked').each(function() {
-                    var price = parseInt($(this).data('price')) || 0;
-                    totalServices += price;
+                    var extraPrice = parseInt($(this).data('price')) || 0;
+                    totalServices += extraPrice;
                 });
 
                 var distance = parseFloat($('#bk_distance').val()) || 0;

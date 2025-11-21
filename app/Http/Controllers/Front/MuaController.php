@@ -61,6 +61,7 @@ class MuaController extends Controller
             return [
                 // keep id as MUA id for detail route
                 'id' => $mua ? $mua->id : null,
+                'service_id' => $service->id,
                 'name' => $mua->name ?? $service->service_name,
                 'location' => $mua ? trim(optional($mua->rel_city)->name ?: ($mua->city ?? '')) : '',
                 'rating' => $mua ? (float) ($mua->rating ?? 0) : 0,
@@ -117,9 +118,9 @@ class MuaController extends Controller
     }
 
     /**
-     * Display MUA detail profile
+     * Display MUA detail profile for a specific service (if provided).
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $mua = \App\Models\Mua::with(['services', 'portfolios' => function ($q) {
             $q->with('service');
@@ -128,7 +129,15 @@ class MuaController extends Controller
             abort(404, 'MUA not found');
         }
 
-        $firstService = $mua->services->sortBy('price')->first();
+        // determine active service: by requested service_id or fallback to cheapest
+        $serviceId = $request->get('service_id');
+        $activeService = null;
+        if ($serviceId) {
+            $activeService = $mua->services->firstWhere('id', $serviceId);
+        }
+        if (! $activeService) {
+            $activeService = $mua->services->sortBy('price')->first();
+        }
 
         $muaArr = [
             'id' => $mua->id,
@@ -136,30 +145,54 @@ class MuaController extends Controller
             'description' => $mua->description,
             'location' => trim($mua->rel_city->name ?? ''),
             'rating' => (float) ($mua->rating ?? 4.5),
-            'price' => $firstService ? (int) $firstService->price : null,
+            'price' => $activeService ? (int) $activeService->price : null,
             'image' => $mua->image ? asset('uploads/' . $mua->image) : asset('images/product-item1.jpg'),
             'max_distance' => $mua->max_distance,
             'operational_hours' => $mua->operational_hours,
             'additional_charge' => $mua->additional_charge,
         ];
 
-        $portfolio = $mua->portfolios->map(function ($p) {
+        // portfolios limited to the active service (if any)
+        $portfolioQuery = $mua->portfolios;
+        if ($activeService) {
+            $portfolioQuery = $portfolioQuery->where('mua_service_id', $activeService->id);
+        }
+
+        $portfolio = $portfolioQuery->map(function ($p) {
             return [
                 'image' => $p->image ? asset('uploads/' . $p->image) : asset('images/product-item1.jpg'),
                 'service_name' => $p->service->service_name ?? null,
             ];
         })->toArray();
 
-        $services = $mua->services->map(function ($s) {
-            return [
-                'id' => $s->id,
-                'name' => $s->service_name ?? $s->name ?? 'Service',
-                'price' => $s->price,
-                'description' => $s->description,
-            ];
-        })->toArray();
+        // features inside the active service become selectable options on the form
+        $features = [];
+        if ($activeService && is_array($activeService->features)) {
+            foreach ($activeService->features as $feature) {
+                $name = $feature;
+                $extra = 0;
 
-        return view('front.mua-detail', ['mua' => $muaArr, 'portfolio' => $portfolio, 'services' => $services]);
+                // parse patterns like "+ Rp. 35.000" from the feature text
+                if (preg_match('/\+\s*Rp\.?\s*([0-9\.]+)/i', $feature, $m)) {
+                    $num = preg_replace('/[^0-9]/', '', $m[1] ?? '0');
+                    $extra = (int) $num;
+                    // remove the pricing part from the display name
+                    $name = trim(preg_replace('/\(.*Rp.*\)/i', '', $feature));
+                }
+
+                $features[] = [
+                    'name' => $name,
+                    'extra_price' => $extra,
+                ];
+            }
+        }
+
+        return view('front.mua-detail', [
+            'mua' => $muaArr,
+            'portfolio' => $portfolio,
+            'features' => $features,
+            'activeService' => $activeService,
+        ]);
     }
 
     /**
