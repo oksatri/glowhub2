@@ -377,12 +377,6 @@
                                         {{ $mua['price'] ? 'Rp. ' . number_format($mua['price'], 0, ',', '.') : '-' }}
                                     </strong>
                                 </div>
-
-                                <div class="mt-2 text-end">
-                                    <a href="{{ route('mua.detail', $mua['id']) }}" class="btn btn-outline-primary btn-sm">
-                                        View Profile
-                                    </a>
-                                </div>
                             </div>
                         </div>
                     </div>
