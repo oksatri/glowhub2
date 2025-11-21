@@ -211,12 +211,11 @@ class MuaController extends Controller
         $districts = $locationData['districts'];
 
         // Normalize 'new' sentinel like in store() so validation won't query 'new'.
-        if ($request->input('user_id') === 'new') {
-            $request->merge(['user_id' => null]);
-        }
+        // if ($request->input('user_id') === 'new') {
+        //     $request->merge(['user_id' => null]);
+        // }
 
         $data = $request->validate([
-            'user_id' => 'nullable|exists:users,id',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'city' => ['nullable', 'string', 'exists:reg_regencies,id'],
@@ -224,43 +223,40 @@ class MuaController extends Controller
             'operational_hours' => 'nullable|string|max:255',
             'additional_charge' => 'nullable|numeric|min:0',
             'availability_hours' => 'nullable|string|max:255',
-            'new_user_name' => 'nullable|string|max:255',
-            'new_user_email' => 'nullable|email|max:255|unique:users,email',
-            'new_user_password' => 'nullable|string|min:6',
+            'link_map' => 'nullable|string|max:255',
         ]);
         // Only city is considered now; no province/district checks.
 
         // handle inline new user creation on update
-        if (empty($data['user_id']) && !empty($data['new_user_email'])) {
-            if (empty($data['new_user_name']) || empty($data['new_user_password'])) {
-                return back()->withInput()->withErrors(['new_user_name' => 'Name and password are required when creating a new user inline.']);
-            }
-            // ensure username is set
-            $username = $data['new_user_username'] ?? null;
-            if (empty($username)) {
-                $local = explode('@', $data['new_user_email'])[0] ?? 'user';
-                $base = preg_replace('/[^a-z0-9_]/i', '', strtolower($local)) ?: 'user';
-                $username = $base;
-                $i = 1;
-                while (User::where('username', $username)->exists()) {
-                    $username = $base . $i;
-                    $i++;
-                }
-            }
+        // if (empty($data['user_id']) && !empty($data['new_user_email'])) {
+        //     if (empty($data['new_user_name']) || empty($data['new_user_password'])) {
+        //         return back()->withInput()->withErrors(['new_user_name' => 'Name and password are required when creating a new user inline.']);
+        //     }
+        //     // ensure username is set
+        //     $username = $data['new_user_username'] ?? null;
+        //     if (empty($username)) {
+        //         $local = explode('@', $data['new_user_email'])[0] ?? 'user';
+        //         $base = preg_replace('/[^a-z0-9_]/i', '', strtolower($local)) ?: 'user';
+        //         $username = $base;
+        //         $i = 1;
+        //         while (User::where('username', $username)->exists()) {
+        //             $username = $base . $i;
+        //             $i++;
+        //         }
+        //     }
 
-            $user = User::create([
-                'name' => $data['new_user_name'],
-                'username' => $username,
-                'email' => $data['new_user_email'],
-                'password' => Hash::make($data['new_user_password']),
-                'role' => 'mua',
-            ]);
-            $data['user_id'] = $user->id;
-        }
+        //     $user = User::create([
+        //         'name' => $data['new_user_name'],
+        //         'username' => $username,
+        //         'email' => $data['new_user_email'],
+        //         'password' => Hash::make($data['new_user_password']),
+        //         'role' => 'mua',
+        //     ]);
+        //     $data['user_id'] = $user->id;
+        // }
 
         $mua->update(
             collect($data)->only([
-                'user_id',
                 'name',
                 'description',
                 'city',
@@ -268,6 +264,7 @@ class MuaController extends Controller
                 'operational_hours',
                 'additional_charge',
                 'availability_hours',
+                'link_map',
             ])->toArray()
         );
 
