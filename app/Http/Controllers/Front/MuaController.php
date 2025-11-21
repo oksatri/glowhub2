@@ -53,10 +53,10 @@ class MuaController extends Controller
                 'rating' => (float) ($mua->rating ?? 0),
                 'reviews_count' => $mua->reviews_count ?? 0,
                 'price' => $firstService ? (int) $firstService->price : null,
+                'category' => $firstService ? ($firstService->categori_service ?? null) : null,
                 'image' => $mua->image ? asset('uploads/' . $mua->image) : asset('images/product-item1.jpg'),
                 'max_distance' => $mua->max_distance,
                 'operational_hours' => $mua->operational_hours,
-                'availability_hours' => $mua->availability_hours,
                 'additional_charge' => $mua->additional_charge,
             ];
         });

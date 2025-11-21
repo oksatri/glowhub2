@@ -317,70 +317,72 @@
     <!-- MUA Listing Section -->
     <section id="mua-results" class="py-5 section-bg-light">
         <div class="container">
-            <div class="row g-4">
+            <div class="row g-4 g-md-4">
                 @foreach ($items as $mua)
                     <!-- MUA Card -->
-                    <div class="col-md-4">
-                        <div class="card h-100 shadow-sm border-0 position-relative">
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="h-100 border-0 position-relative shadow-sm"
+                            style="background-color:#FDE1E1; border-radius:22px; overflow:hidden; transition: transform .2s ease, box-shadow .2s ease;">
                             <!-- Heart Icon -->
-                            <div class="position-absolute top-0 end-0 p-3" style="z-index: 10;">
-                                <i class="far fa-heart text-primary" style="font-size: 1.2rem; cursor: pointer;"></i>
+                            <div class="position-absolute top-0 end-0 p-2" style="z-index: 10;">
+                                <button type="button" class="btn btn-sm p-1 border-0 bg-transparent">
+                                    <i class="far fa-heart" style="color:#333; font-size:1.1rem;"></i>
+                                </button>
                             </div>
 
                             <!-- MUA Image -->
-                            <div class="position-relative">
-                                <img src="{{ $mua['image'] }}" alt="{{ $mua['name'] }}" class="card-img-top"
-                                    style="height: 200px; object-fit: cover;">
+                            <div class="w-100" style="aspect-ratio: 3 / 4; overflow:hidden;">
+                                <img src="{{ $mua['image'] }}" alt="{{ $mua['name'] }}"
+                                    style="width:100%; height:100%; object-fit:cover;">
                             </div>
 
                             <!-- Card Body -->
-                            <div class="card-body text-center p-4">
-                                <h5 class="fw-bold">{{ $mua['name'] }}</h5>
-                                <p class="text-primary mb-2">
-                                    @if (!empty($mua['max_distance']))
-                                        Up to {{ $mua['max_distance'] }} km
-                                        @if (!empty($mua['location']))
-                                            •
-                                        @endif
+                            <div class="px-3 py-2" style="background-color:#F7BCC6;">
+                                <div class="mb-1">
+                                    <div class="fw-semibold small text-truncate" style="color:#2D2A32;"
+                                        title="{{ $mua['name'] }}">
+                                        {{ $mua['name'] }}
+                                    </div>
+                                    @if (!empty($mua['category']))
+                                        <div class="small text-muted text-truncate" style="font-size: 0.74rem;"
+                                            title="{{ $mua['category'] }}">
+                                            {{ $mua['category'] }}
+                                        </div>
                                     @endif
-                                    {{ $mua['location'] }}
-                                </p>
-
-                                <!-- Rating -->
-                                <div class="mb-2">
-                                    @for ($i = 1; $i <= 5; $i++)
-                                        @if ($i <= floor($mua['rating']))
-                                            <i class="fas fa-star text-warning" style="font-size: 0.9rem;"></i>
-                                        @elseif($i <= $mua['rating'])
-                                            <i class="fas fa-star-half-alt text-warning" style="font-size: 0.9rem;"></i>
-                                        @else
-                                            <i class="far fa-star text-warning" style="font-size: 0.9rem;"></i>
-                                        @endif
-                                    @endfor
-                                    <span class="text-muted small ms-2">{{ $mua['rating'] }} ({{ $mua['reviews_count'] }}
-                                        reviews)</span>
                                 </div>
 
-                                <p class="text-muted small mb-1">From Rp. {{ number_format($mua['price'], 0, ',', '.') }}
-                                </p>
-                                @if (!empty($mua['operational_hours']) || !empty($mua['availability_hours']))
-                                    <p class="text-muted small mb-3">
-                                        @if (!empty($mua['operational_hours']))
-                                            Hours: {{ $mua['operational_hours'] }}
-                                        @endif
-                                        @if (!empty($mua['availability_hours']))
-                                            @if (!empty($mua['operational_hours']))
-                                                •
+                                <div class="d-flex align-items-center mb-1 small" style="font-size: 0.78rem;">
+                                    <i class="fas fa-map-marker-alt me-1" style="color:#D23B3B;"></i>
+                                    <span class="text-dark text-truncate" title="{{ $mua['location'] }}">
+                                        {{ $mua['location'] ?: '-' }}</span>
+                                </div>
+
+                                <!-- Rating -->
+                                <div class="d-flex justify-content-between align-items-center small mb-1"
+                                    style="font-size: 0.78rem;">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-star me-1" style="color:#FFB800;"></i>
+                                        <span>
+                                            {{ $mua['rating'] ? number_format($mua['rating'], 1, ',', '.') : 'Baru' }}
+                                            @if ($mua['reviews_count'] > 0)
+                                                <span class="text-muted">({{ $mua['reviews_count'] }})</span>
                                             @endif
-                                            Availability: {{ $mua['availability_hours'] }}
-                                        @endif
-                                    </p>
-                                @else
-                                    <p class="text-muted small mb-3">&nbsp;</p>
-                                @endif
-                                <a href="{{ route('mua.detail', $mua['id']) }}"
-                                    class="btn btn-outline-primary btn-sm">View
-                                    Profile</a>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center mt-1">
+                                    <small class="text-muted" style="font-size: 0.8rem;">Mulai dari</small>
+                                    <strong class="text-dark" style="font-size: 0.9rem;">
+                                        {{ $mua['price'] ? 'Rp. ' . number_format($mua['price'], 0, ',', '.') : '-' }}
+                                    </strong>
+                                </div>
+
+                                <div class="mt-2 text-end">
+                                    <a href="{{ route('mua.detail', $mua['id']) }}" class="btn btn-outline-primary btn-sm">
+                                        View Profile
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
