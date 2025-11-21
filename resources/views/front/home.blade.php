@@ -204,8 +204,8 @@
                                     <div class="h-100 border-0 position-relative shadow-sm"
                                         style="background-color:#FDE1E1; border-radius:22px; overflow:hidden; transition: transform .2s ease, box-shadow .2s ease;">
                                         <div class="position-absolute top-0 end-0 p-2" style="z-index: 10;">
-                                            <button type="button" class="btn btn-sm p-1 border-0 bg-white rounded-circle shadow-sm">
-                                                <i class="far fa-heart" style="color:#444; font-size:1.05rem;"></i>
+                                            <button type="button" class="btn btn-sm p-1 border-0 bg-transparent">
+                                                <i class="far fa-heart" style="color:#333; font-size:1.1rem;"></i>
                                             </button>
                                         </div>
 
