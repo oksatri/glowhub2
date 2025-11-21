@@ -70,7 +70,7 @@
                                 'Akad',
                                 'Wedding (Resepsi)',
                                 'Prewedding',
-                                '\u200bEngagement/Lamaran',
+                                'Engagement/Lamaran',
                                 'Wedding Guest',
                                 'Party',
                                 'Bridesmaid',
