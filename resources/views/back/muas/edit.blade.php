@@ -202,29 +202,97 @@
 
                                 <div id="service-collapse-{{ $s->id }}" class="collapse show">
                                     <div class="card-body">
-                                        @if ($s->description)
-                                            <div class="mt-1 text-muted small">{{ Str::limit($s->description, 220) }}</div>
-                                        @endif
-                                        @php
-                                            $features = [];
-                                            if (!empty($s->features)) {
-                                                if (is_array($s->features)) {
-                                                    $features = $s->features;
-                                                } else {
-                                                    $features = json_decode($s->features, true) ?? [];
-                                                }
-                                            }
-                                        @endphp
-                                        @if (!empty($features))
-                                            <div class="mt-2">
-                                                @foreach ($features as $f)
+                                        <form method="POST" action="{{ url($base . '/' . $mua->id . '/services/' . $s->id) }}">
+                                            @csrf
+                                            @method('PUT')
+                                            <div class="row g-3">
+                                                <div class="col-md-6">
+                                                    <label class="form-label small">Service Name</label>
+                                                    <input type="text" name="nama_service" class="form-control" value="{{ $s->service_name }}" required>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label small">Price</label>
+                                                    <input type="number" name="harga" class="form-control" value="{{ $s->price }}">
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="form-label small">Description</label>
+                                                    <textarea name="deskripsi" class="form-control" rows="3">{{ $s->description }}</textarea>
+                                                </div>
+                                                @php
+                                                    $features = [];
+                                                    if (!empty($s->features)) {
+                                                        if (is_array($s->features)) {
+                                                            $features = $s->features;
+                                                        } else {
+                                                            $features = json_decode($s->features, true) ?? [];
+                                                        }
+                                                    }
+                                                @endphp
+                                                <div class="col-md-6">
+                                                    <label class="form-label small">Brands Used</label>
+                                                    <div class="mb-2">
+                                                        @php
+                                                            $featureValues = [];
+                                                            foreach ($features as $f) {
+                                                                $featureValues[] = is_array($f) && isset($f['name']) ? $f['name'] : (string) $f;
+                                                            }
+                                                        @endphp
+                                                        <textarea name="features" class="form-control" rows="3" placeholder="One feature per line">{{ implode("\n", $featureValues) }}</textarea>
+                                                        <small class="text-muted">One brand/feature per line.</small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Occasions</label>
                                                     @php
-                                                        $label = is_array($f) && isset($f['name']) ? $f['name'] : (string) $f;
+                                                        $occasionOptions = [
+                                                            'Akad',
+                                                            'Wedding (Resepsi)',
+                                                            'Prewedding',
+                                                            'Engagement/Lamaran',
+                                                            'Wedding Guest',
+                                                            'Party',
+                                                            'Bridesmaid',
+                                                            'Graduation',
+                                                            'Graduation Companion',
+                                                            'Maternity Shoot',
+                                                            'Photoshoot',
+                                                            'Family Makeup',
+                                                            'Event',
+                                                        ];
+                                                        $categories = [];
+                                                        if (!empty($s->categori_service)) {
+                                                            if (is_array($s->categori_service)) {
+                                                                $categories = $s->categori_service;
+                                                            } else {
+                                                                $decodedCat = json_decode($s->categori_service, true);
+                                                                if (is_array($decodedCat)) {
+                                                                    $categories = $decodedCat;
+                                                                } else {
+                                                                    $categories = explode(',', $s->categori_service);
+                                                                }
+                                                            }
+                                                        }
                                                     @endphp
-                                                    <span class="badge bg-light text-dark me-1">{{ $label }}</span>
-                                                @endforeach
+                                                    <div class="row g-2">
+                                                        @foreach ($occasionOptions as $opt)
+                                                            @php
+                                                                $idOcc = 'occasion-edit-' . $s->id . '-' . \Illuminate\Support\Str::slug($opt);
+                                                            @endphp
+                                                            <div class="col-6">
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" name="categori_service[]" value="{{ $opt }}" id="{{ $idOcc }}" class="form-check-input" {{ in_array($opt, $categories, true) ? 'checked' : '' }}>
+                                                                    <label class="form-check-label small" for="{{ $idOcc }}">{{ $opt }}</label>
+                                                                </div>
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                    <small class="text-muted d-block mt-1">Pilih occasion untuk service ini.</small>
+                                                </div>
+                                                <div class="col-12 d-flex justify-content-end">
+                                                    <button class="btn btn-sm btn-primary">Update Service</button>
+                                                </div>
                                             </div>
-                                        @endif
+                                        </form>
 
                                         {{-- Portfolio gallery for this service --}}
                                         @php
@@ -245,7 +313,14 @@
                                                                         style="height:120px;">No image</div>
                                                                 @endif
                                                                 <div class="card-body p-2 small">
-                                                                    <div class="text-truncate">{{ $p->description }}</div>
+                                                                    <form method="POST" action="{{ url($base . '/' . $mua->id . '/portfolios/' . $p->id) }}">
+                                                                        @csrf
+                                                                        @method('PUT')
+                                                                        <input type="text" name="description" class="form-control form-control-sm mb-2" value="{{ $p->description }}" placeholder="Description">
+                                                                        <div class="d-flex gap-1">
+                                                                            <button class="btn btn-sm btn-primary flex-fill">Update</button>
+                                                                        </div>
+                                                                    </form>
                                                                     <form
                                                                         action="{{ url($base . '/' . $mua->id . '/portfolios/' . $p->id) }}"
                                                                         method="POST"

@@ -120,9 +120,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('admin/muas', BackMuaController::class, ['as' => 'admin']);
     // Nested MUA services (admin/muas/{mua}/services)
     Route::post('admin/muas/{mua}/services', [BackMuaServiceController::class, 'store'])->name('admin.muas.services.store');
+    Route::put('admin/muas/{mua}/services/{id}', [BackMuaServiceController::class, 'update'])->name('admin.muas.services.update');
     Route::delete('admin/muas/{mua}/services/{id}', [BackMuaServiceController::class, 'destroy'])->name('admin.muas.services.destroy');
     // Portfolios
     Route::post('admin/muas/{mua}/portfolios', [BackMuaPortfolioController::class, 'store'])->name('admin.muas.portfolios.store');
+    Route::put('admin/muas/{mua}/portfolios/{id}', [BackMuaPortfolioController::class, 'update'])->name('admin.muas.portfolios.update');
     Route::delete('admin/muas/{mua}/portfolios/{id}', [BackMuaPortfolioController::class, 'destroy'])->name('admin.muas.portfolios.destroy');
     // Bookings (admin area) — use an explicit admin URI to avoid collision with MUA routes
     Route::get('admin/bookings', [\App\Http\Controllers\Back\BookingController::class, 'index'])->name('admin.bookings.index');
@@ -145,9 +147,11 @@ Route::middleware('auth')->group(function () {
         ])->only(['create', 'store', 'edit', 'update']);
         // Nested MUA services (muas/{mua}/services)
         Route::post('muas/{mua}/services', [BackMuaServiceController::class, 'store'])->name('muas.services.store');
+        Route::put('muas/{mua}/services/{id}', [BackMuaServiceController::class, 'update'])->name('muas.services.update');
         Route::delete('muas/{mua}/services/{id}', [BackMuaServiceController::class, 'destroy'])->name('muas.services.destroy');
         // Portfolios
         Route::post('muas/{mua}/portfolios', [BackMuaPortfolioController::class, 'store'])->name('muas.portfolios.store');
+        Route::put('muas/{mua}/portfolios/{id}', [BackMuaPortfolioController::class, 'update'])->name('muas.portfolios.update');
         Route::delete('muas/{mua}/portfolios/{id}', [BackMuaPortfolioController::class, 'destroy'])->name('muas.portfolios.destroy');
     });
     // Member routes

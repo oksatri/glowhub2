@@ -58,6 +58,24 @@ class MuaPortfolioController extends Controller
     return redirect(url($base . '/' . $mua->id . '/edit'))->with('success', 'Portfolio uploaded');
     }
 
+    public function update(Request $request, $muaId, $id)
+    {
+        $mua = Mua::findOrFail($muaId);
+
+        $portfolio = MuaPortfolio::where('mua_id', $mua->id)->findOrFail($id);
+
+        $data = $request->validate([
+            'description' => 'nullable|string',
+        ]);
+
+        $portfolio->update([
+            'description' => $data['description'] ?? null,
+        ]);
+
+    $base = (auth()->check() && auth()->user()->role === 'admin') ? 'admin/muas' : 'muas';
+    return redirect(url($base . '/' . $mua->id . '/edit'))->with('success', 'Portfolio updated');
+    }
+
     public function destroy($muaId, $id)
     {
         $p = MuaPortfolio::where('mua_id', $muaId)->findOrFail($id);
