@@ -70,9 +70,10 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Name</th>
-                            <th>Specialty</th>
-                            <th>Location</th>
+                            <th>Nama MUA</th>
+                            <th>City / Lokasi</th>
+                            <th>Jam Operasional</th>
+                            <th>Ketersediaan Jam</th>
                             <th class="text-end">Actions</th>
                         </tr>
                     </thead>
@@ -100,12 +101,13 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>{{ $mua->specialty }}</td>
                                 <td>
                                     @if ($mua->city)
                                         {{ App\Models\RegRegency::find($mua->city)->name ?? $mua->city }}
                                     @endif
                                 </td>
+                                <td>{{ $mua->operational_hours }}</td>
+                                <td>{{ $mua->availability_hours }}</td>
                                 <td class="text-end">
                                     <a href="{{ url($base . '/' . $mua->id . '/edit') }}"
                                         class="btn btn-sm btn-outline-primary">Edit</a>
@@ -119,7 +121,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="text-center py-16">
+                                <td colspan="6" class="text-center py-16">
                                     <div class="d-flex flex-column align-items-center">
                                         <div class="empty-state mb-4 p-3 rounded-circle" style="background: #F3F4F6;">
                                             <i class="fas fa-file-alt fa-4x" style="color: #9CA3AF;"></i>
