@@ -167,6 +167,26 @@
                                             <div class="ml-2">
                                                 <h5 class="card-title mb-0">{{ $s->service_name }}</h5>
                                                 <div class="small text-muted">Rp {{ number_format($s->price) }}</div>
+                                                @php
+                                                    $categories = [];
+                                                    if (!empty($s->categori_service)) {
+                                                        if (is_array($s->categori_service)) {
+                                                            $categories = $s->categori_service;
+                                                        } else {
+                                                            $decodedCat = json_decode($s->categori_service, true);
+                                                            if (is_array($decodedCat)) {
+                                                                $categories = $decodedCat;
+                                                            } elseif (is_string($s->categori_service)) {
+                                                                $categories = [$s->categori_service];
+                                                            }
+                                                        }
+                                                    }
+                                                @endphp
+                                                @if (!empty($categories))
+                                                    <div class="small text-muted mt-1">
+                                                        {{ implode(' • ', $categories) }}
+                                                    </div>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -198,7 +218,10 @@
                                         @if (!empty($features))
                                             <div class="mt-2">
                                                 @foreach ($features as $f)
-                                                    <span class="badge bg-light text-dark me-1">{{ $f }}</span>
+                                                    @php
+                                                        $label = is_array($f) && isset($f['name']) ? $f['name'] : (string) $f;
+                                                    @endphp
+                                                    <span class="badge bg-light text-dark me-1">{{ $label }}</span>
                                                 @endforeach
                                             </div>
                                         @endif
