@@ -280,15 +280,33 @@
                                         @php
                                             $timeSlots = [];
                                             $selectedTime = null;
-                                            if (!empty($mua['operational_hours']) && preg_match('/(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})/', $mua['operational_hours'], $m)) {
-                                                $start = new \DateTime($m[1] . ':' . $m[2]);
-                                                $end = new \DateTime($m[3] . ':' . $m[4]);
-                                                while ($start < $end) {
-                                                    $timeSlots[] = $start->format('H:i');
-                                                    $start->modify('+2 hours');
+
+                                            // Generate time slots every 2 hours based on operational_hours if possible
+                                            $op = $mua['operational_hours'] ?? '';
+                                            if (!empty($op) && preg_match('/(\d{1,2})[:\.](\d{2}).*?(\d{1,2})[:\.](\d{2})/u', $op, $m)) {
+                                                try {
+                                                    $start = new \DateTime($m[1] . ':' . $m[2]);
+                                                    $end = new \DateTime($m[3] . ':' . $m[4]);
+                                                    while ($start < $end) {
+                                                        $timeSlots[] = $start->format('H:i');
+                                                        $start->modify('+2 hours');
+                                                    }
+                                                } catch (\Exception $e) {
+                                                    $timeSlots = [];
                                                 }
-                                                $selectedTime = $timeSlots[0] ?? null;
                                             }
+
+                                            // Fallback: if no valid slots from operational_hours, use default 09:00-19:00
+                                            if (empty($timeSlots)) {
+                                                $fallbackStart = new \DateTime('09:00');
+                                                $fallbackEnd = new \DateTime('19:00');
+                                                while ($fallbackStart < $fallbackEnd) {
+                                                    $timeSlots[] = $fallbackStart->format('H:i');
+                                                    $fallbackStart->modify('+2 hours');
+                                                }
+                                            }
+
+                                            $selectedTime = $timeSlots[0] ?? null;
                                         @endphp
                                         <select class="form-select" id="bk_time">
                                             <option value="">Select time</option>
@@ -401,7 +419,7 @@
     </section>
 @endsection
 
-@push('styles')
+@push('style')
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
         .flatpickr-calendar {
