@@ -167,23 +167,52 @@ class MuaController extends Controller
 
         // features inside the active service become selectable options on the form
         $features = [];
-        if ($activeService && is_array($activeService->features)) {
-            foreach ($activeService->features as $feature) {
-                $name = $feature;
-                $extra = 0;
+        if ($activeService && !empty($activeService->features)) {
+            $rawFeatures = $activeService->features;
 
-                // parse patterns like "+ Rp. 35.000" from the feature text
-                if (preg_match('/\+\s*Rp\.?\s*([0-9\.]+)/i', $feature, $m)) {
-                    $num = preg_replace('/[^0-9]/', '', $m[1] ?? '0');
-                    $extra = (int) $num;
-                    // remove the pricing part from the display name
-                    $name = trim(preg_replace('/\(.*Rp.*\)/i', '', $feature));
+            // if stored as JSON string and not yet cast, decode first
+            if (is_string($rawFeatures)) {
+                $decoded = json_decode($rawFeatures, true);
+                if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                    $rawFeatures = $decoded;
+                } else {
+                    $rawFeatures = [$rawFeatures];
                 }
+            }
 
-                $features[] = [
-                    'name' => $name,
-                    'extra_price' => $extra,
-                ];
+            if (is_array($rawFeatures)) {
+                foreach ($rawFeatures as $feature) {
+                    // structured feature: ['name' => ..., 'extra_price' => ...]
+                    if (is_array($feature) && isset($feature['name'])) {
+                        $features[] = [
+                            'name' => (string) $feature['name'],
+                            'extra_price' => isset($feature['extra_price']) ? (int) $feature['extra_price'] : 0,
+                        ];
+                        continue;
+                    }
+
+                    // plain string feature
+                    $featureText = is_string($feature) ? $feature : (string) ($feature['label'] ?? '');
+                    if ($featureText === '') {
+                        continue;
+                    }
+
+                    $name = $featureText;
+                    $extra = 0;
+
+                    // parse patterns like "+ Rp. 35.000" from the feature text
+                    if (preg_match('/\+\s*Rp\.?\s*([0-9\.]+)/i', $featureText, $m)) {
+                        $num = preg_replace('/[^0-9]/', '', $m[1] ?? '0');
+                        $extra = (int) $num;
+                        // remove the pricing part from the display name
+                        $name = trim(preg_replace('/\(.*Rp.*\)/i', '', $featureText));
+                    }
+
+                    $features[] = [
+                        'name' => $name,
+                        'extra_price' => $extra,
+                    ];
+                }
             }
         }
 
