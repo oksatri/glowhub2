@@ -35,20 +35,20 @@
             <!-- Quick add service -->
             <form method="POST" action="{{ url($base . '/' . $mua->id . '/services') }}">
                 @csrf
-                <div class="row mb-3">
-                    <div class="col-sm-6">
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-6">
                         <label class="form-label small">Service Name</label>
                         <input type="text" name="nama_service" class="form-control" placeholder="Service name" required>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-12 col-md-6">
                         <label class="form-label small">Price</label>
                         <input type="number" name="harga" class="form-control" placeholder="Price">
                     </div>
-                    <div class="col-sm-12">
+                    <div class="col-12">
                         <label class="form-label small">Description</label>
                         <textarea name="deskripsi" class="form-control" placeholder="Description" rows="3"></textarea>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-12 col-md-6">
                         <label class="form-label small">Brands Used</label>
                         <div id="features-list">
                             <div class="input-group mb-2 feature-item">
@@ -63,14 +63,14 @@
                         </button>
                         <small class="text-muted d-block mt-1">Add as many features as you want for this service.</small>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-12 col-md-6">
                         <label class="form-label">Occasions</label>
                         @php
                             $occasionOptions = [
                                 'Akad',
                                 'Wedding (Resepsi)',
                                 'Prewedding',
-                                '⁠⁠Engagement/Lamaran',
+                                '\u200bEngagement/Lamaran',
                                 'Wedding Guest',
                                 'Party',
                                 'Bridesmaid',
@@ -86,14 +86,23 @@
                                 $selectedOccasions = (array) $selectedOccasions;
                             }
                         @endphp
-                        <select name="categori_service[]" class="form-select" multiple style="height: 150px !important;">
+                        <div class="row g-2">
                             @foreach ($occasionOptions as $opt)
-                                <option value="{{ $opt }}" {{ in_array($opt, $selectedOccasions, true) ? 'selected' : '' }}>
-                                    {{ $opt }}
-                                </option>
+                                @php
+                                    $id = 'occasion-' . \Illuminate\Support\Str::slug($opt);
+                                @endphp
+                                <div class="col-6">
+                                    <div class="form-check">
+                                        <input type="checkbox" name="categori_service[]" value="{{ $opt }}"
+                                            id="{{ $id }}" class="form-check-input"
+                                            {{ in_array($opt, $selectedOccasions, true) ? 'checked' : '' }}>
+                                        <label class="form-check-label small" for="{{ $id }}">{{ $opt }}</label>
+                                    </div>
+                                </div>
                             @endforeach
-                        </select>
-                        <small class="text-muted d-block mt-1">Hold Ctrl/Command to select more than one occasion.</small>
+                        </div>
+                        <small class="text-muted d-block mt-1">Pilih satu atau lebih occasion yang sesuai untuk service
+                            ini.</small>
                         @if ($errors->has('categori_service'))
                             <div class="invalid-feedback d-block">{{ $errors->first('categori_service') }}</div>
                         @endif

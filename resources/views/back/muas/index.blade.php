@@ -8,10 +8,10 @@
             <h1 class="h2 mb-1" style="color: #2D3748; font-weight:600;">MUAs</h1>
             <p class="text-muted small mb-0">Manage Makeup Artists — add services and portfolio images.</p>
         </div>
-        <a href="{{ route('admin.muas.create') }}" class="btn px-4 py-2 rounded-pill text-white"
+        {{-- <a href="{{ route('admin.muas.create') }}" class="btn px-4 py-2 rounded-pill text-white"
             style="background: linear-gradient(135deg,#6D28D9,#2563EB); border: none;"><i class="fas fa-plus me-2"></i> Create
             New
-            MUA</a>
+            MUA</a> --}}
     </div>
 
     <div class="card border-0 shadow-sm">
@@ -131,11 +131,11 @@
                                         <p style="color: #6B7280; font-size: 1rem;" class="mb-4">Start by adding your
                                             first
                                             MUA</p>
-                                        <a href="{{ url($base . '/create') }}"
+                                        {{-- <a href="{{ url($base . '/create') }}"
                                             class="btn px-4 py-2 rounded-pill text-white"
                                             style="background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%); border: none;">
                                             <i class="fas fa-plus me-2"></i> Create New MUA
-                                        </a>
+                                        </a> --}}
                                     </div>
                                 </td>
                             </tr>
