@@ -264,96 +264,40 @@
                         </div>
 
                         <div class="card-body p-4">
-                            <!-- Simple Calendar -->
+                            <!-- Simple Date & Time Selection -->
                             <div class="calendar-section mb-4">
-                                <div class="row">
-                                    <!-- Calendar Grid -->
+                                <div class="row g-3">
                                     <div class="col-7">
-                                        <div class="calendar-container p-3 bg-light rounded">
-                                            <!-- Calendar Header -->
-                                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                                <button class="btn btn-outline-primary btn-sm" type="button">
-                                                    <i class="fas fa-chevron-left"></i>
-                                                </button>
-                                                <h6 class="fw-bold mb-0">October 2025</h6>
-                                                <button class="btn btn-outline-primary btn-sm" type="button">
-                                                    <i class="fas fa-chevron-right"></i>
-                                                </button>
-                                            </div>
-
-                                            <!-- Days of Week -->
-                                            <div class="row text-center mb-2">
-                                                @foreach (['S', 'M', 'T', 'W', 'T', 'F', 'S'] as $day)
-                                                    <div class="col p-1">
-                                                        <small class="text-muted fw-bold">{{ $day }}</small>
-                                                    </div>
-                                                @endforeach
-                                            </div>
-
-                                            <!-- Calendar Days -->
-                                            @php
-                                                $days = [
-                                                    ['', '', '1', '2', '3', '4', '5'],
-                                                    ['6', '7', '8', '9', '10', '11', '12'],
-                                                    ['13', '14', '15', '16', '17', '18', '19'],
-                                                    ['20', '21', '22', '23', '24', '25', '26'],
-                                                    ['27', '28', '29', '30', '31', '', ''],
-                                                ];
-                                                $availableDays = [8, 15, 22, 25];
-                                                $selectedDay = 25;
-                                            @endphp
-
-                                            @foreach ($days as $week)
-                                                <div class="row text-center mb-1">
-                                                    @foreach ($week as $day)
-                                                        <div class="col p-1">
-                                                            @if ($day)
-                                                                @if (in_array((int) $day, $availableDays))
-                                                                    <button
-                                                                        class="btn btn-sm w-100 day-btn {{ $day == $selectedDay ? 'btn-primary' : 'btn-outline-secondary' }}"
-                                                                        style="height: 30px; font-size: 12px;"
-                                                                        data-day="{{ $day }}">
-                                                                        {{ $day }}
-                                                                    </button>
-                                                                @else
-                                                                    <span class="d-block text-muted small"
-                                                                        style="line-height: 30px; font-size: 11px;">{{ $day }}</span>
-                                                                @endif
-                                                            @endif
-                                                        </div>
-                                                    @endforeach
-                                                </div>
-                                            @endforeach
-                                        </div>
+                                        <label class="form-label small mb-1">Select Date</label>
+                                        <input type="date" class="form-control" id="bk_date">
+                                        <small class="text-muted d-block mt-1">You can change month and year from the
+                                            picker.</small>
                                     </div>
 
                                     <!-- Time Slots -->
                                     <div class="col-5">
-                                        <h6 class="fw-bold mb-3 text-primary">Available Times</h6>
-                                        <div class="time-slots">
-                                            @php
-                                                $timeSlots = [
-                                                    ['time' => '09:00', 'available' => true],
-                                                    ['time' => '11:00', 'available' => true],
-                                                    ['time' => '13:00', 'available' => false],
-                                                    ['time' => '15:00', 'available' => true],
-                                                    ['time' => '17:00', 'available' => false],
-                                                ];
-                                                $selectedTime = '15:00';
-                                            @endphp
-
-                                            @foreach ($timeSlots as $slot)
-                                                <button
-                                                    class="btn btn-sm w-100 mb-2 time-slot {{ $slot['time'] == $selectedTime ? 'btn-primary' : ($slot['available'] ? 'btn-outline-primary' : 'btn-outline-secondary') }}"
-                                                    {{ !$slot['available'] ? 'disabled' : '' }}
-                                                    data-time="{{ $slot['time'] }}" style="padding: 8px;">
-                                                    {{ $slot['time'] }}
-                                                    @if (!$slot['available'])
-                                                        <small class="d-block">Booked</small>
-                                                    @endif
-                                                </button>
+                                        <h6 class="fw-bold mb-2 text-primary">Available Times</h6>
+                                        @php
+                                            $timeSlots = [];
+                                            $selectedTime = null;
+                                            if (!empty($mua['operational_hours']) && preg_match('/(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})/', $mua['operational_hours'], $m)) {
+                                                $start = new \DateTime($m[1] . ':' . $m[2]);
+                                                $end = new \DateTime($m[3] . ':' . $m[4]);
+                                                while ($start < $end) {
+                                                    $timeSlots[] = $start->format('H:i');
+                                                    $start->modify('+2 hours');
+                                                }
+                                                $selectedTime = $timeSlots[0] ?? null;
+                                            }
+                                        @endphp
+                                        <select class="form-select" id="bk_time">
+                                            <option value="">Select time</option>
+                                            @foreach ($timeSlots as $time)
+                                                <option value="{{ $time }}" {{ $time == $selectedTime ? 'selected' : '' }}>
+                                                    {{ $time }}
+                                                </option>
                                             @endforeach
-                                        </div>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -441,8 +385,6 @@
 
                                 <!-- Hidden inputs populated by JS -->
                                 <input type="hidden" name="distance" id="bk_distance">
-                                <input type="hidden" name="selected_date" id="bk_selected_date">
-                                <input type="hidden" name="selected_time" id="bk_selected_time">
                                 <input type="hidden" name="services" id="bk_services">
                                 <input type="hidden" name="mua_service_id" id="bk_mua_service_id">
 
@@ -459,7 +401,51 @@
     </section>
 @endsection
 
+@push('styles')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        .flatpickr-calendar {
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .flatpickr-months .flatpickr-month {
+            background: linear-gradient(135deg, var(--bs-primary) 0%, #ffe9f2 100%);
+            color: #ffffff;
+        }
+
+        .flatpickr-weekday {
+            color: var(--bs-primary);
+            font-weight: 600;
+        }
+
+        .flatpickr-day.selected,
+        .flatpickr-day.startRange,
+        .flatpickr-day.endRange,
+        .flatpickr-day.selected.inRange,
+        .flatpickr-day.startRange.inRange,
+        .flatpickr-day.endRange.inRange,
+        .flatpickr-day.selected:focus,
+        .flatpickr-day.startRange:focus,
+        .flatpickr-day.endRange:focus,
+        .flatpickr-day.selected:hover,
+        .flatpickr-day.startRange:hover,
+        .flatpickr-day.endRange:hover {
+            background: var(--bs-primary);
+            border-color: var(--bs-primary);
+            color: #ffffff;
+        }
+
+        .flatpickr-day.today {
+            border-color: var(--bs-primary);
+            color: var(--bs-primary);
+        }
+    </style>
+@endpush
+
 @push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
     <script>
         $(document).ready(function() {
             var maxDistance = {{ $mua['max_distance'] ?? 'null' }};
@@ -468,6 +454,14 @@
             function formatRupiah(num) {
                 num = num || 0;
                 return 'Rp ' + num.toLocaleString('id-ID');
+            }
+
+            // initialize datepicker for booking date
+            if (typeof flatpickr !== 'undefined') {
+                flatpickr('#bk_date', {
+                    minDate: 'today',
+                    dateFormat: 'Y-m-d'
+                });
             }
 
             function updateEstimatedPrice() {
@@ -504,62 +498,21 @@
                 updateEstimatedPrice();
             });
 
-            // Calendar day selection
-            $('.day-btn').on('click', function() {
-                $('.day-btn').removeClass('btn-primary').addClass('btn-outline-secondary');
-                $(this).removeClass('btn-outline-secondary').addClass('btn-primary');
-            });
-
-            // Time slot selection
-            $('.time-slot').on('click', function() {
-                if (!$(this).prop('disabled')) {
-                    $('.time-slot:not(:disabled)').removeClass('btn-primary').addClass(
-                        'btn-outline-primary');
-                    $(this).removeClass('btn-outline-primary').addClass('btn-primary');
-                }
-            });
-
             // Book Now handler - collects selected date/time/services and submits to server
             $('#bookNowBtn').on('click', function() {
-                // selected day
-                var dayBtn = $('.day-btn.btn-primary');
-                if (dayBtn.length === 0) {
+                // selected date from date input
+                var selectedDate = $('#bk_date').val();
+                if (!selectedDate) {
                     alert('Please select a date first');
                     return;
                 }
-                var day = dayBtn.data('day');
 
-                // parse month and year from calendar header (e.g. "October 2025")
-                var monthYear = $('.calendar-container h6').first().text().trim();
-                var parts = monthYear.split(' ');
-                var monthName = parts[0];
-                var year = parts[1] || new Date().getFullYear();
-                var monthMap = {
-                    January: 1,
-                    February: 2,
-                    March: 3,
-                    April: 4,
-                    May: 5,
-                    June: 6,
-                    July: 7,
-                    August: 8,
-                    September: 9,
-                    October: 10,
-                    November: 11,
-                    December: 12
-                };
-                var month = monthMap[monthName] || (new Date().getMonth() + 1);
-                var dayP = ('0' + day).slice(-2);
-                var monthP = ('0' + month).slice(-2);
-                var selectedDate = year + '-' + monthP + '-' + dayP;
-
-                // selected time
-                var timeBtn = $('.time-slot.btn-primary');
-                if (timeBtn.length === 0) {
+                // selected time from select
+                var selectedTime = $('#bk_time').val();
+                if (!selectedTime) {
                     alert('Please select a time slot');
                     return;
                 }
-                var selectedTime = timeBtn.data('time');
 
                 // services (collect ids)
                 var services = [];
@@ -606,13 +559,10 @@
                                 '<br>Booking ID: <strong>' + res.booking_id + '</strong></div>';
                             // prepend message and reset selections
                             $('#bookNowBtn').after(html);
-                            $('.day-btn').removeClass('btn-primary').addClass(
-                                'btn-outline-secondary');
-                            $('.time-slot').removeClass('btn-primary').addClass(
-                                'btn-outline-primary');
                             $('.service-checkbox').prop('checked', false);
-                            $('#bk_selected_date, #bk_selected_time, #bk_services, #bk_mua_service_id')
-                                .val('');
+                            $('#bk_date').val('');
+                            $('#bk_time').val('');
+                            $('#bk_services, #bk_mua_service_id').val('');
                             // reset form fields except prefilled auth info
                             $('#bk_address').val('');
                             setTimeout(function() {

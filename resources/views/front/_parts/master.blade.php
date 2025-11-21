@@ -86,6 +86,7 @@
             border-color: var(--bs-primary) !important;
         }
     </style>
+    @stack('style')
 </head>
 
 <body data-bs-spy="scroll" data-bs-target="#header" tabindex="0">
