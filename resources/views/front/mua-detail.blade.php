@@ -6,7 +6,7 @@
     <style>
         /* === CLEAN & PROFESSIONAL STYLING === */
         .hero-gradient {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            background: linear-gradient(135deg, #ffd6e8 0%, #ffe9f2 100%) !important;
         }
 
         .floating-elements {
@@ -105,9 +105,8 @@
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
         }
     </style>
-    <!-- Stunning Hero Section -->
-    <section class="hero-gradient position-relative overflow-hidden"
-        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <!-- Hero Section -->
+    <section class="hero-gradient position-relative overflow-hidden">
         <!-- Animated Background Elements -->
         <div class="floating-elements">
             <div class="floating-circle circle-1"></div>
@@ -130,21 +129,25 @@
     </section>
 
     <!-- MUA Detail Section -->
-    <section class="py-5 bg-light">
+    <section class="py-5" style="background-color:#FFF4ED;">
         <div class="container">
             <div class="row g-4">
                 <!-- Left Column - Profile & Portfolio -->
                 <div class="col-lg-6">
                     <div class="profile-section">
                         <!-- Profile Card -->
-                        <div class="card shadow-sm border-0 rounded-3 mb-4">
+                        <div class="card shadow-sm border-0 mb-4"
+                            style="background-color:#FDE1E1; border-radius:22px; overflow:hidden;">
                             <!-- Profile Image -->
                             <div class="position-relative">
-                                <img src="{{ $mua['image'] }}" alt="{{ $mua['name'] }}" class="card-img-top rounded-top"
-                                    style="height: 300px; object-fit: cover;">
+                                <div style="width:100%; aspect-ratio:3/4; overflow:hidden;">
+                                    <img src="{{ $mua['image'] }}" alt="{{ $mua['name'] }}"
+                                        style="width:100%; height:100%; object-fit:cover;">
+                                </div>
                                 <!-- Location Badge -->
                                 <div class="position-absolute bottom-0 start-0 m-3">
-                                    <span class="badge bg-primary px-3 py-2 rounded-pill">
+                                    <span class="badge px-3 py-2 rounded-pill"
+                                        style="background-color:#F7BCC6; color:#4B2E2E;">
                                         <i class="fas fa-map-marker-alt me-1"></i>{{ $mua['location'] }}
                                     </span>
                                 </div>
@@ -395,6 +398,7 @@
                                                 class="form-check p-3 border rounded {{ $service['selected'] ?? false ? 'bg-primary bg-opacity-10 border-primary' : '' }}">
                                                 <input class="form-check-input service-checkbox" type="checkbox"
                                                     name="service_ids[]" value="{{ $service['id'] ?? $loop->index }}"
+                                                    data-price="{{ $service['price'] ?? 0 }}"
                                                     {{ $service['selected'] ?? false ? 'checked' : '' }}
                                                     id="service{{ $loop->index }}">
                                                 <label class="form-check-label d-flex justify-content-between w-100"
@@ -406,6 +410,17 @@
                                             </div>
                                         </div>
                                     @endforeach
+                                </div>
+                            </div>
+
+                            <!-- Estimated Price -->
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    <div class="fw-semibold">Estimated Price</div>
+                                    <div class="small text-muted">Final price confirmed after MUA approval</div>
+                                </div>
+                                <div id="estimatedPriceDisplay" class="h5 fw-bold text-primary mb-0">
+                                    Rp 0
                                 </div>
                             </div>
 
@@ -435,9 +450,16 @@
                                     @if (!empty($mua['max_distance']) && !empty($mua['additional_charge']))
                                         <small class="text-muted d-block mt-1">
                                             Locations beyond {{ $mua['max_distance'] }} km from the MUA may incur an
-                                            additional charge of Rp {{ number_format($mua['additional_charge'], 0, ',', '.') }}.
+                                            additional charge of Rp {{ number_format($mua['additional_charge'], 0, ',', '.') }}
+                                            per km.
                                         </small>
                                     @endif
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label small">Estimated Distance (km)</label>
+                                    <input type="number" min="0" step="0.1" class="form-control" id="bk_distance_input"
+                                        placeholder="e.g. 5" inputmode="decimal">
                                 </div>
 
                                 <!-- Hidden inputs populated by JS -->
@@ -463,6 +485,45 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
+            var maxDistance = {{ $mua['max_distance'] ?? 'null' }};
+            var additionalPerKm = {{ $mua['additional_charge'] ?? 'null' }};
+            function formatRupiah(num) {
+                num = num || 0;
+                return 'Rp ' + num.toLocaleString('id-ID');
+            }
+
+            function updateEstimatedPrice() {
+                var totalServices = 0;
+                $('.service-checkbox:checked').each(function() {
+                    var price = parseInt($(this).data('price')) || 0;
+                    totalServices += price;
+                });
+
+                var distance = parseFloat($('#bk_distance').val()) || 0;
+                var extra = 0;
+                if (maxDistance && additionalPerKm && distance > maxDistance) {
+                    extra = (distance - maxDistance) * additionalPerKm;
+                }
+
+                var total = totalServices + extra;
+                $('#estimatedPriceDisplay').text(formatRupiah(total));
+            }
+
+            // init estimated price on load
+            updateEstimatedPrice();
+
+            // recalc when services change
+            $(document).on('change', '.service-checkbox', function() {
+                updateEstimatedPrice();
+            });
+
+            // sync distance input and recalc
+            $('#bk_distance_input').on('input', function() {
+                var val = $(this).val();
+                $('#bk_distance').val(val);
+                updateEstimatedPrice();
+            });
+
             // Calendar day selection
             $('.day-btn').on('click', function() {
                 $('.day-btn').removeClass('btn-primary').addClass('btn-outline-secondary');
