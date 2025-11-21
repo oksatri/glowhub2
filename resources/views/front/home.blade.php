@@ -167,48 +167,82 @@
             @break
 
             @case('product')
-                <section id="find-mua" class="py-5 section-bg-primary-light">
+                <section id="find-mua" class="py-5" style="background-color: #FFF4ED;">
                     <div class="container">
-                        <div class="text-center mb-5">
+                        <div class="text-center mb-4 mb-md-5">
                             <h2 class="fw-bold mb-3">{{ $section->title ?? 'Discover Top-Rated MUAs' }}</h2>
-                            <p class="lead text-muted">
+                            <p class="lead text-muted mb-0">
                                 {{ $section->description ?? 'Jelajahi makeup artist terverifikasi di dekat Anda.' }}</p>
                         </div>
 
-                        <div class="row g-4">
+                        <div class="row g-3 g-md-4">
                             @foreach ($topMuas ?? collect() as $m)
-                                <div class="col-md-4">
-                                    <div class="card h-100 shadow-sm border-0 position-relative">
-                                        <div class="position-absolute top-0 end-0 p-3" style="z-index: 10;">
-                                            <i class="far fa-heart text-primary" style="font-size: 1.2rem; cursor: pointer;"></i>
+                                @php
+                                    // pilih satu service (termurah) dan satu foto portfolio untuk ditampilkan di kartu
+                                    $service = null;
+                                    if ($m->services && count($m->services) > 0) {
+                                        $service = collect($m->services)->sortBy('price')->first();
+                                    }
+
+                                    $portfolioImage = null;
+                                    if ($m->portfolios && $m->portfolios->count() > 0) {
+                                        if ($service) {
+                                            $byService = $m->portfolios->where('mua_service_id', $service->id)->first();
+                                            $portfolioImage = $byService ? $byService->image : $m->portfolios->first()->image;
+                                        } else {
+                                            $portfolioImage = $m->portfolios->first()->image;
+                                        }
+                                    }
+
+                                    $cardImage = $portfolioImage
+                                        ? asset('uploads/' . $portfolioImage)
+                                        : ($m->image
+                                            ? asset('uploads/' . $m->image)
+                                            : asset('images/product-item1.jpg'));
+
+                                    $location = optional($m->rel_city)->name ?: ($m->city ?? '');
+                                    $rating = (float) ($m->rating ?? 0);
+                                    $reviewsCount = (int) ($m->reviews_count ?? 0);
+                                    $price = $service ? (int) $service->price : null;
+                                @endphp
+
+                                <div class="col-6 col-md-4 col-lg-3">
+                                    <div class="h-100 border-0 position-relative"
+                                        style="background-color:#FDE1E1; border-radius:20px; overflow:hidden;">
+                                        <div class="position-absolute top-0 end-0 p-2" style="z-index: 10;">
+                                            <button type="button" class="btn btn-sm p-1 border-0 bg-transparent">
+                                                <i class="far fa-heart" style="color:#333; font-size:1.1rem;"></i>
+                                            </button>
                                         </div>
-                                        <div class="position-relative">
-                                            <img src="{{ $m->image ? asset('uploads/' . $m->image) : asset('images/product-item1.jpg') }}"
-                                                alt="{{ $m->name }}" class="card-img-top"
-                                                style="height: 200px; object-fit: cover;">
+
+                                        <div class="w-100" style="aspect-ratio: 3 / 4; overflow:hidden;">
+                                            <img src="{{ $cardImage }}" alt="{{ $m->name }}"
+                                                style="width:100%; height:100%; object-fit:cover;">
                                         </div>
-                                        <div class="card-body text-center p-4">
-                                            <h5 class="fw-bold">{{ $m->name }}</h5>
-                                            <p class="text-primary mb-2">{{ $m->specialty ?? '' }} •
-                                                {{ $m->city ?? '' }}</p>
-                                            <div class="mb-2">
-                                                @for ($i = 1; $i <= 5; $i++)
-                                                    <i class="fas fa-star text-warning" style="font-size: 0.9rem;"></i>
-                                                @endfor
-                                                <span class="text-muted small ms-2">{{ number_format($m->rating ?? 4.5, 1) }}
-                                                    ({{ $m->reviews ?? 0 }} reviews)
-                                                </span>
+
+                                        <div class="px-3 py-2" style="background-color:#F6B9C3;">
+                                            <div class="d-flex align-items-center mb-1 small">
+                                                <i class="fas fa-map-marker-alt me-1" style="color:#D23B3B;"></i>
+                                                <span class="text-dark text-truncate" title="{{ $location }}">
+                                                    {{ $location ?: '-' }}</span>
                                             </div>
-                                            @php
-                                                // Cari harga paling murah dari semua service
-                                                $minPrice = null;
-                                                if ($m->services && count($m->services) > 0) {
-                                                    $minPrice = collect($m->services)->min('price');
-                                                }
-                                            @endphp
-                                            <p class="text-muted small mb-3">From Rp.
-                                                {{ $minPrice ? number_format($minPrice, 0, ',', '.') : '-' }}</p>
-                                            <a href="{{ url('mua/' . $m->id) }}" class="btn btn-outline-primary">View Profile</a>
+                                            <div class="d-flex justify-content-between align-items-center small mb-1">
+                                                <div class="d-flex align-items-center">
+                                                    <i class="fas fa-star me-1" style="color:#FFB800;"></i>
+                                                    <span>
+                                                        {{ $rating ? number_format($rating, 1, ',', '.') : 'Baru' }}
+                                                        @if ($reviewsCount > 0)
+                                                            <span class="text-muted">({{ $reviewsCount }})</span>
+                                                        @endif
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <small class="text-muted">Mulai dari</small>
+                                                <strong class="text-dark">
+                                                    {{ $price ? 'Rp. ' . number_format($price, 0, ',', '.') : '-' }}
+                                                </strong>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -224,7 +258,6 @@
                                     </a>
                                 @endforeach
                             @endif
-                            {{-- <a href="{{ route('mua.listing') }}" class="btn btn-primary">Find MUAs</a> --}}
                         </div>
                     </div>
                 </section>
