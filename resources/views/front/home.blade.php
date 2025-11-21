@@ -176,57 +176,62 @@
                         </div>
 
                         <div class="row g-3 g-md-4">
-                            @foreach ($topMuas ?? collect() as $m)
+                            @foreach ($featuredServices ?? collect() as $service)
                                 @php
-                                    // pilih satu service (termurah) dan satu foto portfolio untuk ditampilkan di kartu
-                                    $service = null;
-                                    if ($m->services && count($m->services) > 0) {
-                                        $service = collect($m->services)->sortBy('price')->first();
-                                    }
+                                    $m = $service->mua;
 
+                                    // pilih satu foto portfolio untuk service ini
                                     $portfolioImage = null;
-                                    if ($m->portfolios && $m->portfolios->count() > 0) {
-                                        if ($service) {
-                                            $byService = $m->portfolios->where('mua_service_id', $service->id)->first();
-                                            $portfolioImage = $byService ? $byService->image : $m->portfolios->first()->image;
-                                        } else {
-                                            $portfolioImage = $m->portfolios->first()->image;
-                                        }
+                                    if ($service->portfolios && $service->portfolios->count() > 0) {
+                                        $portfolioImage = $service->portfolios->first()->image;
+                                    } elseif ($m && $m->portfolios && $m->portfolios->count() > 0) {
+                                        $portfolioImage = $m->portfolios->first()->image;
                                     }
 
                                     $cardImage = $portfolioImage
                                         ? asset('uploads/' . $portfolioImage)
-                                        : ($m->image
+                                        : ($m && $m->image
                                             ? asset('uploads/' . $m->image)
                                             : asset('images/product-item1.jpg'));
 
-                                    $location = optional($m->rel_city)->name ?: ($m->city ?? '');
-                                    $rating = (float) ($m->rating ?? 0);
-                                    $reviewsCount = (int) ($m->reviews_count ?? 0);
-                                    $price = $service ? (int) $service->price : null;
+                                    $location = $m ? (optional($m->rel_city)->name ?: ($m->city ?? '')) : '';
+                                    $rating = $m ? (float) ($m->rating ?? 0) : 0;
+                                    $reviewsCount = $m ? (int) ($m->reviews_count ?? 0) : 0;
+                                    $price = (int) ($service->price ?? 0);
                                 @endphp
 
                                 <div class="col-6 col-md-4 col-lg-3">
-                                    <div class="h-100 border-0 position-relative"
-                                        style="background-color:#FDE1E1; border-radius:20px; overflow:hidden;">
+                                    <div class="h-100 border-0 position-relative shadow-sm"
+                                        style="background-color:#FDE1E1; border-radius:22px; overflow:hidden; transition: transform .2s ease, box-shadow .2s ease;">
                                         <div class="position-absolute top-0 end-0 p-2" style="z-index: 10;">
-                                            <button type="button" class="btn btn-sm p-1 border-0 bg-transparent">
-                                                <i class="far fa-heart" style="color:#333; font-size:1.1rem;"></i>
+                                            <button type="button" class="btn btn-sm p-1 border-0 bg-white rounded-circle shadow-sm">
+                                                <i class="far fa-heart" style="color:#444; font-size:1.05rem;"></i>
                                             </button>
                                         </div>
 
                                         <div class="w-100" style="aspect-ratio: 3 / 4; overflow:hidden;">
-                                            <img src="{{ $cardImage }}" alt="{{ $m->name }}"
+                                            <img src="{{ $cardImage }}" alt="{{ $m->name ?? $service->service_name }}"
                                                 style="width:100%; height:100%; object-fit:cover;">
                                         </div>
 
-                                        <div class="px-3 py-2" style="background-color:#F6B9C3;">
-                                            <div class="d-flex align-items-center mb-1 small">
+                                        <div class="px-3 py-2" style="background-color:#F7BCC6;">
+                                            <div class="mb-1">
+                                                <div class="fw-semibold small text-truncate" style="color:#2D2A32;" title="{{ $m->name ?? $service->service_name }}">
+                                                    {{ $m->name ?? $service->service_name }}
+                                                </div>
+                                                @if (!empty($service->categori_service))
+                                                    <div class="small text-muted text-truncate" style="font-size: 0.74rem;" title="{{ $service->categori_service }}">
+                                                        {{ $service->categori_service }}
+                                                    </div>
+                                                @endif
+                                            </div>
+
+                                            <div class="d-flex align-items-center mb-1 small" style="font-size: 0.78rem;">
                                                 <i class="fas fa-map-marker-alt me-1" style="color:#D23B3B;"></i>
                                                 <span class="text-dark text-truncate" title="{{ $location }}">
                                                     {{ $location ?: '-' }}</span>
                                             </div>
-                                            <div class="d-flex justify-content-between align-items-center small mb-1">
+                                            <div class="d-flex justify-content-between align-items-center small mb-1" style="font-size: 0.78rem;">
                                                 <div class="d-flex align-items-center">
                                                     <i class="fas fa-star me-1" style="color:#FFB800;"></i>
                                                     <span>
@@ -237,9 +242,9 @@
                                                     </span>
                                                 </div>
                                             </div>
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <small class="text-muted">Mulai dari</small>
-                                                <strong class="text-dark">
+                                            <div class="d-flex justify-content-between align-items-center mt-1">
+                                                <small class="text-muted" style="font-size: 0.8rem;">Mulai dari</small>
+                                                <strong class="text-dark" style="font-size: 0.9rem;">
                                                     {{ $price ? 'Rp. ' . number_format($price, 0, ',', '.') : '-' }}
                                                 </strong>
                                             </div>

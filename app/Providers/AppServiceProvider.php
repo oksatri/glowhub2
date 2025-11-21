@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\View;
 use App\Models\ContentSection;
 use App\Models\SiteSetting;
 use App\Models\Mua;
+use App\Models\MuaService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -43,7 +44,14 @@ class AppServiceProvider extends ServiceProvider
                 ->take(6)
                 ->get();
 
-            $view->with(compact('contents', 'siteSetting', 'topMuas'));
+            // featured services list (for front cards) based on MuaService data
+            $featuredServices = MuaService::with(['mua.rel_city', 'portfolios'])
+                ->whereHas('mua')
+                ->orderBy('price')
+                ->take(12)
+                ->get();
+
+            $view->with(compact('contents', 'siteSetting', 'topMuas', 'featuredServices'));
         });
     }
 }
