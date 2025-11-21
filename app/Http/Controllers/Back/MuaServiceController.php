@@ -16,7 +16,7 @@ class MuaServiceController extends Controller
         $data = $request->validate([
             'nama_service' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
-            'fitur' => 'nullable',
+            'features' => 'nullable',
             'harga' => 'nullable|numeric',
             'categori_service' => 'nullable|array',
         ]);
@@ -33,16 +33,16 @@ class MuaServiceController extends Controller
             $payload['categori_service'] = implode(',', $data['categori_service']);
         }
 
-        // fitur bisa berupa array atau string, simpan ke db sebagai JSON
-        if (!empty($data['fitur'])) {
-            if (is_array($data['fitur'])) {
-                $payload['features'] = json_encode($data['fitur']);
+        // features bisa berupa array atau string, simpan ke db sebagai JSON
+        if (!empty($data['features'])) {
+            if (is_array($data['features'])) {
+                $payload['features'] = json_encode($data['features']);
             } else {
-                $decoded = json_decode($data['fitur'], true);
+                $decoded = json_decode($data['features'], true);
                 if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
                     $payload['features'] = json_encode($decoded);
                 } else {
-                    $payload['features'] = json_encode(array_values(array_filter(array_map('trim', explode(',', $data['fitur'])))));
+                    $payload['features'] = json_encode(array_values(array_filter(array_map('trim', explode(',', $data['features'])))));
                 }
             }
         } else {
