@@ -51,22 +51,22 @@
                     <div class="col-12 col-md-6">
                         <label class="form-label small">Features</label>
                         <div id="features-list">
-                            <div class="input-group mb-2 feature-item">
-                                <input type="text" name="features[name][]" class="form-control" placeholder="Feature">
-                                <button type="button" class="btn btn-outline-danger remove-feature" tabindex="-1">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
-                            <div class="input-group mb-2 feature-item">
-                                <input type="number" name="features[min_price][]" class="form-control" placeholder="Min Price">
-                            </div>
-                            <div class="input-group mb-2 feature-item">
-                                <input type="number" name="features[max_price][]" class="form-control" placeholder="Max Price">
-                            </div>
-                            <div class="input-group mb-2 feature-item">
+                            <div class="feature-item border p-2 mb-2">
+                                <div class="input-group mb-2">
+                                    <input type="text" name="features[0][name]" class="form-control" placeholder="Feature">
+                                    <button type="button" class="btn btn-outline-danger remove-feature" tabindex="-1">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                <div class="input-group mb-2">
+                                    <input type="number" name="features[0][min_price]" class="form-control" placeholder="Min Price">
+                                </div>
+                                <div class="input-group mb-2">
+                                    <input type="number" name="features[0][max_price]" class="form-control" placeholder="Max Price">
+                                </div>
                                 <div class="form-check">
-                                    <input type="checkbox" name="features[brands][]" class="form-check-input">
-                                    <label class="form-check-label">Brands</label>
+                                    <input type="checkbox" name="features[0][mandatory]" class="form-check-input">
+                                    <label class="form-check-label">Mandatory</label>
                                 </div>
                             </div>
                         </div>
@@ -128,54 +128,40 @@
                             const addFeatureBtn = document.getElementById('add-feature');
 
                             addFeatureBtn.addEventListener('click', function() {
+                                const index = featuresList.children.length;
                                 const featureItem = document.createElement('div');
-                                featureItem.className = 'input-group mb-2 feature-item';
+                                featureItem.className = 'feature-item border p-2 mb-2';
                                 featureItem.innerHTML = `
-                                    <input type="text" name="features[name][]" class="form-control" placeholder="Feature">
-                                    <button type="button" class="btn btn-outline-danger remove-feature" tabindex="-1">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                `;
-                                featuresList.appendChild(featureItem);
-
-                                const minPriceItem = document.createElement('div');
-                                minPriceItem.className = 'input-group mb-2 feature-item';
-                                minPriceItem.innerHTML = `
-                                    <input type="number" name="features[min_price][]" class="form-control" placeholder="Min Price">
-                                `;
-                                featuresList.appendChild(minPriceItem);
-
-                                const maxPriceItem = document.createElement('div');
-                                maxPriceItem.className = 'input-group mb-2 feature-item';
-                                maxPriceItem.innerHTML = `
-                                    <input type="number" name="features[max_price][]" class="form-control" placeholder="Max Price">
-                                `;
-                                featuresList.appendChild(maxPriceItem);
-
-                                const brandsItem = document.createElement('div');
-                                brandsItem.className = 'input-group mb-2 feature-item';
-                                brandsItem.innerHTML = `
+                                    <div class="input-group mb-2">
+                                        <input type="text" name="features[${index}][name]" class="form-control" placeholder="Feature">
+                                        <button type="button" class="btn btn-outline-danger remove-feature" tabindex="-1">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                    <div class="input-group mb-2">
+                                        <input type="number" name="features[${index}][min_price]" class="form-control" placeholder="Min Price">
+                                    </div>
+                                    <div class="input-group mb-2">
+                                        <input type="number" name="features[${index}][max_price]" class="form-control" placeholder="Max Price">
+                                    </div>
                                     <div class="form-check">
-                                        <input type="checkbox" name="features[brands][]" class="form-check-input">
-                                        <label class="form-check-label">Brands</label>
+                                        <input type="checkbox" name="features[${index}][mandatory]" class="form-check-input">
+                                        <label class="form-check-label">Mandatory</label>
                                     </div>
                                 `;
-                                featuresList.appendChild(brandsItem);
+                                featuresList.appendChild(featureItem);
                             });
 
                             featuresList.addEventListener('click', function(e) {
                                 if (e.target.closest('.remove-feature')) {
                                     const item = e.target.closest('.feature-item');
-                                    if (featuresList.children.length > 1) {
-                                        item.remove();
-                                    } else {
-                                        item.querySelector('input').value = '';
-                                    }
+                                    item.remove();
                                 }
                             });
                         });
                     </script>
                 @endpush
+
                 <div class="d-flex justify-content-end">
                     <button class="btn btn-outline-primary">Add Service</button>
                 </div>
@@ -267,25 +253,25 @@
                                                         }
                                                     }
                                                 @endphp
-                                                <div class="col-md-6">
+                                                <div class="col-12 col-md-6">
                                                     <label class="form-label small">Features</label>
                                                     <div id="features-list-2">
                                                         @foreach ($features as $key => $feature)
-                                                            <div class="input-group mb-2 feature-item">
-                                                                <input type="text" name="features[name][]" class="form-control" placeholder="Feature">
-                                                                <button type="button" class="btn btn-outline-danger remove-feature" tabindex="-1" value="{{ $feature['name'][$key] }}">
-                                                                    <i class="fas fa-times"></i>
-                                                                </button>
-                                                            </div>
-                                                            <div class="input-group mb-2 feature-item">
-                                                                <input type="number" name="features[min_price][]" class="form-control" placeholder="Min Price" value="{{ $feature['min_price'][$key] }}">
-                                                            </div>
-                                                            <div class="input-group mb-2 feature-item">
-                                                                <input type="number" name="features[max_price][]" class="form-control" placeholder="Max Price" value="{{ $feature['max_price'][$key] }}">
-                                                            </div>
-                                                            <div class="input-group mb-2 feature-item">
+                                                            <div class="feature-item border p-2 mb-2">
+                                                                <div class="input-group mb-2">
+                                                                    <input type="text" name="features[{{ $key }}][name]" class="form-control" placeholder="Feature" value="{{ $feature['name'] }}">
+                                                                    <button type="button" class="btn btn-outline-danger remove-feature" tabindex="-1">
+                                                                        <i class="fas fa-times"></i>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="input-group mb-2">
+                                                                    <input type="number" name="features[{{ $key }}][min_price]" class="form-control" placeholder="Min Price" value="{{ $feature['min_price'] }}">
+                                                                </div>
+                                                                <div class="input-group mb-2">
+                                                                    <input type="number" name="features[{{ $key }}][max_price]" class="form-control" placeholder="Max Price" value="{{ $feature['max_price'] }}">
+                                                                </div>
                                                                 <div class="form-check">
-                                                                    <input type="checkbox" name="features[mandatory][]" class="form-check-input" value="{{ $feature['mandatory'][$key] }}">
+                                                                    <input type="checkbox" name="features[{{ $key }}][mandatory]" class="form-check-input" {{ $feature['mandatory'] ? 'checked' : '' }}>
                                                                     <label class="form-check-label">Mandatory</label>
                                                                 </div>
                                                             </div>
@@ -295,61 +281,6 @@
                                                         <i class="fas fa-plus"></i> Add Feature
                                                     </button>
                                                     <small class="text-muted d-block mt-1">Add as many features as you want for this service.</small>
-                                                    @push('scripts')
-                                                        <script>
-                                                            document.addEventListener('DOMContentLoaded', function() {
-                                                                const featuresList = document.getElementById('features-list-2');
-                                                                const addFeatureBtn = document.getElementById('add-feature-2');
-
-                                                                addFeatureBtn.addEventListener('click', function() {
-                                                                    const featureItem = document.createElement('div');
-                                                                    featureItem.className = 'input-group mb-2 feature-item';
-                                                                    featureItem.innerHTML = `
-                                                                        <input type="text" name="features[name][]" class="form-control" placeholder="Feature">
-                                                                        <button type="button" class="btn btn-outline-danger remove-feature" tabindex="-1">
-                                                                            <i class="fas fa-times"></i>
-                                                                        </button>
-                                                                    `;
-                                                                    featuresList.appendChild(featureItem);
-
-                                                                    const minPriceItem = document.createElement('div');
-                                                                    minPriceItem.className = 'input-group mb-2 feature-item';
-                                                                    minPriceItem.innerHTML = `
-                                                                        <input type="number" name="features[min_price][]" class="form-control" placeholder="Min Price">
-                                                                    `;
-                                                                    featuresList.appendChild(minPriceItem);
-
-                                                                    const maxPriceItem = document.createElement('div');
-                                                                    maxPriceItem.className = 'input-group mb-2 feature-item';
-                                                                    maxPriceItem.innerHTML = `
-                                                                        <input type="number" name="features[max_price][]" class="form-control" placeholder="Max Price">
-                                                                    `;
-                                                                    featuresList.appendChild(maxPriceItem);
-
-                                                                    const brandsItem = document.createElement('div');
-                                                                    brandsItem.className = 'input-group mb-2 feature-item';
-                                                                    brandsItem.innerHTML = `
-                                                                        <div class="form-check">
-                                                                            <input type="checkbox" name="features[brands][]" class="form-check-input" id="brands-checkbox-{{ $loop->index }}" required>
-                                                                            <label class="form-check-label" for="brands-checkbox-{{ $loop->index }}">Brands</label>
-                                                                        </div>
-                                                                    `;
-                                                                    featuresList.appendChild(brandsItem);
-                                                                });
-
-                                                                featuresList.addEventListener('click', function(e) {
-                                                                    if (e.target.closest('.remove-feature')) {
-                                                                        const item = e.target.closest('.feature-item');
-                                                                        if (featuresList.children.length > 1) {
-                                                                            item.remove();
-                                                                        } else {
-                                                                            item.querySelector('input').value = '';
-                                                                        }
-                                                                    }
-                                                                });
-                                                            });
-                                                        </script>
-                                                    @endpush
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="form-label">Occasions</label>
@@ -398,6 +329,46 @@
                                                     </div>
                                                     <small class="text-muted d-block mt-1">Pilih occasion untuk service ini.</small>
                                                 </div>
+                                                @push('scripts')
+                                                    <script>
+                                                        document.addEventListener('DOMContentLoaded', function() {
+                                                            const featuresList = document.getElementById('features-list-2');
+                                                            const addFeatureBtn = document.getElementById('add-feature-2');
+
+                                                            addFeatureBtn.addEventListener('click', function() {
+                                                                const index = featuresList.children.length;
+                                                                const featureItem = document.createElement('div');
+                                                                featureItem.className = 'feature-item border p-2 mb-2';
+                                                                featureItem.innerHTML = `
+                                                                    <div class="input-group mb-2">
+                                                                        <input type="text" name="features[${index}][name]" class="form-control" placeholder="Feature">
+                                                                        <button type="button" class="btn btn-outline-danger remove-feature" tabindex="-1">
+                                                                            <i class="fas fa-times"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="input-group mb-2">
+                                                                        <input type="number" name="features[${index}][min_price]" class="form-control" placeholder="Min Price">
+                                                                    </div>
+                                                                    <div class="input-group mb-2">
+                                                                        <input type="number" name="features[${index}][max_price]" class="form-control" placeholder="Max Price">
+                                                                    </div>
+                                                                    <div class="form-check">
+                                                                        <input type="checkbox" name="features[${index}][mandatory]" class="form-check-input">
+                                                                        <label class="form-check-label">Mandatory</label>
+                                                                    </div>
+                                                                `;
+                                                                featuresList.appendChild(featureItem);
+                                                            });
+
+                                                            featuresList.addEventListener('click', function(e) {
+                                                                if (e.target.closest('.remove-feature')) {
+                                                                    const item = e.target.closest('.feature-item');
+                                                                    item.remove();
+                                                                }
+                                                            });
+                                                        });
+                                                    </script>
+                                                @endpush
                                                 <div class="col-12 d-flex justify-content-end">
                                                     <button class="btn btn-sm btn-primary">Update Service</button>
                                                 </div>
@@ -423,14 +394,6 @@
                                                                         style="height:120px;">No image</div>
                                                                 @endif
                                                                 <div class="card-body p-2 small">
-                                                                    <form method="POST" action="{{ url($base . '/' . $mua->id . '/portfolios/' . $p->id) }}">
-                                                                        @csrf
-                                                                        @method('PUT')
-                                                                        <input type="text" name="description" class="form-control form-control-sm mb-2" value="{{ $p->description }}" placeholder="Description">
-                                                                        <div class="d-flex gap-1">
-                                                                            <button class="btn btn-sm btn-primary flex-fill">Update</button>
-                                                                        </div>
-                                                                    </form>
                                                                     <form
                                                                         action="{{ url($base . '/' . $mua->id . '/portfolios/' . $p->id) }}"
                                                                         method="POST"
