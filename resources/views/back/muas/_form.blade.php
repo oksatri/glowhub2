@@ -51,7 +51,7 @@
                 @if ($errors->has('operational_hours'))
                     <div class="invalid-feedback">{{ $errors->first('operational_hours') }}</div>
                 @endif
-                <label class="form-label">Link Map</label>
+                <label class="form-label mt-3">Link Map</label>
                 <input type="text" name="link_map"
                     class="form-control {{ $errors->has('link_map') ? 'is-invalid' : '' }}"
                     value="{{ old('link_map', $mua->link_map ?? '') }}" placeholder="e.g. Google Maps link">
