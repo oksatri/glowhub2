@@ -42,12 +42,6 @@
             </div>
 
             <div class="col-md-6 mb-3">
-                
-            </div>
-        </div>
-
-        <div class="row gx-2">
-            <div class="col-md-6 mb-3">
                 <label class="form-label">Operational Hours</label>
                 <input type="text" name="operational_hours"
                     class="form-control {{ $errors->has('operational_hours') ? 'is-invalid' : '' }}"
@@ -56,10 +50,6 @@
                 @if ($errors->has('operational_hours'))
                     <div class="invalid-feedback">{{ $errors->first('operational_hours') }}</div>
                 @endif
-            </div>
-
-            <div class="col-md-6 mb-3">
-                
             </div>
         </div>
 
