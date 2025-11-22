@@ -22,22 +22,22 @@
         <div class="row gx-2">
             <div class="col-md-6 mb-3">
                 <label class="form-label">City / Regency</label>
-                <select name="city" id="citySelect"
-                    class="form-select {{ $errors->has('city') ? 'is-invalid' : '' }}">
-                    <option value="">Select City / Regency</option>
+                <select name="cities[]" id="citySelect" multiple
+                    class="form-select {{ $errors->has('cities') ? 'is-invalid' : '' }}" size="4">
+                    <option value="">Select City / Regency (can select multiple)</option>
                     @if (is_array($cities) && count($cities) > 0)
                         @foreach ($cities as $provinceId => $citiesByProvince)
                             @foreach ($citiesByProvince as $c)
                                 <option value="{{ $c['id'] }}"
-                                    {{ old('city', $mua->city ?? '') == $c['id'] ? 'selected' : '' }}>
+                                    {{ (is_array(old('cities', $mua->cities ?? [])) && in_array($c['id'], old('cities', $mua->cities ?? []))) ? 'selected' : '' }}>
                                     {{ $c['name'] }}
                                 </option>
                             @endforeach
                         @endforeach
                     @endif
                 </select>
-                @if ($errors->has('city'))
-                    <div class="invalid-feedback d-block">{{ $errors->first('city') }}</div>
+                @if ($errors->has('cities'))
+                    <div class="invalid-feedback d-block">{{ $errors->first('cities') }}</div>
                 @endif
             </div>
 

@@ -41,4 +41,14 @@ class Mua extends Model
     {
         return $this->belongsTo(RegRegency::class, 'city');
     }
+
+    public function getCitiesAttribute()
+    {
+        return $this->city ? explode(',', $this->city) : [];
+    }
+
+    public function setCitiesAttribute($value)
+    {
+        $this->attributes['city'] = is_array($value) ? implode(',', $value) : $value;
+    }
 }

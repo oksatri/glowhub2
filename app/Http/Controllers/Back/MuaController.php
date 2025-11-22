@@ -120,8 +120,8 @@ class MuaController extends Controller
             'user_id' => 'nullable|exists:users,id',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            // only city is used now
-            'city' => ['nullable', 'string', 'exists:reg_regencies,id'],
+            'cities' => 'nullable|array',
+            'cities.*' => 'required|string|exists:reg_regencies,id',
             'max_distance' => 'nullable|integer|min:0',
             'operational_hours' => 'nullable|string|max:255',
             'additional_charge' => 'nullable|numeric|min:0',
@@ -169,6 +169,12 @@ class MuaController extends Controller
             $data['user_id'] = Auth::id();
         }
 
+        // Handle multiple cities - convert array to comma-separated string
+        if (isset($data['cities']) && is_array($data['cities'])) {
+            $data['city'] = implode(',', $data['cities']);
+            unset($data['cities']);
+        }
+
         $mua = Mua::create(
             collect($data)->only([
                 'user_id',
@@ -190,6 +196,11 @@ class MuaController extends Controller
     public function edit($id)
     {
         $mua = Mua::with('services', 'portfolios')->findOrFail($id);
+        // Convert city string to array for the form
+        if ($mua->city && !is_array($mua->cities)) {
+            $mua->cities = explode(',', $mua->city);
+        }
+        
         $locationData = $this->getLocationData();
         $provinces = $locationData['provinces'];
         $cities = $locationData['cities'];
@@ -216,7 +227,8 @@ class MuaController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'city' => ['nullable', 'string', 'exists:reg_regencies,id'],
+            'cities' => 'nullable|array',
+            'cities.*' => 'required|string|exists:reg_regencies,id',
             'max_distance' => 'nullable|integer|min:0',
             'operational_hours' => 'nullable|string|max:255',
             'additional_charge' => 'nullable|numeric|min:0',
@@ -252,6 +264,12 @@ class MuaController extends Controller
         //     ]);
         //     $data['user_id'] = $user->id;
         // }
+
+        // Handle multiple cities - convert array to comma-separated string
+        if (isset($data['cities']) && is_array($data['cities'])) {
+            $data['city'] = implode(',', $data['cities']);
+            unset($data['cities']);
+        }
 
         $mua->update(
             collect($data)->only([
