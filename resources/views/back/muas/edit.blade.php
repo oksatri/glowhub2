@@ -49,13 +49,25 @@
                         <textarea name="deskripsi" class="form-control" placeholder="Description" rows="3"></textarea>
                     </div>
                     <div class="col-12 col-md-6">
-                        <label class="form-label small">Brands Used</label>
+                        <label class="form-label small">Features</label>
                         <div id="features-list">
                             <div class="input-group mb-2 feature-item">
-                                <input type="text" name="features[]" class="form-control" placeholder="Feature">
+                                <input type="text" name="features[name][]" class="form-control" placeholder="Feature">
                                 <button type="button" class="btn btn-outline-danger remove-feature" tabindex="-1">
                                     <i class="fas fa-times"></i>
                                 </button>
+                            </div>
+                            <div class="input-group mb-2 feature-item">
+                                <input type="number" name="features[min_price][]" class="form-control" placeholder="Min Price">
+                            </div>
+                            <div class="input-group mb-2 feature-item">
+                                <input type="number" name="features[max_price][]" class="form-control" placeholder="Max Price">
+                            </div>
+                            <div class="input-group mb-2 feature-item">
+                                <div class="form-check">
+                                    <input type="checkbox" name="features[brands][]" class="form-check-input" id="brands-checkbox-{{ $loop->index }}" required>
+                                    <label class="form-check-label" for="brands-checkbox-{{ $loop->index }}">Brands</label>
+                                </div>
                             </div>
                         </div>
                         <button type="button" class="btn btn-outline-secondary btn-sm" id="add-feature">
@@ -119,12 +131,36 @@
                                 const featureItem = document.createElement('div');
                                 featureItem.className = 'input-group mb-2 feature-item';
                                 featureItem.innerHTML = `
-                                <input type="text" name="features[]" class="form-control" placeholder="Feature">
-                                <button type="button" class="btn btn-outline-danger remove-feature" tabindex="-1">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            `;
+                                    <input type="text" name="features[name][]" class="form-control" placeholder="Feature">
+                                    <button type="button" class="btn btn-outline-danger remove-feature" tabindex="-1">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                `;
                                 featuresList.appendChild(featureItem);
+
+                                const minPriceItem = document.createElement('div');
+                                minPriceItem.className = 'input-group mb-2 feature-item';
+                                minPriceItem.innerHTML = `
+                                    <input type="number" name="features[min_price][]" class="form-control" placeholder="Min Price">
+                                `;
+                                featuresList.appendChild(minPriceItem);
+
+                                const maxPriceItem = document.createElement('div');
+                                maxPriceItem.className = 'input-group mb-2 feature-item';
+                                maxPriceItem.innerHTML = `
+                                    <input type="number" name="features[max_price][]" class="form-control" placeholder="Max Price">
+                                `;
+                                featuresList.appendChild(maxPriceItem);
+
+                                const brandsItem = document.createElement('div');
+                                brandsItem.className = 'input-group mb-2 feature-item';
+                                brandsItem.innerHTML = `
+                                    <div class="form-check">
+                                        <input type="checkbox" name="features[brands][]" class="form-check-input" id="brands-checkbox-{{ $loop->index }}" required>
+                                        <label class="form-check-label" for="brands-checkbox-{{ $loop->index }}">Brands</label>
+                                    </div>
+                                `;
+                                featuresList.appendChild(brandsItem);
                             });
 
                             featuresList.addEventListener('click', function(e) {
@@ -225,21 +261,95 @@
                                                             $features = $s->features;
                                                         } else {
                                                             $features = json_decode($s->features, true) ?? [];
+                                                            if (!is_array($features)) {
+                                                                $features = [];
+                                                            }
                                                         }
                                                     }
                                                 @endphp
                                                 <div class="col-md-6">
-                                                    <label class="form-label small">Brands Used</label>
-                                                    <div class="mb-2">
-                                                        @php
-                                                            $featureValues = [];
-                                                            foreach ($features as $f) {
-                                                                $featureValues[] = is_array($f) && isset($f['name']) ? $f['name'] : (string) $f;
-                                                            }
-                                                        @endphp
-                                                        <textarea name="features" class="form-control" rows="3" placeholder="One feature per line">{{ implode("\n", $featureValues) }}</textarea>
-                                                        <small class="text-muted">One brand/feature per line.</small>
+                                                    <label class="form-label small">Features</label>
+                                                    <div id="features-list-2">
+                                                        @foreach ($features as $feature)
+                                                            <div class="input-group mb-2 feature-item">
+                                                                <input type="text" name="features[name][]" class="form-control" placeholder="Feature">
+                                                                <button type="button" class="btn btn-outline-danger remove-feature" tabindex="-1">
+                                                                    <i class="fas fa-times"></i>
+                                                                </button>
+                                                            </div>
+                                                            <div class="input-group mb-2 feature-item">
+                                                                <input type="number" name="features[min_price][]" class="form-control" placeholder="Min Price">
+                                                            </div>
+                                                            <div class="input-group mb-2 feature-item">
+                                                                <input type="number" name="features[max_price][]" class="form-control" placeholder="Max Price">
+                                                            </div>
+                                                            <div class="input-group mb-2 feature-item">
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" name="features[brands][]" class="form-check-input" id="brands-checkbox-{{ $loop->index }}" required>
+                                                                    <label class="form-check-label" for="brands-checkbox-{{ $loop->index }}">Brands</label>
+                                                                </div>
+                                                            </div>
+                                                        @endforeach
                                                     </div>
+                                                    <button type="button" class="btn btn-outline-secondary btn-sm" id="add-feature-2">
+                                                        <i class="fas fa-plus"></i> Add Feature
+                                                    </button>
+                                                    <small class="text-muted d-block mt-1">Add as many features as you want for this service.</small>
+                                                    @push('scripts')
+                                                        <script>
+                                                            document.addEventListener('DOMContentLoaded', function() {
+                                                                const featuresList = document.getElementById('features-list-2');
+                                                                const addFeatureBtn = document.getElementById('add-feature-2');
+
+                                                                addFeatureBtn.addEventListener('click', function() {
+                                                                    const featureItem = document.createElement('div');
+                                                                    featureItem.className = 'input-group mb-2 feature-item';
+                                                                    featureItem.innerHTML = `
+                                                                        <input type="text" name="features[name][]" class="form-control" placeholder="Feature">
+                                                                        <button type="button" class="btn btn-outline-danger remove-feature" tabindex="-1">
+                                                                            <i class="fas fa-times"></i>
+                                                                        </button>
+                                                                    `;
+                                                                    featuresList.appendChild(featureItem);
+
+                                                                    const minPriceItem = document.createElement('div');
+                                                                    minPriceItem.className = 'input-group mb-2 feature-item';
+                                                                    minPriceItem.innerHTML = `
+                                                                        <input type="number" name="features[min_price][]" class="form-control" placeholder="Min Price">
+                                                                    `;
+                                                                    featuresList.appendChild(minPriceItem);
+
+                                                                    const maxPriceItem = document.createElement('div');
+                                                                    maxPriceItem.className = 'input-group mb-2 feature-item';
+                                                                    maxPriceItem.innerHTML = `
+                                                                        <input type="number" name="features[max_price][]" class="form-control" placeholder="Max Price">
+                                                                    `;
+                                                                    featuresList.appendChild(maxPriceItem);
+
+                                                                    const brandsItem = document.createElement('div');
+                                                                    brandsItem.className = 'input-group mb-2 feature-item';
+                                                                    brandsItem.innerHTML = `
+                                                                        <div class="form-check">
+                                                                            <input type="checkbox" name="features[brands][]" class="form-check-input" id="brands-checkbox-{{ $loop->index }}" required>
+                                                                            <label class="form-check-label" for="brands-checkbox-{{ $loop->index }}">Brands</label>
+                                                                        </div>
+                                                                    `;
+                                                                    featuresList.appendChild(brandsItem);
+                                                                });
+
+                                                                featuresList.addEventListener('click', function(e) {
+                                                                    if (e.target.closest('.remove-feature')) {
+                                                                        const item = e.target.closest('.feature-item');
+                                                                        if (featuresList.children.length > 1) {
+                                                                            item.remove();
+                                                                        } else {
+                                                                            item.querySelector('input').value = '';
+                                                                        }
+                                                                    }
+                                                                });
+                                                            });
+                                                        </script>
+                                                    @endpush
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="form-label">Occasions</label>
