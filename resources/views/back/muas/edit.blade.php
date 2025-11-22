@@ -213,7 +213,7 @@
                                                 @endphp
                                                 <div class="col-12 col-md-6">
                                                     <label class="form-label small">Features</label>
-                                                    <div id="features-list-2">
+                                                    <div id="features-list-{{ $s->id }}">
                                                         @foreach ($features as $key => $feature)
                                                             <div class="feature-item border p-2 mb-2">
                                                                 <div class="input-group mb-2">
@@ -234,7 +234,7 @@
                                                             </div>
                                                         @endforeach
                                                     </div>
-                                                    <button type="button" class="btn btn-outline-secondary btn-sm" id="add-feature-2">
+                                                    <button type="button" class="btn btn-outline-secondary btn-sm" id="add-feature-{{ $s->id }}">
                                                         <i class="fas fa-plus"></i> Add Feature
                                                     </button>
                                                     <small class="text-muted d-block mt-1">Add as many features as you want for this service.</small>
@@ -286,6 +286,43 @@
                                                     </div>
                                                     <small class="text-muted d-block mt-1">Pilih occasion untuk service ini.</small>
                                                 </div>
+                                                @push('scripts')
+                                                <script>
+                                                    const featuresList2 = document.getElementById('features-list-{{ $s->id }}');
+                                                    const addFeatureBtn2 = document.getElementById('add-feature-{{ $s->id }}');
+
+                                                    addFeatureBtn2.addEventListener('click', function() {
+                                                        const index = featuresList2.children.length;
+                                                        const featureItem = document.createElement('div');
+                                                        featureItem.className = 'feature-item border p-2 mb-2';
+                                                        featureItem.innerHTML = `
+                                                            <div class="input-group mb-2">
+                                                                <input type="text" name="features[${index}][name]" class="form-control" placeholder="Feature">
+                                                                <button type="button" class="btn btn-outline-danger remove-feature" tabindex="-1">
+                                                                    <i class="fas fa-times"></i>
+                                                                </button>
+                                                            </div>
+                                                            <div class="input-group mb-2">
+                                                                <input type="number" name="features[${index}][min_price]" class="form-control" placeholder="Min Price">
+                                                                <span>-</span>
+                                                                <input type="number" name="features[${index}][max_price]" class="form-control" placeholder="Max Price">
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input type="checkbox" name="features[${index}][mandatory]" class="form-check-input">
+                                                                <label class="form-check-label">Mandatory</label>
+                                                            </div>
+                                                        `;
+                                                        featuresList2.appendChild(featureItem);
+                                                    });
+
+                                                    featuresList2.addEventListener('click', function(e) {
+                                                        if (e.target.closest('.remove-feature')) {
+                                                            const item = e.target.closest('.feature-item');
+                                                            item.remove();
+                                                        }
+                                                    });
+                                                </script>
+                                                @endpush
                                                 <div class="col-12 d-flex justify-content-end">
                                                     <button class="btn btn-sm btn-primary">Update Service</button>
                                                 </div>
@@ -531,40 +568,6 @@
             });
 
             featuresList.addEventListener('click', function(e) {
-                if (e.target.closest('.remove-feature')) {
-                    const item = e.target.closest('.feature-item');
-                    item.remove();
-                }
-            });
-
-            const featuresList2 = document.getElementById('features-list-2');
-            const addFeatureBtn2 = document.getElementById('add-feature-2');
-
-            addFeatureBtn2.addEventListener('click', function() {
-                const index = featuresList2.children.length;
-                const featureItem = document.createElement('div');
-                featureItem.className = 'feature-item border p-2 mb-2';
-                featureItem.innerHTML = `
-                    <div class="input-group mb-2">
-                        <input type="text" name="features[${index}][name]" class="form-control" placeholder="Feature">
-                        <button type="button" class="btn btn-outline-danger remove-feature" tabindex="-1">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                    <div class="input-group mb-2">
-                        <input type="number" name="features[${index}][min_price]" class="form-control" placeholder="Min Price">
-                        <span>-</span>
-                        <input type="number" name="features[${index}][max_price]" class="form-control" placeholder="Max Price">
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" name="features[${index}][mandatory]" class="form-check-input">
-                        <label class="form-check-label">Mandatory</label>
-                    </div>
-                `;
-                featuresList2.appendChild(featureItem);
-            });
-
-            featuresList2.addEventListener('click', function(e) {
                 if (e.target.closest('.remove-feature')) {
                     const item = e.target.closest('.feature-item');
                     item.remove();
