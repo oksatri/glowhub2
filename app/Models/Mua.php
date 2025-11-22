@@ -24,7 +24,7 @@ class Mua extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->hasOne(\App\Models\User::class);
     }
 
     public function services()
