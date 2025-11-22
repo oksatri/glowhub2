@@ -76,23 +76,25 @@
         </div>
     </div>
     <div class="col-sm-4">
-        <h4 class="text-success mb-3">Home Service</h4>
-        <label class="form-label">Max Distance (km)</label>
-        <input type="number" name="max_distance"
-            class="mb-3 form-control {{ $errors->has('max_distance') ? 'is-invalid' : '' }}"
-            value="{{ old('max_distance', $mua->max_distance ?? '') }}" min="0"
-            placeholder="e.g. 20">
-        @if ($errors->has('max_distance'))
-            <div class="invalid-feedback">{{ $errors->first('max_distance') }}</div>
-        @endif
-        <label class="form-label">Additional Charge</label>
-        <input type="number" step="0" name="additional_charge"
-            class="mb-3 form-control {{ $errors->has('additional_charge') ? 'is-invalid' : '' }}"
-            value="{{ old('additional_charge', $mua->additional_charge ?? '') }}" min="0"
-            placeholder="e.g. 50000">
-        @if ($errors->has('additional_charge'))
-            <div class="invalid-feedback">{{ $errors->first('additional_charge') }}</div>
-        @endif
+        <div class="card p-3">
+            <h4 class="text-primary mb-3">Home Service</h4>
+            <label class="form-label">Max Distance (km)</label>
+            <input type="number" name="max_distance"
+                class="mb-3 form-control {{ $errors->has('max_distance') ? 'is-invalid' : '' }}"
+                value="{{ old('max_distance', $mua->max_distance ?? '') }}" min="0"
+                placeholder="e.g. 20">
+            @if ($errors->has('max_distance'))
+                <div class="invalid-feedback">{{ $errors->first('max_distance') }}</div>
+            @endif
+            <label class="form-label">Additional Charge</label>
+            <input type="number" step="0" name="additional_charge"
+                class="mb-3 form-control {{ $errors->has('additional_charge') ? 'is-invalid' : '' }}"
+                value="{{ old('additional_charge', $mua->additional_charge ?? '') }}" min="0"
+                placeholder="e.g. 50000">
+            @if ($errors->has('additional_charge'))
+                <div class="invalid-feedback">{{ $errors->first('additional_charge') }}</div>
+            @endif
+        </div>
     </div>
 </div>
 
