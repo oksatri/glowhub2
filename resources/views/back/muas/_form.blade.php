@@ -23,7 +23,7 @@
             <div class="col-md-6 mb-3">
                 <label class="form-label">City / Regency</label>
                 <select name="cities[]" id="citySelect" multiple
-                    class="form-select {{ $errors->has('cities') ? 'is-invalid' : '' }}" size="4">
+                    class="form-select {{ $errors->has('cities') ? 'is-invalid' : '' }}" style="height: 150px !important;">
                     <option value="">Select City / Regency (can select multiple)</option>
                     @if (is_array($cities) && count($cities) > 0)
                         @foreach ($cities as $provinceId => $citiesByProvince)
@@ -50,11 +50,6 @@
                 @if ($errors->has('operational_hours'))
                     <div class="invalid-feedback">{{ $errors->first('operational_hours') }}</div>
                 @endif
-            </div>
-        </div>
-
-        <div class="row gx-2">
-            <div class="col-md-12 mb-3">
                 <label class="form-label">Link Map</label>
                 <input type="text" name="link_map"
                     class="form-control {{ $errors->has('link_map') ? 'is-invalid' : '' }}"
@@ -62,6 +57,7 @@
                 @if ($errors->has('link_map'))
                     <div class="invalid-feedback">{{ $errors->first('link_map') }}</div>
                 @endif
+            </div>
             </div>
         </div>
     </div>
