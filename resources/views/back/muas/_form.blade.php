@@ -24,7 +24,7 @@
                 <label class="form-label">City / Regency</label>
                 <select name="cities[]" id="citySelect" multiple
                     class="form-select {{ $errors->has('cities') ? 'is-invalid' : '' }}" style="height: 150px !important;">
-                    <option value="">Select City / Regency (can select multiple)</option>
+                    {{-- <option value="">Select City / Regency (can select multiple)</option> --}}
                     @if (is_array($cities) && count($cities) > 0)
                         @foreach ($cities as $provinceId => $citiesByProvince)
                             @foreach ($citiesByProvince as $c)
