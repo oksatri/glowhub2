@@ -64,8 +64,8 @@
                                     <input type="number" name="features[0][max_price]" class="form-control" placeholder="Max Price">
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" name="features[0][mandatory]" class="form-check-input">
-                                    <label class="form-check-label">Mandatory</label>
+                                    <input type="checkbox" name="features[0][is_image]" class="form-check-input">
+                                    <label class="form-check-label">Perlu lampiran foto?</label>
                                 </div>
                             </div>
                         </div>
@@ -200,16 +200,16 @@
                                                 </div>
                                                 @php
                                                     $features = [];
-                                                    // if (!empty($s->features)) {
-                                                    //     if (is_array($s->features)) {
-                                                    //         $features = $s->features;
-                                                    //     } else {
-                                                    //         $features = json_decode($s->features, true) ?? [];
-                                                    //         if (!is_array($features)) {
-                                                    //             $features = [];
-                                                    //         }
-                                                    //     }
-                                                    // }
+                                                    if (!empty($s->features)) {
+                                                        if (is_array($s->features)) {
+                                                            $features = $s->features;
+                                                        } else {
+                                                            $features = json_decode($s->features, true) ?? [];
+                                                            if (!is_array($features)) {
+                                                                $features = [];
+                                                            }
+                                                        }
+                                                    }
                                                 @endphp
                                                 <div class="col-12 col-md-6">
                                                     <label class="form-label small">Features</label>
@@ -228,8 +228,8 @@
                                                                     <input type="number" name="features[{{ $key }}][max_price]" class="form-control" placeholder="Max Price" value="{{ $feature['max_price'] }}">
                                                                 </div>
                                                                 <div class="form-check">
-                                                                    <input type="checkbox" name="features[{{ $key }}][mandatory]" class="form-check-input" {{ $feature['mandatory'] ? 'checked' : '' }}>
-                                                                    <label class="form-check-label">Mandatory</label>
+                                                                    <input type="checkbox" name="features[{{ $key }}][is_image]" class="form-check-input" {{ $feature['mandatory'] ? 'checked' : '' }}>
+                                                                    <label class="form-check-label">Perlu lampiran foto?</label>
                                                                 </div>
                                                             </div>
                                                         @endforeach
@@ -308,8 +308,8 @@
                                                                 <input type="number" name="features[${index}][max_price]" class="form-control" placeholder="Max Price">
                                                             </div>
                                                             <div class="form-check">
-                                                                <input type="checkbox" name="features[${index}][mandatory]" class="form-check-input">
-                                                                <label class="form-check-label">Mandatory</label>
+                                                                <input type="checkbox" name="features[${index}][is_image]" class="form-check-input">
+                                                                <label class="form-check-label">Perlu lampiran foto?</label>
                                                             </div>
                                                         `;
                                                         featuresList2.appendChild(featureItem);
@@ -560,8 +560,8 @@
                         <input type="number" name="features[${index}][max_price]" class="form-control" placeholder="Max Price">
                     </div>
                     <div class="form-check">
-                        <input type="checkbox" name="features[${index}][mandatory]" class="form-check-input">
-                        <label class="form-check-label">Mandatory</label>
+                        <input type="checkbox" name="features[${index}][is_image]" class="form-check-input">
+                        <label class="form-check-label">Perlu lampiran foto?</label>
                     </div>
                 `;
                 featuresList.appendChild(featureItem);
