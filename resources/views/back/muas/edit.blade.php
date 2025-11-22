@@ -242,16 +242,16 @@
                                                 </div>
                                                 @php
                                                     $features = [];
-                                                    if (!empty($s->features)) {
-                                                        if (is_array($s->features)) {
-                                                            $features = $s->features;
-                                                        } else {
-                                                            $features = json_decode($s->features, true) ?? [];
-                                                            if (!is_array($features)) {
-                                                                $features = [];
-                                                            }
-                                                        }
-                                                    }
+                                                    // if (!empty($s->features)) {
+                                                    //     if (is_array($s->features)) {
+                                                    //         $features = $s->features;
+                                                    //     } else {
+                                                    //         $features = json_decode($s->features, true) ?? [];
+                                                    //         if (!is_array($features)) {
+                                                    //             $features = [];
+                                                    //         }
+                                                    //     }
+                                                    // }
                                                 @endphp
                                                 <div class="col-12 col-md-6">
                                                     <label class="form-label small">Features</label>
