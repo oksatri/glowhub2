@@ -45,7 +45,7 @@ class Mua extends Model
 
     public function getServiceCitiesAttribute()
     {
-        return $this->service_cities ? explode(',', $this->service_cities) : [];
+        return $this->attributes['service_cities'] ? explode(',', $this->attributes['service_cities']) : [];
     }
 
     public function setServiceCitiesAttribute($value)
