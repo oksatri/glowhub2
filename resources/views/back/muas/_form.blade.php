@@ -36,6 +36,7 @@
                         @endforeach
                     @endif
                 </select>
+                <small class="text-muted">Hold Ctrl/Cmd and click to select multiple cities</small>
                 @if ($errors->has('cities'))
                     <div class="invalid-feedback d-block">{{ $errors->first('cities') }}</div>
                 @endif
