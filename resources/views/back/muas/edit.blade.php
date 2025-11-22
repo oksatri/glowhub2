@@ -60,8 +60,7 @@
                                 </div>
                                 <div class="input-group mb-2">
                                     <input type="number" name="features[0][min_price]" class="form-control" placeholder="Min Price">
-                                </div>
-                                <div class="input-group mb-2">
+                                    <span>-</span>
                                     <input type="number" name="features[0][max_price]" class="form-control" placeholder="Max Price">
                                 </div>
                                 <div class="form-check">
@@ -140,8 +139,7 @@
                                     </div>
                                     <div class="input-group mb-2">
                                         <input type="number" name="features[${index}][min_price]" class="form-control" placeholder="Min Price">
-                                    </div>
-                                    <div class="input-group mb-2">
+                                        <span>-</span>
                                         <input type="number" name="features[${index}][max_price]" class="form-control" placeholder="Max Price">
                                     </div>
                                     <div class="form-check">
@@ -266,8 +264,7 @@
                                                                 </div>
                                                                 <div class="input-group mb-2">
                                                                     <input type="number" name="features[{{ $key }}][min_price]" class="form-control" placeholder="Min Price" value="{{ $feature['min_price'] }}">
-                                                                </div>
-                                                                <div class="input-group mb-2">
+                                                                    <span>-</span>
                                                                     <input type="number" name="features[{{ $key }}][max_price]" class="form-control" placeholder="Max Price" value="{{ $feature['max_price'] }}">
                                                                 </div>
                                                                 <div class="form-check">
@@ -348,8 +345,7 @@
                                                                     </div>
                                                                     <div class="input-group mb-2">
                                                                         <input type="number" name="features[${index}][min_price]" class="form-control" placeholder="Min Price">
-                                                                    </div>
-                                                                    <div class="input-group mb-2">
+                                                                        <span>-</span>
                                                                         <input type="number" name="features[${index}][max_price]" class="form-control" placeholder="Max Price">
                                                                     </div>
                                                                     <div class="form-check">
