@@ -287,7 +287,7 @@ class MuaController extends Controller
         foreach ($mua->portfolios as $p) {
             if ($p->image) Storage::disk('public')->delete($p->image);
         }
-        if ($user->mua) {
+        if ($mua->user) {
             $mua->user()->delete();
         }
         $mua->delete();
