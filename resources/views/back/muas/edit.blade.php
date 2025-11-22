@@ -65,8 +65,8 @@
                             </div>
                             <div class="input-group mb-2 feature-item">
                                 <div class="form-check">
-                                    <input type="checkbox" name="features[brands][]" class="form-check-input" id="brands-checkbox-{{ $loop->index }}" required>
-                                    <label class="form-check-label" for="brands-checkbox-{{ $loop->index }}">Brands</label>
+                                    <input type="checkbox" name="features[brands][]" class="form-check-input">
+                                    <label class="form-check-label">Brands</label>
                                 </div>
                             </div>
                         </div>
@@ -156,8 +156,8 @@
                                 brandsItem.className = 'input-group mb-2 feature-item';
                                 brandsItem.innerHTML = `
                                     <div class="form-check">
-                                        <input type="checkbox" name="features[brands][]" class="form-check-input" id="brands-checkbox-{{ $loop->index }}" required>
-                                        <label class="form-check-label" for="brands-checkbox-{{ $loop->index }}">Brands</label>
+                                        <input type="checkbox" name="features[brands][]" class="form-check-input">
+                                        <label class="form-check-label">Brands</label>
                                     </div>
                                 `;
                                 featuresList.appendChild(brandsItem);
@@ -273,20 +273,20 @@
                                                         @foreach ($features as $feature)
                                                             <div class="input-group mb-2 feature-item">
                                                                 <input type="text" name="features[name][]" class="form-control" placeholder="Feature">
-                                                                <button type="button" class="btn btn-outline-danger remove-feature" tabindex="-1">
+                                                                <button type="button" class="btn btn-outline-danger remove-feature" tabindex="-1" value="{{ $feature['name'] }}">
                                                                     <i class="fas fa-times"></i>
                                                                 </button>
                                                             </div>
                                                             <div class="input-group mb-2 feature-item">
-                                                                <input type="number" name="features[min_price][]" class="form-control" placeholder="Min Price">
+                                                                <input type="number" name="features[min_price][]" class="form-control" placeholder="Min Price" value="{{ $feature['min_price'] }}">
                                                             </div>
                                                             <div class="input-group mb-2 feature-item">
-                                                                <input type="number" name="features[max_price][]" class="form-control" placeholder="Max Price">
+                                                                <input type="number" name="features[max_price][]" class="form-control" placeholder="Max Price" value="{{ $feature['max_price'] }}">
                                                             </div>
                                                             <div class="input-group mb-2 feature-item">
                                                                 <div class="form-check">
-                                                                    <input type="checkbox" name="features[brands][]" class="form-check-input" id="brands-checkbox-{{ $loop->index }}" required>
-                                                                    <label class="form-check-label" for="brands-checkbox-{{ $loop->index }}">Brands</label>
+                                                                    <input type="checkbox" name="features[mandatory][]" class="form-check-input" value="{{ $feature['mandatory'] }}">
+                                                                    <label class="form-check-label">Mandatory</label>
                                                                 </div>
                                                             </div>
                                                         @endforeach
