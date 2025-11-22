@@ -120,8 +120,9 @@ class MuaController extends Controller
             'user_id' => 'nullable|exists:users,id',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'cities' => 'nullable|array',
-            'cities.*' => 'required|string|exists:reg_regencies,id',
+            'city' => ['nullable', 'string', 'exists:reg_regencies,id'],
+            'service_cities' => 'nullable|array',
+            'service_cities.*' => 'required|string|exists:reg_regencies,id',
             'max_distance' => 'nullable|integer|min:0',
             'operational_hours' => 'nullable|string|max:255',
             'additional_charge' => 'nullable|numeric|min:0',
@@ -169,10 +170,9 @@ class MuaController extends Controller
             $data['user_id'] = Auth::id();
         }
 
-        // Handle multiple cities - convert array to comma-separated string
-        if (isset($data['cities']) && is_array($data['cities'])) {
-            $data['city'] = implode(',', $data['cities']);
-            unset($data['cities']);
+        // Handle multiple service cities - convert array to comma-separated string
+        if (isset($data['service_cities']) && is_array($data['service_cities'])) {
+            $data['service_cities'] = implode(',', $data['service_cities']);
         }
 
         $mua = Mua::create(
@@ -181,6 +181,7 @@ class MuaController extends Controller
                 'name',
                 'description',
                 'city',
+                'service_cities',
                 'max_distance',
                 'operational_hours',
                 'additional_charge',
@@ -196,9 +197,9 @@ class MuaController extends Controller
     public function edit($id)
     {
         $mua = Mua::with('services', 'portfolios')->findOrFail($id);
-        // Convert city string to array for the form
-        if ($mua->city && !is_array($mua->cities)) {
-            $mua->cities = explode(',', $mua->city);
+        // Convert service cities string to array for the form
+        if ($mua->service_cities && !is_array($mua->service_cities)) {
+            $mua->service_cities = explode(',', $mua->service_cities);
         }
         
         $locationData = $this->getLocationData();
@@ -227,8 +228,9 @@ class MuaController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'cities' => 'nullable|array',
-            'cities.*' => 'required|string|exists:reg_regencies,id',
+            'city' => ['nullable', 'string', 'exists:reg_regencies,id'],
+            'service_cities' => 'nullable|array',
+            'service_cities.*' => 'required|string|exists:reg_regencies,id',
             'max_distance' => 'nullable|integer|min:0',
             'operational_hours' => 'nullable|string|max:255',
             'additional_charge' => 'nullable|numeric|min:0',
@@ -265,10 +267,9 @@ class MuaController extends Controller
         //     $data['user_id'] = $user->id;
         // }
 
-        // Handle multiple cities - convert array to comma-separated string
-        if (isset($data['cities']) && is_array($data['cities'])) {
-            $data['city'] = implode(',', $data['cities']);
-            unset($data['cities']);
+        // Handle multiple service cities - convert array to comma-separated string
+        if (isset($data['service_cities']) && is_array($data['service_cities'])) {
+            $data['service_cities'] = implode(',', $data['service_cities']);
         }
 
         $mua->update(
@@ -276,6 +277,7 @@ class MuaController extends Controller
                 'name',
                 'description',
                 'city',
+                'service_cities',
                 'max_distance',
                 'operational_hours',
                 'additional_charge',

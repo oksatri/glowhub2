@@ -21,29 +21,26 @@
 
         <div class="row gx-2">
             <div class="col-md-6 mb-3">
-                <label class="form-label">City / Regency</label>
-                <select name="cities[]" id="citySelect" multiple
-                    class="form-select {{ $errors->has('cities') ? 'is-invalid' : '' }}" style="height: 150px !important;">
-                    {{-- <option value="">Select City / Regency (can select multiple)</option> --}}
+                <label class="form-label">Primary City / Regency</label>
+                <select name="city" id="primaryCitySelect"
+                    class="form-select {{ $errors->has('city') ? 'is-invalid' : '' }}">
+                    <option value="">Select Primary City / Regency</option>
                     @if (is_array($cities) && count($cities) > 0)
                         @foreach ($cities as $provinceId => $citiesByProvince)
                             @foreach ($citiesByProvince as $c)
                                 <option value="{{ $c['id'] }}"
-                                    {{ (is_array(old('cities', $mua->cities ?? [])) && in_array($c['id'], old('cities', $mua->cities ?? []))) ? 'selected' : '' }}>
+                                    {{ old('city', $mua->city ?? '') == $c['id'] ? 'selected' : '' }}>
                                     {{ $c['name'] }}
                                 </option>
                             @endforeach
                         @endforeach
                     @endif
                 </select>
-                <small class="text-muted">Hold Ctrl/Cmd and click to select multiple cities</small>
-                @if ($errors->has('cities'))
-                    <div class="invalid-feedback d-block">{{ $errors->first('cities') }}</div>
+                @if ($errors->has('city'))
+                    <div class="invalid-feedback d-block">{{ $errors->first('city') }}</div>
                 @endif
-            </div>
 
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Operational Hours</label>
+                <label class="form-label mt-3">Operational Hours</label>
                 <input type="text" name="operational_hours"
                     class="form-control {{ $errors->has('operational_hours') ? 'is-invalid' : '' }}"
                     value="{{ old('operational_hours', $mua->operational_hours ?? '') }}"
@@ -51,12 +48,34 @@
                 @if ($errors->has('operational_hours'))
                     <div class="invalid-feedback">{{ $errors->first('operational_hours') }}</div>
                 @endif
+                
                 <label class="form-label mt-3">Link Map</label>
                 <input type="text" name="link_map"
                     class="form-control {{ $errors->has('link_map') ? 'is-invalid' : '' }}"
                     value="{{ old('link_map', $mua->link_map ?? '') }}" placeholder="e.g. Google Maps link">
                 @if ($errors->has('link_map'))
                     <div class="invalid-feedback">{{ $errors->first('link_map') }}</div>
+                @endif
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Service Area Cities</label>
+                <select name="service_cities[]" id="serviceCitiesSelect" multiple
+                    class="form-select {{ $errors->has('service_cities') ? 'is-invalid' : '' }}" style="height: 150px !important;">
+                    @if (is_array($cities) && count($cities) > 0)
+                        @foreach ($cities as $provinceId => $citiesByProvince)
+                            @foreach ($citiesByProvince as $c)
+                                <option value="{{ $c['id'] }}"
+                                    {{ (is_array(old('service_cities', $mua->service_cities ?? [])) && in_array($c['id'], old('service_cities', $mua->service_cities ?? []))) ? 'selected' : '' }}>
+                                    {{ $c['name'] }}
+                                </option>
+                            @endforeach
+                        @endforeach
+                    @endif
+                </select>
+                <small class="text-muted">Hold Ctrl/Cmd and click to select multiple cities</small>
+                @if ($errors->has('service_cities'))
+                    <div class="invalid-feedback d-block">{{ $errors->first('service_cities') }}</div>
                 @endif
             </div>
         </div>

@@ -14,6 +14,7 @@ class Mua extends Model
         'name',
         'description',
         'city',
+        'service_cities',
         'rating',
         'max_distance',
         'operational_hours',
@@ -42,13 +43,13 @@ class Mua extends Model
         return $this->belongsTo(RegRegency::class, 'city');
     }
 
-    public function getCitiesAttribute()
+    public function getServiceCitiesAttribute()
     {
-        return $this->city ? explode(',', $this->city) : [];
+        return $this->service_cities ? explode(',', $this->service_cities) : [];
     }
 
-    public function setCitiesAttribute($value)
+    public function setServiceCitiesAttribute($value)
     {
-        $this->attributes['city'] = is_array($value) ? implode(',', $value) : $value;
+        $this->attributes['service_cities'] = is_array($value) ? implode(',', $value) : $value;
     }
 }
