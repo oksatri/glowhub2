@@ -74,6 +74,14 @@
                     @endif
                 </select>
                 <small class="text-muted">Hold Ctrl/Cmd and click to select multiple cities</small>
+                
+                <div class="mt-2" id="selectedServiceCities">
+                    <small class="text-muted"><strong>Selected Service Areas:</strong></small>
+                    <div class="d-flex flex-wrap gap-1 mt-1" id="selectedCitiesList">
+                        <!-- Selected cities will be displayed here -->
+                    </div>
+                </div>
+                
                 @if ($errors->has('service_cities'))
                     <div class="invalid-feedback d-block">{{ $errors->first('service_cities') }}</div>
                 @endif
@@ -108,6 +116,32 @@
         document.addEventListener('DOMContentLoaded', function() {
             const userSelect = document.getElementById('userSelect');
             const newUserFields = document.getElementById('newUserFields');
+            const serviceCitiesSelect = document.getElementById('serviceCitiesSelect');
+            const selectedCitiesList = document.getElementById('selectedCitiesList');
+
+            // Function to update selected cities display
+            function updateSelectedCities() {
+                if (!serviceCitiesSelect || !selectedCitiesList) return;
+                
+                const selectedOptions = Array.from(serviceCitiesSelect.selectedOptions);
+                const cityNames = selectedOptions.map(option => option.textContent);
+                
+                if (cityNames.length > 0) {
+                    selectedCitiesList.innerHTML = cityNames.map(city => 
+                        `<span class="badge bg-primary">${city}</span>`
+                    ).join('');
+                } else {
+                    selectedCitiesList.innerHTML = '<span class="text-muted">No cities selected</span>';
+                }
+            }
+
+            // Initial display
+            updateSelectedCities();
+
+            // Update on change
+            if (serviceCitiesSelect) {
+                serviceCitiesSelect.addEventListener('change', updateSelectedCities);
+            }
 
             // toggle new user fields when admin selects "Add new user..."
             function toggleNewUserFields() {
