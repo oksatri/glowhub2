@@ -270,22 +270,22 @@
                                                 <div class="col-md-6">
                                                     <label class="form-label small">Features</label>
                                                     <div id="features-list-2">
-                                                        @foreach ($features as $index => $feature)
+                                                        @foreach ($features as $key => $feature)
                                                             <div class="input-group mb-2 feature-item">
                                                                 <input type="text" name="features[name][]" class="form-control" placeholder="Feature">
-                                                                <button type="button" class="btn btn-outline-danger remove-feature" tabindex="-1" value="{{ $feature['name'][$index] }}">
+                                                                <button type="button" class="btn btn-outline-danger remove-feature" tabindex="-1" value="{{ $feature['name'][$key] }}">
                                                                     <i class="fas fa-times"></i>
                                                                 </button>
                                                             </div>
                                                             <div class="input-group mb-2 feature-item">
-                                                                <input type="number" name="features[min_price][]" class="form-control" placeholder="Min Price" value="{{ $feature['min_price'][$index] }}">
+                                                                <input type="number" name="features[min_price][]" class="form-control" placeholder="Min Price" value="{{ $feature['min_price'][$key] }}">
                                                             </div>
                                                             <div class="input-group mb-2 feature-item">
-                                                                <input type="number" name="features[max_price][]" class="form-control" placeholder="Max Price" value="{{ $feature['max_price'][$index] }}">
+                                                                <input type="number" name="features[max_price][]" class="form-control" placeholder="Max Price" value="{{ $feature['max_price'][$key] }}">
                                                             </div>
                                                             <div class="input-group mb-2 feature-item">
                                                                 <div class="form-check">
-                                                                    <input type="checkbox" name="features[mandatory][]" class="form-check-input" value="{{ $feature['mandatory'][$index] }}">
+                                                                    <input type="checkbox" name="features[mandatory][]" class="form-check-input" value="{{ $feature['mandatory'][$key] }}">
                                                                     <label class="form-check-label">Mandatory</label>
                                                                 </div>
                                                             </div>
