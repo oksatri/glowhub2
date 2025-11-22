@@ -219,9 +219,9 @@
                     @forelse($recentBookings as $b)
                         <div class="d-flex align-items-start border-left-line pb-3">
                             <div>
-                                <a href="{{ route('back.bookings.show', $b->id) }}" class="btn btn-info btn-circle mb-2 btn-item">
+                                <span class="btn btn-info btn-circle mb-2 btn-item">
                                     <i data-feather="calendar"></i>
-                                </a>
+                                </span>
                             </div>
                             <div class="ml-3 mt-2">
                                 <h5 class="text-dark font-weight-medium mb-2">{{ $b->customer_name ?? '—' }}
