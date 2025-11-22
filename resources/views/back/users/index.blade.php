@@ -97,6 +97,7 @@
                             <td>{{ $user->role }}</td>
                             <td>{{ $user->created_at->format('Y-m-d') }}</td>
                             <td class="text-end">
+                                @if($user->role !== 'admin')
                                 <a href="{{ url('users/' . $user->id . '/edit') }}"
                                     class="btn btn-sm btn-outline-primary">Edit</a>
                                 <form action="{{ url('users/' . $user->id) }}" method="POST" class="d-inline"
@@ -105,6 +106,7 @@
                                     @method('DELETE')
                                     <button class="btn btn-sm btn-outline-danger">Delete</button>
                                 </form>
+                                @endif
                             </td>
                         </tr>
                     @empty
