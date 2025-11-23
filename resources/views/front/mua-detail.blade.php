@@ -462,6 +462,26 @@
             background-color: #f8d7da !important;
             color: #721c24 !important;
         }
+
+        .flatpickr-day.past-date {
+            background-color: #e9ecef !important;
+            color: #6c757d !important;
+            border-color: #dee2e6 !important;
+            cursor: not-allowed !important;
+            opacity: 0.5;
+        }
+
+        .flatpickr-day.past-date:hover {
+            background-color: #e9ecef !important;
+            color: #6c757d !important;
+        }
+
+        .flatpickr-day.today-date {
+            background-color: #e7f3ff !important;
+            color: #0066cc !important;
+            border-color: #0066cc !important;
+            font-weight: bold;
+        }
     </style>
 @endpush
 
@@ -488,16 +508,48 @@
                     @endforeach
                 @endif
 
+                // Find first available date (today or next available)
+                function findFirstAvailableDate() {
+                    var today = new Date();
+                    var currentDate = new Date(today);
+                    
+                    // Check up to 30 days ahead
+                    for (var i = 0; i < 30; i++) {
+                        var dateStr = currentDate.getFullYear() + '-' + 
+                            String(currentDate.getMonth() + 1).padStart(2, '0') + '-' + 
+                            String(currentDate.getDate()).padStart(2, '0');
+                        
+                        if (!bookedDates.includes(dateStr)) {
+                            return currentDate;
+                        }
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                    return today; // fallback to today if no available date found
+                }
+
+                var firstAvailableDate = findFirstAvailableDate();
+
                 flatpickr('#bk_date', {
                     minDate: 'today',
+                    maxDate: new Date().fp_incr(30), // Limit to 30 days ahead
                     dateFormat: 'Y-m-d',
-                    disable: function(date) {
-                        // Check if date is in booked dates array
-                        var dateStr = date.getFullYear() + '-' + 
-                            String(date.getMonth() + 1).padStart(2, '0') + '-' + 
-                            String(date.getDate()).padStart(2, '0');
-                        return bookedDates.includes(dateStr);
-                    },
+                    defaultDate: firstAvailableDate,
+                    disable: [
+                        function(date) {
+                            // Disable all past dates
+                            var today = new Date();
+                            today.setHours(0, 0, 0, 0);
+                            if (date < today) {
+                                return true;
+                            }
+                            
+                            // Check if date is in booked dates array
+                            var dateStr = date.getFullYear() + '-' + 
+                                String(date.getMonth() + 1).padStart(2, '0') + '-' + 
+                                String(date.getDate()).padStart(2, '0');
+                            return bookedDates.includes(dateStr);
+                        }
+                    ],
                     locale: {
                         firstDayOfWeek: 1,
                         weekdays: {
@@ -514,14 +566,37 @@
                         updateTimeSlots(dateStr);
                     },
                     onDayCreate: function(dObj, dStr, fp, dayElement) {
-                        // Add custom styling for booked dates
+                        // Add custom styling for different date states
+                        var today = new Date();
+                        today.setHours(0, 0, 0, 0);
+                        var dateObj = new Date(dObj);
+                        dateObj.setHours(0, 0, 0, 0);
+                        
                         var dateStr = dObj.getFullYear() + '-' + 
                             String(dObj.getMonth() + 1).padStart(2, '0') + '-' + 
                             String(dObj.getDate()).padStart(2, '0');
                         
-                        if (bookedDates.includes(dateStr)) {
+                        // Past dates
+                        if (dateObj < today) {
+                            dayElement.classList.add('past-date');
+                            dayElement.title = 'Tanggal sudah lewat';
+                        }
+                        // Booked dates
+                        else if (bookedDates.includes(dateStr)) {
                             dayElement.classList.add('booked-date');
                             dayElement.title = 'Tanggal sudah dibooking';
+                        }
+                        // Today
+                        else if (dateObj.getTime() === today.getTime()) {
+                            dayElement.classList.add('today-date');
+                            dayElement.title = 'Hari ini';
+                        }
+                    },
+                    onReady: function(selectedDates, dateStr, instance) {
+                        // Initialize time slots for the default selected date
+                        if (selectedDates.length > 0) {
+                            var initialDate = instance.formatDate(selectedDates[0], 'Y-m-d');
+                            updateTimeSlots(initialDate);
                         }
                     }
                 });
