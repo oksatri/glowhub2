@@ -217,18 +217,18 @@
                                                         @foreach ($features as $key => $feature)
                                                             <div class="feature-item border p-2 mb-2">
                                                                 <div class="input-group mb-2">
-                                                                    <input type="text" name="features[{{ $key }}][name]" class="form-control" placeholder="Feature" value="{{ $feature['name'] }}">
+                                                                    <input type="text" name="features[{{ $key }}][name]" class="form-control" placeholder="Feature" value="{{ @$feature['name'] }}">
                                                                     <button type="button" class="btn btn-outline-danger remove-feature" tabindex="-1">
                                                                         <i class="fas fa-times"></i>
                                                                     </button>
                                                                 </div>
                                                                 <div class="input-group mb-2">
-                                                                    <input type="number" name="features[{{ $key }}][min_price]" class="form-control" placeholder="Min Price" value="{{ $feature['min_price'] }}">
+                                                                    <input type="number" name="features[{{ $key }}][min_price]" class="form-control" placeholder="Min Price" value="{{ @$feature['min_price'] }}">
                                                                     <span>-</span>
-                                                                    <input type="number" name="features[{{ $key }}][max_price]" class="form-control" placeholder="Max Price" value="{{ $feature['max_price'] }}">
+                                                                    <input type="number" name="features[{{ $key }}][max_price]" class="form-control" placeholder="Max Price" value="{{ @$feature['max_price'] }}">
                                                                 </div>
                                                                 <div class="form-check">
-                                                                    <input type="checkbox" name="features[{{ $key }}][is_image]" class="form-check-input" {{ $feature['is_image'] ? 'checked' : '' }}>
+                                                                    <input type="checkbox" name="features[{{ $key }}][is_image]" class="form-check-input" {{ @$feature['is_image'] ? 'checked' : '' }}>
                                                                     <label class="form-check-label">Perlu lampiran foto?</label>
                                                                 </div>
                                                             </div>
