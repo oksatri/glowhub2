@@ -376,7 +376,8 @@
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label small">Address</label>
-                                    <input type="text" name="address" id="bk_address" class="form-control" required>
+                                    <input type="text" name="address" id="bk_address" class="form-control" required
+                                           placeholder="Enter your complete address">
                                     @if (!empty($mua['max_distance']) && !empty($mua['additional_charge']))
                                         <small class="text-muted d-block mt-1">
                                             Locations beyond {{ $mua['max_distance'] }} km from the MUA may incur an
@@ -385,6 +386,46 @@
                                         </small>
                                     @endif
                                 </div>
+
+                                <!-- Distance Check Section -->
+                                @if (!empty($mua['link_map']))
+                                <div class="mb-3">
+                                    <label class="form-label small">Check Distance</label>
+                                    <div class="row g-2">
+                                        <div class="col-8">
+                                            <input type="text" id="origin_address" class="form-control" 
+                                                   placeholder="Your address (auto-filled)" readonly>
+                                        </div>
+                                        <div class="col-4">
+                                            <button type="button" id="check_distance_btn" 
+                                                    class="btn btn-outline-primary w-100">
+                                                <i class="fas fa-route me-1"></i> Check
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div id="distance_result" class="mt-2" style="display: none;">
+                                        <div class="alert alert-info small mb-0">
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-info-circle me-2"></i>
+                                                <div>
+                                                    <strong>Distance:</strong> <span id="distance_value">-</span><br>
+                                                    <strong>Duration:</strong> <span id="duration_value">-</span><br>
+                                                    <strong>Additional Cost:</strong> <span id="additional_cost">-</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="distance_loading" class="mt-2" style="display: none;">
+                                        <div class="text-center small text-muted">
+                                            <i class="fas fa-spinner fa-spin me-1"></i> Calculating distance...
+                                        </div>
+                                    </div>
+                                    <small class="text-muted d-block mt-1">
+                                        <i class="fas fa-map-marker-alt me-1"></i>
+                                        Click "Check" to calculate distance from MUA location
+                                    </small>
+                                </div>
+                                @endif
 
                                 <div class="mb-3">
                                     <label class="form-label small">Estimated Distance (km)</label>
@@ -487,8 +528,81 @@
 
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    
+    <!-- Google Maps API -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&libraries=places&callback=initGoogleMaps"></script>
 
     <script>
+        // Global variables for Google Maps
+        var directionsService;
+        var directionsRenderer;
+        var muaLocation = "{{ $mua['link_map'] ?? '' }}";
+
+        // Initialize Google Maps
+        function initGoogleMaps() {
+            directionsService = new google.maps.DirectionsService();
+            directionsRenderer = new google.maps.DirectionsRenderer();
+            
+            // Auto-fill origin address when user types in address field
+            $('#bk_address').on('input', function() {
+                $('#origin_address').val($(this).val());
+            });
+        }
+
+        // Calculate distance using Google Maps
+        function calculateDistance() {
+            var origin = $('#bk_address').val();
+            var destination = muaLocation;
+            
+            if (!origin || !destination) {
+                alert('Please enter your address first');
+                return;
+            }
+
+            $('#distance_loading').show();
+            $('#distance_result').hide();
+
+            var request = {
+                origin: origin,
+                destination: destination,
+                travelMode: 'DRIVING'
+            };
+
+            directionsService.route(request, function(response, status) {
+                $('#distance_loading').hide();
+                
+                if (status === 'OK') {
+                    var route = response.routes[0];
+                    var leg = route.legs[0];
+                    var distance = leg.distance.value / 1000; // Convert meters to km
+                    var duration = leg.duration.text;
+                    
+                    // Calculate additional cost
+                    var additionalCost = 0;
+                    if (maxDistance && additionalPerKm && distance > maxDistance) {
+                        additionalCost = (distance - maxDistance) * additionalPerKm;
+                    }
+                    
+                    // Update display
+                    $('#distance_value').text(distance.toFixed(1) + ' km');
+                    $('#duration_value').text(duration);
+                    $('#additional_cost').text(additionalCost > 0 ? formatRupiah(additionalCost) : 'No additional cost');
+                    
+                    // Update distance input
+                    $('#bk_distance_input').val(distance.toFixed(1));
+                    $('#bk_distance').val(distance.toFixed(1));
+                    
+                    // Update estimated price
+                    updateEstimatedPrice();
+                    
+                    $('#distance_result').show();
+                } else {
+                    alert('Unable to calculate distance. Please check your address and try again.');
+                    console.error('Directions request failed due to ' + status);
+                }
+            });
+        }
+
         $(document).ready(function() {
             var maxDistance = {{ $mua['max_distance'] ?? 'null' }};
             var additionalPerKm = {{ $mua['additional_charge'] ?? 'null' }};
@@ -687,6 +801,11 @@
                 var val = $(this).val();
                 $('#bk_distance').val(val);
                 updateEstimatedPrice();
+            });
+
+            // Check distance button click handler
+            $('#check_distance_btn').on('click', function() {
+                calculateDistance();
             });
 
             // Book Now handler - collects selected date/time/services and submits to server

@@ -150,6 +150,7 @@ class MuaController extends Controller
             'max_distance' => $mua->max_distance,
             'operational_hours' => $mua->operational_hours,
             'additional_charge' => $mua->additional_charge,
+            'link_map' => $mua->link_map,
         ];
 
         // portfolios limited to the active service (if any)
