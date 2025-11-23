@@ -228,7 +228,7 @@
                                                                     <input type="number" name="features[{{ $key }}][max_price]" class="form-control" placeholder="Max Price" value="{{ $feature['max_price'] }}">
                                                                 </div>
                                                                 <div class="form-check">
-                                                                    <input type="checkbox" name="features[{{ $key }}][is_image]" class="form-check-input" {{ $feature['mandatory'] ? 'checked' : '' }}>
+                                                                    <input type="checkbox" name="features[{{ $key }}][is_image]" class="form-check-input" {{ $feature['is_image'] ? 'checked' : '' }}>
                                                                     <label class="form-check-label">Perlu lampiran foto?</label>
                                                                 </div>
                                                             </div>
