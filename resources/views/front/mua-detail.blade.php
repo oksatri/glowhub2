@@ -336,17 +336,28 @@
                                     @endphp
 
                                     @foreach ($features as $idx => $feature)
+                                        @php
+                                            $hasExtraPrice = !empty($feature['extra_price']) && $feature['extra_price'] > 0;
+                                        @endphp
                                         <div class="col-12">
                                             <div
-                                                class="form-check p-3 border rounded">
+                                                class="form-check p-3 border rounded {{ !$hasExtraPrice ? 'bg-light' : '' }}">
                                                 <input class="form-check-input service-checkbox" type="checkbox"
                                                     name="feature_names[]" value="{{ $feature['name'] }}"
                                                     data-price="{{ $feature['extra_price'] ?? 0 }}"
-                                                    id="feature{{ $idx }}">
-                                                <label class="form-check-label d-flex justify-content-between w-100"
+                                                    id="feature{{ $idx }}"
+                                                    @if (!$hasExtraPrice)
+                                                        checked disabled
+                                                    @endif>
+                                                <label class="form-check-label d-flex justify-content-between w-100 {{ !$hasExtraPrice ? 'text-muted' : '' }}"
                                                     for="feature{{ $idx }}">
-                                                    <span class="fw-semibold">{{ $feature['name'] }}</span>
-                                                    @if (!empty($feature['extra_price']))
+                                                    <span class="fw-semibold {{ !$hasExtraPrice ? 'text-decoration-line-through' : '' }}">
+                                                        {{ $feature['name'] }}
+                                                        @if (!$hasExtraPrice)
+                                                            <small class="text-muted">(Wajib)</small>
+                                                        @endif
+                                                    </span>
+                                                    @if (!empty($feature['extra_price']) && $feature['extra_price'] > 0)
                                                         <span class="text-success small">+ Rp
                                                             {{ number_format($feature['extra_price'], 0, ',', '.') }}</span>
                                                     @else
@@ -512,7 +523,7 @@
             updateEstimatedPrice();
 
             // recalc when services change
-            $(document).on('change', '.service-checkbox', function() {
+            $(document).on('change', '.service-checkbox:not(:disabled)', function() {
                 updateEstimatedPrice();
             });
 
@@ -582,9 +593,9 @@
                         if (res.status === 'success') {
                             var html = '<div class="alert alert-success">' + res.message +
                                 '<br>Booking ID: <strong>' + res.booking_id + '</strong></div>';
-                            // prepend message and reset selections
+                            // prepend message and reset selections (only enabled checkboxes)
                             $('#bookNowBtn').after(html);
-                            $('.service-checkbox').prop('checked', false);
+                            $('.service-checkbox:not(:disabled)').prop('checked', false);
                             $('#bk_date').val('');
                             $('#bk_time').val('');
                             $('#bk_services, #bk_mua_service_id').val('');
