@@ -102,7 +102,7 @@
             <label class="form-label">Additional Charge</label>
             <input type="number" name="additional_charge"
                 class="mb-3 form-control {{ $errors->has('additional_charge') ? 'is-invalid' : '' }}"
-                value="{{ old('additional_charge', $mua->additional_charge ?? '') }}" min="0"
+                value="{{ old('additional_charge', $mua->additional_charge && $mua->additional_charge > 0 ?? '') }}" min="0"
                 placeholder="e.g. 50000">
             @if ($errors->has('additional_charge'))
                 <div class="invalid-feedback">{{ $errors->first('additional_charge') }}</div>
