@@ -215,21 +215,19 @@
                                         </div>
 
                                         <div class="px-3 py-2" style="background-color:#F7BCC6;">
+                                            <!-- Location at top -->
+                                            <div class="d-flex align-items-center mb-2 small" style="font-size: 0.78rem;">
+                                                <i class="fas fa-map-marker-alt me-1" style="color:#D23B3B;"></i>
+                                                <span class="text-dark text-truncate fw-semibold" title="{{ $location }}">
+                                                    {{ $location ?: '-' }}</span>
+                                            </div>
+                                            
                                             <div class="mb-1">
-                                                <div class="fw-semibold small text-truncate" style="color:#2D2A32;" title="{{ $m->name ?? $service->service_name }}">
-                                                    {{ $m->name ?? $service->service_name }}
-                                                </div>
                                                 @if (!empty($service->categori_service))
                                                     <div class="small text-muted text-truncate" style="font-size: 0.74rem;" title="{{ $service->categori_service }}">
                                                         {{ $service->categori_service }}
                                                     </div>
                                                 @endif
-                                            </div>
-
-                                            <div class="d-flex align-items-center mb-1 small" style="font-size: 0.78rem;">
-                                                <i class="fas fa-map-marker-alt me-1" style="color:#D23B3B;"></i>
-                                                <span class="text-dark text-truncate" title="{{ $location }}">
-                                                    {{ $location ?: '-' }}</span>
                                             </div>
                                             <div class="d-flex justify-content-between align-items-center small mb-1" style="font-size: 0.78rem;">
                                                 <div class="d-flex align-items-center">

@@ -1,5 +1,5 @@
 @extends('front._parts.master')
-@section('meta_title', ($mua['name'] ?? 'MUA Profile') . ' - ' . ($siteSetting->site_name ?? 'GlowHub'))
+@section('meta_title', ($mua['location'] ?? 'MUA Profile') . ' - ' . ($siteSetting->site_name ?? 'GlowHub'))
 @section('meta_description', ($mua['description'] ?? '') . ' • ' . ($siteSetting->meta_description ??
     ($siteSetting->site_tagline ?? '')))
 @section('content')
@@ -122,7 +122,7 @@
                             class="text-white text-decoration-none opacity-75 hover-opacity">Home</a></li>
                     <li class="breadcrumb-item"><a href="{{ url('/mua-listing') }}"
                             class="text-white text-decoration-none opacity-75 hover-opacity">Find MUA</a></li>
-                    <li class="breadcrumb-item active text-white fw-bold" aria-current="page">{{ $mua['name'] }}</li>
+                    <li class="breadcrumb-item active text-white fw-bold" aria-current="page">{{ $mua['location'] }}</li>
                 </ol>
             </nav>
         </div>
@@ -155,13 +155,20 @@
 
                             <!-- Profile Info -->
                             <div class="card-body p-4">
+                                <!-- Location at top -->
+                                <div class="text-center mb-3">
+                                    <div class="d-flex justify-content-center align-items-center mb-2">
+                                        <i class="fas fa-map-marker-alt me-2" style="color:#D23B3B;"></i>
+                                        <span class="fw-semibold text-primary">{{ $mua['location'] }}</span>
+                                    </div>
+                                </div>
+                                
                                 <div class="text-center mb-4">
-                                    <h3 class="fw-bold text-primary mb-2">{{ $mua['name'] }}</h3>
                                     <p class="text-muted mb-2">
                                         @if (!empty($mua['max_distance']))
                                             Available within {{ $mua['max_distance'] }} km radius
                                         @else
-                                            {{ $mua['location'] }}
+                                            Service area available
                                         @endif
                                     </p>
                                     <p class="small text-secondary fst-italic">
