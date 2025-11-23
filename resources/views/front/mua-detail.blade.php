@@ -570,16 +570,18 @@
                         var today = new Date();
                         today.setHours(0, 0, 0, 0);
                         
-                        // dObj is already a Date object from flatpickr, no need to create new one
-                        var dateObj = dObj;
-                        dateObj.setHours(0, 0, 0, 0);
+                        // dStr contains the date string in YYYY-MM-DD format
+                        // Create a valid Date object from dStr
+                        var dateParts = dStr.split('-');
+                        var currentDay = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]); // month is 0-indexed
+                        currentDay.setHours(0, 0, 0, 0);
                         
-                        var dateStr = dateObj.getFullYear() + '-' + 
-                            String(dateObj.getMonth() + 1).padStart(2, '0') + '-' + 
-                            String(dateObj.getDate()).padStart(2, '0');
+                        var dateStr = currentDay.getFullYear() + '-' + 
+                            String(currentDay.getMonth() + 1).padStart(2, '0') + '-' + 
+                            String(currentDay.getDate()).padStart(2, '0');
                         
                         // Past dates
-                        if (dateObj < today) {
+                        if (currentDay < today) {
                             dayElement.classList.add('past-date');
                             dayElement.title = 'Tanggal sudah lewat';
                         }
@@ -589,7 +591,7 @@
                             dayElement.title = 'Tanggal sudah dibooking';
                         }
                         // Today
-                        else if (dateObj.getTime() === today.getTime()) {
+                        else if (currentDay.getTime() === today.getTime()) {
                             dayElement.classList.add('today-date');
                             dayElement.title = 'Hari ini';
                         }
