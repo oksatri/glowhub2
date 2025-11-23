@@ -128,7 +128,7 @@
                 
                 if (cityNames.length > 0) {
                     selectedCitiesList.innerHTML = cityNames.map(city => 
-                        `<span class="badge bg-primary me-1 text-white" style="margin-right:5px">${city}</span>`
+                        `<span class="badge bg-primary me-1 text-white" style="margin:5px;">${city}</span>`
                     ).join('');
                 } else {
                     selectedCitiesList.innerHTML = '<span class="text-muted">No cities selected</span>';
