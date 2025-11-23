@@ -337,29 +337,36 @@
 
                                     @foreach ($features as $idx => $feature)
                                         @php
-                                            $hasExtraPrice = !empty($feature['extra_price']) && $feature['extra_price'] > 0;
+                                            $hasPriceRange = (!empty($feature['min_price']) && $feature['min_price'] > 0) || (!empty($feature['max_price']) && $feature['max_price'] > 0);
                                         @endphp
                                         <div class="col-12">
                                             <div
-                                                class="form-check p-3 border rounded {{ !$hasExtraPrice ? 'bg-light' : '' }}">
+                                                class="form-check p-3 border rounded {{ !$hasPriceRange ? 'bg-light' : '' }}">
                                                 <input class="form-check-input service-checkbox" type="checkbox"
                                                     name="feature_names[]" value="{{ $feature['name'] }}"
-                                                    data-price="{{ $feature['extra_price'] ?? 0 }}"
+                                                    data-price="{{ $feature['min_price'] ?? $feature['max_price'] ?? 0 }}"
                                                     id="feature{{ $idx }}"
-                                                    @if (!$hasExtraPrice)
+                                                    @if (!$hasPriceRange)
                                                         checked disabled
                                                     @endif>
-                                                <label class="form-check-label d-flex justify-content-between w-100 {{ !$hasExtraPrice ? 'text-muted' : '' }}"
+                                                <label class="form-check-label d-flex justify-content-between w-100 {{ !$hasPriceRange ? 'text-muted' : '' }}"
                                                     for="feature{{ $idx }}">
-                                                    <span class="fw-semibold {{ !$hasExtraPrice ? 'text-decoration-line-through' : '' }}">
+                                                    <span class="fw-semibold {{ !$hasPriceRange ? 'text-decoration-line-through' : '' }}">
                                                         {{ $feature['name'] }}
-                                                        @if (!$hasExtraPrice)
+                                                        @if (!$hasPriceRange)
                                                             <small class="text-muted">(Wajib)</small>
                                                         @endif
                                                     </span>
-                                                    @if (!empty($feature['extra_price']) && $feature['extra_price'] > 0)
-                                                        <span class="text-success small">+ Rp
-                                                            {{ number_format($feature['extra_price'], 0, ',', '.') }}</span>
+                                                    @if ($hasPriceRange)
+                                                        <span class="text-success small">
+                                                            @if (!empty($feature['min_price']) && !empty($feature['max_price']))
+                                                                Rp {{ number_format($feature['min_price'], 0, ',', '.') }} - {{ number_format($feature['max_price'], 0, ',', '.') }}
+                                                            @elseif (!empty($feature['min_price']))
+                                                                Mulai Rp {{ number_format($feature['min_price'], 0, ',', '.') }}
+                                                            @elseif (!empty($feature['max_price']))
+                                                                Hingga Rp {{ number_format($feature['max_price'], 0, ',', '.') }}
+                                                            @endif
+                                                        </span>
                                                     @else
                                                         <span class="text-muted small">Included</span>
                                                     @endif
