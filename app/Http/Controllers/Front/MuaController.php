@@ -182,35 +182,45 @@ class MuaController extends Controller
 
             if (is_array($rawFeatures)) {
                 foreach ($rawFeatures as $feature) {
-                    // structured feature: ['name' => ..., 'extra_price' => ...]
+                    // structured feature with min_price and max_price
                     if (is_array($feature) && isset($feature['name'])) {
                         $features[] = [
                             'name' => (string) $feature['name'],
-                            'extra_price' => isset($feature['extra_price']) ? (int) $feature['extra_price'] : 0,
+                            'min_price' => isset($feature['min_price']) ? (int) $feature['min_price'] : null,
+                            'max_price' => isset($feature['max_price']) ? (int) $feature['max_price'] : null,
+                            'extra_price' => isset($feature['extra_price']) ? (int) $feature['extra_price'] : 0, // fallback for backward compatibility
                         ];
                         continue;
                     }
 
-                    // plain string feature
+                    // plain string feature - try to parse price patterns
                     $featureText = is_string($feature) ? $feature : (string) ($feature['label'] ?? '');
                     if ($featureText === '') {
                         continue;
                     }
 
                     $name = $featureText;
-                    $extra = 0;
+                    $minPrice = null;
+                    $maxPrice = null;
+                    $extraPrice = 0;
 
-                    // parse patterns like "+ Rp. 35.000" from the feature text
-                    if (preg_match('/\+\s*Rp\.?\s*([0-9\.]+)/i', $featureText, $m)) {
-                        $num = preg_replace('/[^0-9]/', '', $m[1] ?? '0');
-                        $extra = (int) $num;
-                        // remove the pricing part from the display name
-                        $name = trim(preg_replace('/\(.*Rp.*\)/i', '', $featureText));
+                    // parse range patterns like "Rp. 100.000 - 200.000"
+                    if (preg_match('/Rp\.?\s*([0-9\.]+)\s*[-–]\s*([0-9\.]+)/i', $featureText, $m)) {
+                        $minPrice = (int) preg_replace('/[^0-9]/', '', $m[1] ?? '0');
+                        $maxPrice = (int) preg_replace('/[^0-9]/', '', $m[2] ?? '0');
+                        $name = trim(preg_replace('/Rp\.?\s*[0-9\.]+\s*[-–]\s*[0-9\.]+/i', '', $featureText));
+                    }
+                    // parse single price patterns like "+ Rp. 35.000" or "Rp. 35.000"
+                    elseif (preg_match('/\+?\s*Rp\.?\s*([0-9\.]+)/i', $featureText, $m)) {
+                        $extraPrice = (int) preg_replace('/[^0-9]/', '', $m[1] ?? '0');
+                        $name = trim(preg_replace('/\+?\s*Rp\.?\s*[0-9\.]+/i', '', $featureText));
                     }
 
                     $features[] = [
                         'name' => $name,
-                        'extra_price' => $extra,
+                        'min_price' => $minPrice,
+                        'max_price' => $maxPrice,
+                        'extra_price' => $extraPrice, // fallback
                     ];
                 }
             }

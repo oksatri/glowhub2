@@ -344,7 +344,7 @@
                                                 class="form-check p-3 border rounded {{ !$hasPriceRange ? 'bg-light' : '' }}">
                                                 <input class="form-check-input service-checkbox" type="checkbox"
                                                     name="feature_names[]" value="{{ $feature['name'] }}"
-                                                    data-price="{{ $feature['min_price'] ?? $feature['max_price'] ?? 0 }}"
+                                                    data-price="{{ $feature['min_price'] ?? $feature['max_price'] ?? $feature['extra_price'] ?? 0 }}"
                                                     id="feature{{ $idx }}"
                                                     @if (!$hasPriceRange)
                                                         checked disabled
