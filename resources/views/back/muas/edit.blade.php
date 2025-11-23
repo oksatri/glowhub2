@@ -288,11 +288,11 @@
                                                 </div>
                                                 @push('scripts')
                                                 <script>
-                                                    const featuresList2 = document.getElementById('features-list-{{ $s->id }}');
-                                                    const addFeatureBtn2 = document.getElementById('add-feature-{{ $s->id }}');
+                                                    const featuresList{{ $s->id }} = document.getElementById('features-list-{{ $s->id }}');
+                                                    const addFeatureBtn{{ $s->id }}  = document.getElementById('add-feature-{{ $s->id }}');
 
-                                                    addFeatureBtn2.addEventListener('click', function() {
-                                                        const index = featuresList2.children.length;
+                                                    addFeatureBtn{{ $s->id }} .addEventListener('click', function() {
+                                                        const index = featuresList{{ $s->id }}.children.length;
                                                         const featureItem = document.createElement('div');
                                                         featureItem.className = 'feature-item border p-2 mb-2';
                                                         featureItem.innerHTML = `
@@ -312,10 +312,10 @@
                                                                 <label class="form-check-label">Perlu lampiran foto?</label>
                                                             </div>
                                                         `;
-                                                        featuresList2.appendChild(featureItem);
+                                                        featuresList{{ $s->id }}.appendChild(featureItem);
                                                     });
 
-                                                    featuresList2.addEventListener('click', function(e) {
+                                                    featuresList{{ $s->id }}.addEventListener('click', function(e) {
                                                         if (e.target.closest('.remove-feature')) {
                                                             const item = e.target.closest('.feature-item');
                                                             item.remove();
