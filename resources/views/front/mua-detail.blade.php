@@ -353,9 +353,6 @@
                                                     for="feature{{ $idx }}">
                                                     <span class="fw-semibold">
                                                         {{ $feature['name'] }}
-                                                        @if (!$hasPriceRange)
-                                                            <small class="text-muted">(Wajib)</small>
-                                                        @endif
                                                     </span>
                                                     @if ($hasPriceRange)
                                                         <span class="text-success small">
