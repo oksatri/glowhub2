@@ -287,8 +287,9 @@
                                         @php
                                             $timeSlots = [];
                                             $selectedTime = null;
+                                            $blockedTimes = [];
 
-                                            // Generate time slots every 2 hours based on operational_hours if possible
+                                            // Generate time slots every 30 minutes based on operational_hours
                                             $op = $mua['operational_hours'] ?? '';
                                             if (!empty($op) && preg_match('/(\d{1,2})[:\.](\d{2}).*?(\d{1,2})[:\.](\d{2})/u', $op, $m)) {
                                                 try {
@@ -296,7 +297,7 @@
                                                     $end = new \DateTime($m[3] . ':' . $m[4]);
                                                     while ($start < $end) {
                                                         $timeSlots[] = $start->format('H:i');
-                                                        $start->modify('+2 hours');
+                                                        $start->modify('+30 minutes');
                                                     }
                                                 } catch (\Exception $e) {
                                                     $timeSlots = [];
@@ -309,7 +310,24 @@
                                                 $fallbackEnd = new \DateTime('19:00');
                                                 while ($fallbackStart < $fallbackEnd) {
                                                     $timeSlots[] = $fallbackStart->format('H:i');
-                                                    $fallbackStart->modify('+2 hours');
+                                                    $fallbackStart->modify('+30 minutes');
+                                                }
+                                            }
+
+                                            // Process existing bookings to block time slots (1 hour 30 minutes block)
+                                            if (isset($existingBookings) && $existingBookings->count() > 0) {
+                                                foreach ($existingBookings as $booking) {
+                                                    $bookingTime = new \DateTime($booking->selected_time);
+                                                    // Block 1 hour 30 minutes (90 minutes) from booking time
+                                                    $blockEnd = clone $bookingTime;
+                                                    $blockEnd->add(new \DateInterval('PT1H30M'));
+                                                    
+                                                    // Add all time slots within the blocked period
+                                                    $current = clone $bookingTime;
+                                                    while ($current < $blockEnd) {
+                                                        $blockedTimes[] = $current->format('H:i');
+                                                        $current->modify('+30 minutes');
+                                                    }
                                                 }
                                             }
 
@@ -318,8 +336,15 @@
                                         <select class="form-select" id="bk_time">
                                             <option value="">Select time</option>
                                             @foreach ($timeSlots as $time)
-                                                <option value="{{ $time }}" {{ $time == $selectedTime ? 'selected' : '' }}>
+                                                @php
+                                                    $isBlocked = in_array($time, $blockedTimes);
+                                                @endphp
+                                                <option value="{{ $time }}" 
+                                                    {{ $time == $selectedTime ? 'selected' : '' }}
+                                                    {{ $isBlocked ? 'disabled' : '' }}
+                                                    {{ $isBlocked ? 'style="background-color: #f8d7da; color: #721c24;" : '' }}>
                                                     {{ $time }}
+                                                    {{ $isBlocked ? ' (Booked)' : '' }}
                                                 </option>
                                             @endforeach
                                         </select>

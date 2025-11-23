@@ -226,11 +226,18 @@ class MuaController extends Controller
             }
         }
 
+        // Get existing bookings for this MUA to block time slots
+        $existingBookings = Booking::where('mua_id', $id)
+            ->whereDate('selected_date', today())
+            ->where('status', '!=', 'cancelled')
+            ->get(['selected_time', 'selected_date']);
+
         return view('front.mua-detail', [
             'mua' => $muaArr,
             'portfolio' => $portfolio,
             'features' => $features,
             'activeService' => $activeService,
+            'existingBookings' => $existingBookings,
         ]);
     }
 
