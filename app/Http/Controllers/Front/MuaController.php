@@ -228,7 +228,7 @@ class MuaController extends Controller
 
         // Get existing bookings for this MUA to block dates and time slots
         $existingBookings = Booking::where('mua_id', $id)
-            ->where('status', '!=', 'cancelled')
+            ->where('status', '!=', 'rejected')
             ->get(['selected_date', 'selected_time']);
 
         return view('front.mua-detail', [

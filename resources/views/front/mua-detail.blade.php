@@ -285,73 +285,12 @@
                                     <div class="col-5">
                                         <h6 class="fw-bold mb-2 text-primary">Available Times</h6>
                                         @php
-                                            $timeSlots = [];
-                                            $selectedTime = null;
-                                            $blockedTimes = [];
-
-                                            // Generate time slots every 30 minutes based on operational_hours
-                                            $op = $mua['operational_hours'] ?? '';
-                                            if (!empty($op) && preg_match('/(\d{1,2})[:\.](\d{2}).*?(\d{1,2})[:\.](\d{2})/u', $op, $m)) {
-                                                try {
-                                                    $start = new \DateTime($m[1] . ':' . $m[2]);
-                                                    $end = new \DateTime($m[3] . ':' . $m[4]);
-                                                    while ($start < $end) {
-                                                        $timeSlots[] = $start->format('H:i');
-                                                        $start->modify('+30 minutes');
-                                                    }
-                                                } catch (\Exception $e) {
-                                                    $timeSlots = [];
-                                                }
-                                            }
-
-                                            // Fallback: if no valid slots from operational_hours, use default 09:00-19:00
-                                            if (empty($timeSlots)) {
-                                                $fallbackStart = new \DateTime('09:00');
-                                                $fallbackEnd = new \DateTime('19:00');
-                                                while ($fallbackStart < $fallbackEnd) {
-                                                    $timeSlots[] = $fallbackStart->format('H:i');
-                                                    $fallbackStart->modify('+30 minutes');
-                                                }
-                                            }
-
-                                            // Process existing bookings to block time slots (1 hour 30 minutes block)
-                                            // Only process bookings for the selected date
-                                            $selectedDate = isset($_GET['date']) ? $_GET['date'] : date('Y-m-d');
-                                            if (isset($existingBookings) && $existingBookings->count() > 0) {
-                                                foreach ($existingBookings as $booking) {
-                                                    // Only block if booking date matches selected date
-                                                    if ($booking->selected_date->format('Y-m-d') === $selectedDate) {
-                                                        $bookingTime = new \DateTime($booking->selected_time);
-                                                        // Block 1 hour 30 minutes (90 minutes) from booking time
-                                                        $blockEnd = clone $bookingTime;
-                                                        $blockEnd->add(new \DateInterval('PT1H30M'));
-                                                        
-                                                        // Add all time slots within the blocked period
-                                                        $current = clone $bookingTime;
-                                                        while ($current < $blockEnd) {
-                                                            $blockedTimes[] = $current->format('H:i');
-                                                            $current->modify('+30 minutes');
-                                                        }
-                                                    }
-                                                }
-                                            }
-
+                                            // Simple time slots for initial display (will be updated by JavaScript)
+                                            $timeSlots = ['09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30'];
                                             $selectedTime = $timeSlots[0] ?? null;
                                         @endphp
                                         <select class="form-select" id="bk_time">
-                                            <option value="">Select time</option>
-                                            @foreach ($timeSlots as $time)
-                                                @php
-                                                    $isBlocked = in_array($time, $blockedTimes);
-                                                @endphp
-                                                <option value="{{ $time }}" 
-                                                    {{ $time == $selectedTime ? 'selected' : '' }}
-                                                    {{ $isBlocked ? 'disabled' : '' }}
-                                                    {{ $isBlocked ? 'style="background-color: #f8d7da; color: #721c24;"' : '' }}>
-                                                    {{ $time }}
-                                                    {{ $isBlocked ? ' (Booked)' : '' }}
-                                                </option>
-                                            @endforeach
+                                            <option value="">Select date first</option>
                                         </select>
                                     </div>
                                 </div>
@@ -510,6 +449,19 @@
             border-color: var(--bs-primary);
             color: var(--bs-primary);
         }
+
+        .flatpickr-day.booked-date {
+            background-color: #f8d7da !important;
+            color: #721c24 !important;
+            border-color: #f5c6cb !important;
+            cursor: not-allowed !important;
+            opacity: 0.7;
+        }
+
+        .flatpickr-day.booked-date:hover {
+            background-color: #f8d7da !important;
+            color: #721c24 !important;
+        }
     </style>
 @endpush
 
@@ -539,7 +491,13 @@
                 flatpickr('#bk_date', {
                     minDate: 'today',
                     dateFormat: 'Y-m-d',
-                    disable: bookedDates,
+                    disable: function(date) {
+                        // Check if date is in booked dates array
+                        var dateStr = date.getFullYear() + '-' + 
+                            String(date.getMonth() + 1).padStart(2, '0') + '-' + 
+                            String(date.getDate()).padStart(2, '0');
+                        return bookedDates.includes(dateStr);
+                    },
                     locale: {
                         firstDayOfWeek: 1,
                         weekdays: {
@@ -552,18 +510,70 @@
                         }
                     },
                     onChange: function(selectedDates, dateStr, instance) {
-                        // Refresh time slots when date changes
-                        if (selectedDates.length > 0) {
-                            var selectedDate = selectedDates[0];
-                            var formattedDate = selectedDate.getFullYear() + '-' + 
-                                String(selectedDate.getMonth() + 1).padStart(2, '0') + '-' + 
-                                String(selectedDate.getDate()).padStart(2, '0');
-                            
-                            // Reload page with new date to refresh time slots
-                            window.location.href = window.location.pathname + '?date=' + formattedDate;
+                        // Update time slots dynamically when date changes
+                        updateTimeSlots(dateStr);
+                    },
+                    onDayCreate: function(dObj, dStr, fp, dayElement) {
+                        // Add custom styling for booked dates
+                        var dateStr = dObj.getFullYear() + '-' + 
+                            String(dObj.getMonth() + 1).padStart(2, '0') + '-' + 
+                            String(dObj.getDate()).padStart(2, '0');
+                        
+                        if (bookedDates.includes(dateStr)) {
+                            dayElement.classList.add('booked-date');
+                            dayElement.title = 'Tanggal sudah dibooking';
                         }
                     }
                 });
+            }
+
+            // Function to update time slots based on selected date
+            function updateTimeSlots(selectedDate) {
+                if (!selectedDate) return;
+                
+                // Show loading
+                $('#bk_time').html('<option value="">Loading...</option>');
+                
+                // Get existing bookings for selected date
+                var blockedTimes = [];
+                @if (isset($existingBookings) && $existingBookings->count() > 0)
+                    @foreach ($existingBookings as $booking)
+                        if ('{{ $booking->selected_date->format('Y-m-d') }}' === selectedDate) {
+                            var bookingTime = '{{ $booking->selected_time }}';
+                            // Block 1 hour 30 minutes from booking time
+                            var bookingDateTime = new Date('2000-01-01T' + bookingTime + ':00');
+                            for (var i = 0; i < 3; i++) { // 3 slots of 30 minutes = 1.5 hours
+                                var timeStr = bookingDateTime.getHours().toString().padStart(2, '0') + ':' + 
+                                             bookingDateTime.getMinutes().toString().padStart(2, '0');
+                                blockedTimes.push(timeStr);
+                                bookingDateTime.setMinutes(bookingDateTime.getMinutes() + 30);
+                            }
+                        }
+                    @endforeach
+                @endif
+
+                // Generate time slots
+                var timeSlots = [];
+                var startHour = 9;
+                var endHour = 19;
+                
+                for (var hour = startHour; hour < endHour; hour++) {
+                    for (var minute = 0; minute < 60; minute += 30) {
+                        var timeStr = hour.toString().padStart(2, '0') + ':' + minute.toString().padStart(2, '0');
+                        timeSlots.push(timeStr);
+                    }
+                }
+
+                // Update time select
+                var html = '<option value="">Select time</option>';
+                timeSlots.forEach(function(time) {
+                    var isBlocked = blockedTimes.includes(time);
+                    html += '<option value="' + time + '" ' + 
+                           (isBlocked ? 'disabled style="background-color: #f8d7da; color: #721c24;"' : '') + '>' +
+                           time + (isBlocked ? ' (Booked)' : '') + '</option>';
+                });
+                
+                $('#bk_time').html(html);
             }
 
             function updateEstimatedPrice() {
