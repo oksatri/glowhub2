@@ -180,7 +180,7 @@
                                     </div>
                                 </div>
 
-                                <div id="service-collapse-{{ $s->id }}" class="collapse show">
+                                <div id="service-collapse-{{ $s->id }}" class="collapse">
                                     <div class="card-body">
                                         <form method="POST" action="{{ url($base . '/' . $mua->id . '/services/' . $s->id) }}">
                                             @csrf
