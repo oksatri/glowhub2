@@ -351,7 +351,7 @@
                                                     @endif>
                                                 <label class="form-check-label d-flex justify-content-between w-100 {{ !$hasPriceRange ? 'text-muted' : '' }}"
                                                     for="feature{{ $idx }}">
-                                                    <span class="fw-semibold {{ !$hasPriceRange ? 'text-decoration-line-through' : '' }}">
+                                                    <span class="fw-semibold">
                                                         {{ $feature['name'] }}
                                                         @if (!$hasPriceRange)
                                                             <small class="text-muted">(Wajib)</small>
