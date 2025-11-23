@@ -315,18 +315,23 @@
                                             }
 
                                             // Process existing bookings to block time slots (1 hour 30 minutes block)
+                                            // Only process bookings for the selected date
+                                            $selectedDate = isset($_GET['date']) ? $_GET['date'] : date('Y-m-d');
                                             if (isset($existingBookings) && $existingBookings->count() > 0) {
                                                 foreach ($existingBookings as $booking) {
-                                                    $bookingTime = new \DateTime($booking->selected_time);
-                                                    // Block 1 hour 30 minutes (90 minutes) from booking time
-                                                    $blockEnd = clone $bookingTime;
-                                                    $blockEnd->add(new \DateInterval('PT1H30M'));
-                                                    
-                                                    // Add all time slots within the blocked period
-                                                    $current = clone $bookingTime;
-                                                    while ($current < $blockEnd) {
-                                                        $blockedTimes[] = $current->format('H:i');
-                                                        $current->modify('+30 minutes');
+                                                    // Only block if booking date matches selected date
+                                                    if ($booking->selected_date->format('Y-m-d') === $selectedDate) {
+                                                        $bookingTime = new \DateTime($booking->selected_time);
+                                                        // Block 1 hour 30 minutes (90 minutes) from booking time
+                                                        $blockEnd = clone $bookingTime;
+                                                        $blockEnd->add(new \DateInterval('PT1H30M'));
+                                                        
+                                                        // Add all time slots within the blocked period
+                                                        $current = clone $bookingTime;
+                                                        while ($current < $blockEnd) {
+                                                            $blockedTimes[] = $current->format('H:i');
+                                                            $current->modify('+30 minutes');
+                                                        }
                                                     }
                                                 }
                                             }
@@ -523,9 +528,41 @@
 
             // initialize datepicker for booking date
             if (typeof flatpickr !== 'undefined') {
+                // Prepare array of booked dates
+                var bookedDates = [];
+                @if (isset($existingBookings) && $existingBookings->count() > 0)
+                    @foreach ($existingBookings as $booking)
+                        bookedDates.push('{{ $booking->selected_date->format('Y-m-d') }}');
+                    @endforeach
+                @endif
+
                 flatpickr('#bk_date', {
                     minDate: 'today',
-                    dateFormat: 'Y-m-d'
+                    dateFormat: 'Y-m-d',
+                    disable: bookedDates,
+                    locale: {
+                        firstDayOfWeek: 1,
+                        weekdays: {
+                            shorthand: ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'],
+                            longhand: ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu']
+                        },
+                        months: {
+                            shorthand: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
+                            longhand: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
+                        }
+                    },
+                    onChange: function(selectedDates, dateStr, instance) {
+                        // Refresh time slots when date changes
+                        if (selectedDates.length > 0) {
+                            var selectedDate = selectedDates[0];
+                            var formattedDate = selectedDate.getFullYear() + '-' + 
+                                String(selectedDate.getMonth() + 1).padStart(2, '0') + '-' + 
+                                String(selectedDate.getDate()).padStart(2, '0');
+                            
+                            // Reload page with new date to refresh time slots
+                            window.location.href = window.location.pathname + '?date=' + formattedDate;
+                        }
+                    }
                 });
             }
 
