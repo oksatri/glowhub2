@@ -342,7 +342,7 @@
                                                 <option value="{{ $time }}" 
                                                     {{ $time == $selectedTime ? 'selected' : '' }}
                                                     {{ $isBlocked ? 'disabled' : '' }}
-                                                    {{ $isBlocked ? 'style="background-color: #f8d7da; color: #721c24;" : '' }}>
+                                                    {{ $isBlocked ? 'style="background-color: #f8d7da; color: #721c24;"' : '' }}>
                                                     {{ $time }}
                                                     {{ $isBlocked ? ' (Booked)' : '' }}
                                                 </option>
