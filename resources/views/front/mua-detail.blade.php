@@ -569,12 +569,14 @@
                         // Add custom styling for different date states
                         var today = new Date();
                         today.setHours(0, 0, 0, 0);
-                        var dateObj = new Date(dObj);
+                        
+                        // dObj is already a Date object from flatpickr, no need to create new one
+                        var dateObj = dObj;
                         dateObj.setHours(0, 0, 0, 0);
                         
-                        var dateStr = dObj.getFullYear() + '-' + 
-                            String(dObj.getMonth() + 1).padStart(2, '0') + '-' + 
-                            String(dObj.getDate()).padStart(2, '0');
+                        var dateStr = dateObj.getFullYear() + '-' + 
+                            String(dateObj.getMonth() + 1).padStart(2, '0') + '-' + 
+                            String(dateObj.getDate()).padStart(2, '0');
                         
                         // Past dates
                         if (dateObj < today) {
