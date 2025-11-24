@@ -412,10 +412,9 @@
                                 @if (!empty($mua['link_map']))
                                 <div class="mb-3">
                                     <div class="col-4">
-                                        <button type="button" id="check_distance_btn"
-                                                class="btn btn-outline-primary w-100">
+                                        <a href="{{ $mua['link_map'] }}" target="_blank" class="btn btn-outline-primary w-100">
                                             <i class="fas fa-route me-1"></i> Check
-                                        </button>
+                                        </a>
                                     </div>
                                     <small class="text-muted d-block mt-1">
                                         <i class="fas fa-map-marker-alt me-1"></i>
