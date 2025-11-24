@@ -23,6 +23,10 @@ class Mua extends Model
         'image'
     ];
 
+    protected $casts = [
+        'additional_charge' => 'integer',
+    ];
+
     public function user()
     {
         return $this->hasOne(\App\Models\User::class, 'id','user_id');

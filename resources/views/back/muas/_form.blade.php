@@ -48,7 +48,7 @@
                 @if ($errors->has('operational_hours'))
                     <div class="invalid-feedback">{{ $errors->first('operational_hours') }}</div>
                 @endif
-                
+
                 <label class="form-label mt-3">Link Map</label>
                 <input type="text" name="link_map"
                     class="form-control {{ $errors->has('link_map') ? 'is-invalid' : '' }}"
@@ -74,14 +74,14 @@
                     @endif
                 </select>
                 <small class="text-muted">Hold Ctrl/Cmd and click to select multiple cities</small>
-                
+
                 <div class="mt-2" id="selectedServiceCities">
                     <small class="text-muted"><strong>Selected Service Areas:</strong></small>
                     <div class="d-flex flex-wrap gap-1 mt-1" id="selectedCitiesList">
                         <!-- Selected cities will be displayed here -->
                     </div>
                 </div>
-                
+
                 @if ($errors->has('service_cities'))
                     <div class="invalid-feedback d-block">{{ $errors->first('service_cities') }}</div>
                 @endif
@@ -100,10 +100,14 @@
                 <div class="invalid-feedback">{{ $errors->first('max_distance') }}</div>
             @endif
             <label class="form-label">Additional Charge</label>
-            <input type="number" name="additional_charge"
-                class="mb-3 form-control {{ $errors->has('additional_charge') ? 'is-invalid' : '' }}"
-                value="{{ old('additional_charge', $mua->additional_charge && $mua->additional_charge > 0 ?? '') }}" min="0"
-                placeholder="e.g. 50000">
+            <div class="input-group mb-3">
+                <span class="input-group-text">Rp</span>
+                <input type="number" name="additional_charge"
+                    class="form-control {{ $errors->has('additional_charge') ? 'is-invalid' : '' }}"
+                    value="{{ old('additional_charge', isset($mua) ? $mua->additional_charge : '') }}"
+                    min="0" step="1"
+                    placeholder="e.g. 50000">
+            </div>
             @if ($errors->has('additional_charge'))
                 <div class="invalid-feedback">{{ $errors->first('additional_charge') }}</div>
             @endif
@@ -122,12 +126,12 @@
             // Function to update selected cities display
             function updateSelectedCities() {
                 if (!serviceCitiesSelect || !selectedCitiesList) return;
-                
+
                 const selectedOptions = Array.from(serviceCitiesSelect.selectedOptions);
                 const cityNames = selectedOptions.map(option => option.textContent);
-                
+
                 if (cityNames.length > 0) {
-                    selectedCitiesList.innerHTML = cityNames.map(city => 
+                    selectedCitiesList.innerHTML = cityNames.map(city =>
                         `<span class="badge bg-primary me-1 text-white" style="margin:5px;">${city}</span>`
                     ).join('');
                 } else {
