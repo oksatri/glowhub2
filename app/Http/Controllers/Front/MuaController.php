@@ -142,7 +142,7 @@ class MuaController extends Controller
         $muaArr = [
             'id' => $mua->id,
             'name' => $mua->name,
-            'description' => $mua->description,
+            'description' => $activeService ? $activeService->description : null,
             'location' => trim($mua->rel_city->name ?? ''),
             'rating' => (float) ($mua->rating ?? 4.5),
             'price' => $activeService ? (int) $activeService->price : null,
