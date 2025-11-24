@@ -656,53 +656,6 @@
             function updateTimeSlots(selectedDate) {
                 if (!selectedDate) return;
 
-                // Get the original time slots from PHP (stored as data attribute)
-                var timeSlots = [];
-                @php
-                    // Re-generate the same time slots for JavaScript use
-                    $operationalHours = $mua->operational_hours ?? '09:00 - 18:00';
-                    $times = explode('-', $operationalHours);
-                    $startHour = 9;
-                    $endHour = 18;
-
-                    if (count($times) >= 2) {
-                        $startTime = trim($times[0]);
-                        $endTime = trim($times[1]);
-
-                        // Parse start time
-                        $startParts = explode(':', str_replace('.', ':', $startTime));
-                        $startHour = (int)($startParts[0] ?? 9);
-
-                        // Parse end time
-                        $endParts = explode(':', str_replace('.', ':', $endTime));
-                        $endHour = (int)($endParts[0] ?? 18);
-
-                        // Validate hours
-                        $startHour = max(0, min(23, $startHour));
-                        $endHour = max(0, min(23, $endHour));
-                    }
-
-                    // Generate time slots
-                    $phpTimeSlots = [];
-                    for ($hour = $startHour; $hour <= $endHour; $hour++) {
-                        $phpTimeSlots[] = sprintf('%02d:00', $hour);
-                        $phpTimeSlots[] = sprintf('%02d:30', $hour);
-                    }
-
-                    // Remove the last slot if it's beyond end hour
-                    if (count($phpTimeSlots) > 0) {
-                        $lastSlot = end($phpTimeSlots);
-                        $lastHour = (int)explode(':', $lastSlot)[0];
-                        $lastMinute = (int)explode(':', $lastSlot)[1];
-                        if ($lastHour > $endHour || ($lastHour == $endHour && $lastMinute > 0)) {
-                            array_pop($phpTimeSlots);
-                        }
-                    }
-                @endphp
-
-                // Convert PHP array to JavaScript
-                timeSlots = @json_encode($phpTimeSlots ?? []);
-
                 // Get existing bookings for selected date
                 var blockedTimes = [];
                 @if (isset($existingBookings) && $existingBookings->count() > 0)
@@ -723,8 +676,17 @@
                     @endforeach
                 @endif
 
+                // Get all time slots from the select element
+                var timeSlots = [];
+                $('#bk_time option').each(function() {
+                    var value = $(this).val();
+                    if (value) {
+                        timeSlots.push(value);
+                    }
+                });
+
                 // Update time select
-                var html = '<option value="">Pilih waktu</option>';
+                var html = '<option value="">Select time</option>';
                 if (timeSlots.length === 0) {
                     html = '<option value="" disabled>Tidak ada jadwal tersedia</option>';
                 } else {
