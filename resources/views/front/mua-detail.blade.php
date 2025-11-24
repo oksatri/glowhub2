@@ -535,10 +535,6 @@
 
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
-    <!-- Google Maps API -->
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&libraries=places&callback=initGoogleMaps"></script>
-
     <script>
         $(document).ready(function() {
             var maxDistance = {{ $mua['max_distance'] ?? 'null' }};
@@ -655,6 +651,93 @@
                         }
                     }
                 });
+            }
+
+            function updateTimeSlots(selectedDate) {
+                if (!selectedDate) return;
+
+                // Get the original time slots from PHP (stored as data attribute)
+                var timeSlots = [];
+                @php
+                    // Re-generate the same time slots for JavaScript use
+                    $operationalHours = $mua->operational_hours ?? '09:00 - 18:00';
+                    $times = explode('-', $operationalHours);
+                    $startHour = 9;
+                    $endHour = 18;
+
+                    if (count($times) >= 2) {
+                        $startTime = trim($times[0]);
+                        $endTime = trim($times[1]);
+
+                        // Parse start time
+                        $startParts = explode(':', str_replace('.', ':', $startTime));
+                        $startHour = (int)($startParts[0] ?? 9);
+
+                        // Parse end time
+                        $endParts = explode(':', str_replace('.', ':', $endTime));
+                        $endHour = (int)($endParts[0] ?? 18);
+
+                        // Validate hours
+                        $startHour = max(0, min(23, $startHour));
+                        $endHour = max(0, min(23, $endHour));
+                    }
+
+                    // Generate time slots
+                    $phpTimeSlots = [];
+                    for ($hour = $startHour; $hour <= $endHour; $hour++) {
+                        $phpTimeSlots[] = sprintf('%02d:00', $hour);
+                        $phpTimeSlots[] = sprintf('%02d:30', $hour);
+                    }
+
+                    // Remove the last slot if it's beyond end hour
+                    if (count($phpTimeSlots) > 0) {
+                        $lastSlot = end($phpTimeSlots);
+                        $lastHour = (int)explode(':', $lastSlot)[0];
+                        $lastMinute = (int)explode(':', $lastSlot)[1];
+                        if ($lastHour > $endHour || ($lastHour == $endHour && $lastMinute > 0)) {
+                            array_pop($phpTimeSlots);
+                        }
+                    }
+                @endphp
+
+                // Convert PHP array to JavaScript
+                timeSlots = @json_encode($phpTimeSlots ?? []);
+
+                // Get existing bookings for selected date
+                var blockedTimes = [];
+                @if (isset($existingBookings) && $existingBookings->count() > 0)
+                    @foreach ($existingBookings as $booking)
+                        if ('{{ $booking->selected_date->format('Y-m-d') }}' === selectedDate) {
+                            var bookingTime = '{{ $booking->selected_time }}';
+                            // Block 1 hour 30 minutes from booking time (3 slots of 30 minutes)
+                            var bookingDateTime = new Date('2000-01-01T' + bookingTime + ':00');
+                            for (var i = 0; i < 3; i++) {
+                                var timeStr = bookingDateTime.getHours().toString().padStart(2, '0') + ':' +
+                                             bookingDateTime.getMinutes().toString().padStart(2, '0');
+                                if (!blockedTimes.includes(timeStr)) {
+                                    blockedTimes.push(timeStr);
+                                }
+                                bookingDateTime.setMinutes(bookingDateTime.getMinutes() + 30);
+                            }
+                        }
+                    @endforeach
+                @endif
+
+                // Update time select
+                var html = '<option value="">Pilih waktu</option>';
+                if (timeSlots.length === 0) {
+                    html = '<option value="" disabled>Tidak ada jadwal tersedia</option>';
+                } else {
+                    timeSlots.forEach(function(time) {
+                        var isBlocked = blockedTimes.includes(time);
+                        var displayTime = time + (isBlocked ? ' (Sudah dibooking)' : '');
+                        html += '<option value="' + time + '" ' +
+                               (isBlocked ? 'disabled style="background-color: #f8d7da; color: #721c24;"' : '') + '>' +
+                               displayTime + '</option>';
+                    });
+                }
+
+                $('#bk_time').html(html);
             }
 
             function updateEstimatedPrice() {
