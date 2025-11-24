@@ -806,6 +806,8 @@
 
                 // Parse operational hours
                 var operationalHours = parseOperationalHours('{{ $mua->operational_hours ?? '' }}');
+                console.log('Operational hours from DB:', '{{ $mua->operational_hours ?? '' }}');
+                console.log('Parsed operational hours:', operationalHours);
 
                 // Generate time slots based on operational hours (30-minute intervals)
                 var timeSlots = [];
@@ -835,6 +837,7 @@
                         currentHour++;
                     }
                 }
+                console.log('Generated time slots:', timeSlots);
 
                 // Update time select
                 var html = '<option value="">Pilih waktu</option>';
