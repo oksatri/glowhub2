@@ -1,7 +1,5 @@
 <!-- CSS untuk peta -->
-@push('styles')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-@endpush
 
 <div class="row gx-4">
     <div class="col-12 mb-4">
@@ -169,13 +167,13 @@
     </div>
 </div>
 
-
-@push('scripts')
 <!-- Tambahkan script Leaflet -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <!-- Tambahkan script kustom untuk peta -->
 <script src="{{ asset('js/location-map.js') }}"></script>
+
+@push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const userSelect = document.getElementById('userSelect');
