@@ -284,51 +284,43 @@
                                     <!-- Time Slots -->
                                     <div class="col-5">
                                         <h6 class="fw-bold mb-2 text-primary">Available Times</h6>
-                                        <select class="form-select" id="bk_time">
-                                            @php
-                                                // Parse operational hours using PHP
-                                                $operationalHours = $mua->operational_hours ?? '09:00 - 18:00';
-                                                $times = explode('-', $operationalHours);
-                                                $startHour = 9;
-                                                $endHour = 18;
+                                        @php
+                                            $timeSlots = [];
+                                            $selectedTime = null;
 
-                                                if (count($times) >= 2) {
-                                                    $startTime = trim($times[0]);
-                                                    $endTime = trim($times[1]);
-
-                                                    // Parse start time
-                                                    $startParts = explode(':', str_replace('.', ':', $startTime));
-                                                    $startHour = (int)($startParts[0] ?? 9);
-
-                                                    // Parse end time
-                                                    $endParts = explode(':', str_replace('.', ':', $endTime));
-                                                    $endHour = (int)($endParts[0] ?? 18);
-
-                                                    // Validate hours
-                                                    $startHour = max(0, min(23, $startHour));
-                                                    $endHour = max(0, min(23, $endHour));
-                                                }
-
-                                                // Generate time slots
-                                                $timeSlots = [];
-                                                for ($hour = $startHour; $hour <= $endHour; $hour++) {
-                                                    $timeSlots[] = sprintf('%02d:00', $hour);
-                                                    $timeSlots[] = sprintf('%02d:30', $hour);
-                                                }
-
-                                                // Remove the last slot if it's beyond end hour
-                                                if (count($timeSlots) > 0) {
-                                                    $lastSlot = end($timeSlots);
-                                                    $lastHour = (int)explode(':', $lastSlot)[0];
-                                                    $lastMinute = (int)explode(':', $lastSlot)[1];
-                                                    if ($lastHour > $endHour || ($lastHour == $endHour && $lastMinute > 0)) {
-                                                        array_pop($timeSlots);
+                                            // Generate time slots every 2 hours based on operational_hours if possible
+                                            $op = $mua['operational_hours'] ?? '';
+                                            if (!empty($op) && preg_match('/(\d{1,2})[:\.](\d{2}).*?(\d{1,2})[:\.](\d{2})/u', $op, $m)) {
+                                                try {
+                                                    $start = new \DateTime($m[1] . ':' . $m[2]);
+                                                    $end = new \DateTime($m[3] . ':' . $m[4]);
+                                                    while ($start < $end) {
+                                                        $timeSlots[] = $start->format('H:i');
+                                                        $start->modify('+2 hours');
                                                     }
+                                                } catch (\Exception $e) {
+                                                    $timeSlots = [];
                                                 }
-                                            @endphp
-                                            <option value="">Select date first</option>
-                                            @foreach ($timeSlots as $slot)
-                                                <option value="{{ $slot }}">{{ $slot }}</option>
+                                            }
+
+                                            // Fallback: if no valid slots from operational_hours, use default 09:00-19:00
+                                            if (empty($timeSlots)) {
+                                                $fallbackStart = new \DateTime('09:00');
+                                                $fallbackEnd = new \DateTime('19:00');
+                                                while ($fallbackStart < $fallbackEnd) {
+                                                    $timeSlots[] = $fallbackStart->format('H:i');
+                                                    $fallbackStart->modify('+2 hours');
+                                                }
+                                            }
+
+                                            $selectedTime = $timeSlots[0] ?? null;
+                                        @endphp
+                                        <select class="form-select" id="bk_time">
+                                            <option value="">Select time</option>
+                                            @foreach ($timeSlots as $time)
+                                                <option value="{{ $time }}" {{ $time == $selectedTime ? 'selected' : '' }}>
+                                                    {{ $time }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -382,16 +374,6 @@
                                 </div>
                             </div>
 
-                            <!-- Estimated Price -->
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div>
-                                    <div class="fw-semibold">Estimated Price</div>
-                                    <div class="small text-muted">Final price confirmed after MUA approval</div>
-                                </div>
-                                <div id="estimatedPriceDisplay" class="h5 fw-bold text-primary mb-0">
-                                    Rp 0
-                                </div>
-                            </div>
 
                             <!-- Booking Form -->
                             <form id="bookingForm" method="POST" action="{{ route('mua.book', $mua['id']) }}">
@@ -429,35 +411,11 @@
                                 <!-- Distance Check Section -->
                                 @if (!empty($mua['link_map']))
                                 <div class="mb-3">
-                                    <label class="form-label small">Check Distance</label>
-                                    <div class="row g-2">
-                                        <div class="col-8">
-                                            <input type="text" id="origin_address" class="form-control"
-                                                   placeholder="Your address (auto-filled)" readonly>
-                                        </div>
-                                        <div class="col-4">
-                                            <button type="button" id="check_distance_btn"
-                                                    class="btn btn-outline-primary w-100">
-                                                <i class="fas fa-route me-1"></i> Check
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div id="distance_result" class="mt-2" style="display: none;">
-                                        <div class="alert alert-info small mb-0">
-                                            <div class="d-flex align-items-center">
-                                                <i class="fas fa-info-circle me-2"></i>
-                                                <div>
-                                                    <strong>Distance:</strong> <span id="distance_value">-</span><br>
-                                                    <strong>Duration:</strong> <span id="duration_value">-</span><br>
-                                                    <strong>Additional Cost:</strong> <span id="additional_cost">-</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="distance_loading" class="mt-2" style="display: none;">
-                                        <div class="text-center small text-muted">
-                                            <i class="fas fa-spinner fa-spin me-1"></i> Calculating distance...
-                                        </div>
+                                    <div class="col-4">
+                                        <button type="button" id="check_distance_btn"
+                                                class="btn btn-outline-primary w-100">
+                                            <i class="fas fa-route me-1"></i> Check
+                                        </button>
                                     </div>
                                     <small class="text-muted d-block mt-1">
                                         <i class="fas fa-map-marker-alt me-1"></i>
@@ -477,7 +435,18 @@
                                 <input type="hidden" name="services" id="bk_services">
                                 <input type="hidden" name="mua_service_id" id="bk_mua_service_id">
 
-                                <button type="button" id="bookNowBtn" class="btn w-100 btn-lg fw-bold"
+                                <!-- Estimated Price -->
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div>
+                                        <div class="fw-semibold">Estimated Price</div>
+                                        <div class="small text-muted">Final price confirmed after MUA approval</div>
+                                    </div>
+                                    <div id="estimatedPriceDisplay" class="h5 fw-bold text-primary mb-0">
+                                        Rp 0
+                                    </div>
+                                </div>
+
+                                <button type="submit" id="bookNowBtn" class="btn w-100 btn-lg fw-bold"
                                     style="background: linear-gradient(135deg, #845d70 0%, #6d4c5a 100%); color: white; border: none; border-radius: 25px; padding: 15px;">
                                     <i class="fas fa-calendar-check me-2"></i>Book Now
                                 </button>
