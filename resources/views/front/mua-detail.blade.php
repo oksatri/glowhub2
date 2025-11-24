@@ -288,7 +288,7 @@
                                             $timeSlots = [];
                                             $selectedTime = null;
 
-                                            // Generate time slots every 2 hours based on operational_hours if possible
+                                            // Generate time slots every 30 minutes based on operational_hours if possible
                                             $op = $mua['operational_hours'] ?? '';
                                             if (!empty($op) && preg_match('/(\d{1,2})[:\.](\d{2}).*?(\d{1,2})[:\.](\d{2})/u', $op, $m)) {
                                                 try {
@@ -296,7 +296,7 @@
                                                     $end = new \DateTime($m[3] . ':' . $m[4]);
                                                     while ($start < $end) {
                                                         $timeSlots[] = $start->format('H:i');
-                                                        $start->modify('+2 hours');
+                                                        $start->modify('+30 minutes');
                                                     }
                                                 } catch (\Exception $e) {
                                                     $timeSlots = [];
@@ -309,7 +309,7 @@
                                                 $fallbackEnd = new \DateTime('19:00');
                                                 while ($fallbackStart < $fallbackEnd) {
                                                     $timeSlots[] = $fallbackStart->format('H:i');
-                                                    $fallbackStart->modify('+2 hours');
+                                                    $fallbackStart->modify('+30 minutes');
                                                 }
                                             }
 
