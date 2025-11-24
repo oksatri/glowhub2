@@ -156,18 +156,12 @@
                             <!-- Profile Info -->
                             <div class="card-body p-4">
                                 <!-- Location at top -->
-                                <div class="text-center mb-3">
+                                {{-- <div class="text-center mb-3">
                                     <div class="d-flex justify-content-center align-items-center mb-2">
                                         <i class="fas fa-map-marker-alt me-2" style="color:#D23B3B;"></i>
-                                        <span class="fw-semibold text-primary me-2">{{ $mua['location'] }}</span>
-                                        @if(!empty($mua['link_map']))
-                                            <a href="{{ $mua['link_map'] }}" target="_blank" class="btn btn-sm btn-outline-primary"
-                                               style="padding: 0.15rem 0.5rem; font-size: 0.75rem;">
-                                                <i class="fas fa-external-link-alt me-1"></i> Cek Lokasi
-                                            </a>
-                                        @endif
+                                        <span class="fw-semibold text-primary">{{ $mua['location'] }}</span>
                                     </div>
-                                </div>
+                                </div> --}}
 
                                 <div class="text-center mb-4">
                                     <p class="text-muted mb-2">
