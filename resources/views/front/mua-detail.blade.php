@@ -440,9 +440,9 @@
                                         <div class="fw-semibold">Estimated Price</div>
                                         <div class="small text-muted">Final price confirmed after MUA approval</div>
                                     </div>
-                                    <div id="estimatedPriceDisplay" class="h3 fw-bold text-primary mb-0">
+                                    <h3 id="estimatedPriceDisplay" class="text-primary mb-0">
                                         Rp 0
-                                    </div>
+                                    </h3>
                                 </div>
 
                                 <button type="submit" id="bookNowBtn" class="btn w-100 btn-lg fw-bold"
