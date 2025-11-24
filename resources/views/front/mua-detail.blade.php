@@ -734,26 +734,26 @@
                     if (times.length >= 2) {
                         // Parse start time (handle both ':' and '.' as separators)
                         let startTime = times[0].split(':');
-                        let startHour = parseInt(startTime[0]) || 9;
+                        let startHour = parseInt(startTime[0], 10) || 9;  // Parse as base 10
                         let startMinute = 0;
 
                         // Handle minutes if present
                         if (startTime.length > 1) {
                             // Ensure minutes are exactly 2 digits
                             let minutes = startTime[1].padEnd(2, '0').substring(0, 2);
-                            startMinute = parseInt(minutes) || 0;
+                            startMinute = parseInt(minutes, 10) || 0;  // Parse as base 10
                         }
 
                         // Parse end time (handle both ':' and '.' as separators)
                         let endTime = times[1].split(':');
-                        let endHour = parseInt(endTime[0]) || 18;
+                        let endHour = parseInt(endTime[0], 10) || 18;  // Parse as base 10
                         let endMinute = 0;
 
                         // Handle minutes if present
                         if (endTime.length > 1) {
                             // Ensure minutes are exactly 2 digits
                             let minutes = endTime[1].padEnd(2, '0').substring(0, 2);
-                            endMinute = parseInt(minutes) || 0;
+                            endMinute = parseInt(minutes, 10) || 0;  // Parse as base 10
                         }
 
                         // Validate hours
