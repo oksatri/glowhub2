@@ -1,56 +1,4 @@
-<!-- CSS untuk peta -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
 <div class="row gx-4">
-    <div class="col-12 mb-4">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0">Lokasi & Area Layanan</h5>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <form id="location-search-form" class="mb-3">
-                                <div class="input-group">
-                                    <input type="text" id="address-input" class="form-control"
-                                           placeholder="Cari alamat...">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-search"></i>
-                                    </button>
-                                </div>
-                            </form>
-                            <div id="distance-info" class="mb-3">
-                                <!-- Informasi jarak akan muncul di sini -->
-                            </div>
-                            <div class="form-group">
-                                <label>Koordinat</label>
-                                <div class="input-group mb-2">
-                                    <span class="input-group-text">Latitude</span>
-                                    <input type="text" id="latitude" name="latitude"
-                                           class="form-control"
-                                           value="{{ old('latitude', $mua->latitude ?? '') }}"
-                                           readonly>
-                                </div>
-                                <div class="input-group">
-                                    <span class="input-group-text">Longitude</span>
-                                    <input type="text" id="longitude" name="longitude"
-                                           class="form-control"
-                                           value="{{ old('longitude', $mua->longitude ?? '') }}"
-                                           readonly>
-                                </div>
-                                <small class="text-muted">Klik pada peta untuk mengatur koordinat</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div id="location-map" style="height: 300px; width: 100%; border-radius: 4px;"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="col-sm-8">
         <div class="mb-3">
             <label class="form-label">MUA Name</label>
@@ -166,12 +114,6 @@
         </div>
     </div>
 </div>
-
-<!-- Tambahkan script Leaflet -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-<!-- Tambahkan script kustom untuk peta -->
-<script src="{{ asset('js/location-map.js') }}"></script>
 
 @push('scripts')
     <script>
