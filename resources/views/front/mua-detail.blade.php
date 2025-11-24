@@ -159,10 +159,16 @@
                                 <div class="text-center mb-3">
                                     <div class="d-flex justify-content-center align-items-center mb-2">
                                         <i class="fas fa-map-marker-alt me-2" style="color:#D23B3B;"></i>
-                                        <span class="fw-semibold text-primary">{{ $mua['location'] }}</span>
+                                        <span class="fw-semibold text-primary me-2">{{ $mua['location'] }}</span>
+                                        @if(!empty($mua['link_map']))
+                                            <a href="{{ $mua['link_map'] }}" target="_blank" class="btn btn-sm btn-outline-primary"
+                                               style="padding: 0.15rem 0.5rem; font-size: 0.75rem;">
+                                                <i class="fas fa-external-link-alt me-1"></i> Cek Lokasi
+                                            </a>
+                                        @endif
                                     </div>
                                 </div>
-                                
+
                                 <div class="text-center mb-4">
                                     <p class="text-muted mb-2">
                                         @if (!empty($mua['max_distance']))
@@ -393,11 +399,11 @@
                                     <label class="form-label small">Check Distance</label>
                                     <div class="row g-2">
                                         <div class="col-8">
-                                            <input type="text" id="origin_address" class="form-control" 
+                                            <input type="text" id="origin_address" class="form-control"
                                                    placeholder="Your address (auto-filled)" readonly>
                                         </div>
                                         <div class="col-4">
-                                            <button type="button" id="check_distance_btn" 
+                                            <button type="button" id="check_distance_btn"
                                                     class="btn btn-outline-primary w-100">
                                                 <i class="fas fa-route me-1"></i> Check
                                             </button>
@@ -528,7 +534,7 @@
 
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    
+
     <!-- Google Maps API -->
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&libraries=places&callback=initGoogleMaps"></script>
 
@@ -542,7 +548,7 @@
         function initGoogleMaps() {
             directionsService = new google.maps.DirectionsService();
             directionsRenderer = new google.maps.DirectionsRenderer();
-            
+
             // Auto-fill origin address when user types in address field
             $('#bk_address').on('input', function() {
                 $('#origin_address').val($(this).val());
@@ -553,7 +559,7 @@
         function calculateDistance() {
             var origin = $('#bk_address').val();
             var destination = muaLocation;
-            
+
             if (!origin || !destination) {
                 alert('Please enter your address first');
                 return;
@@ -570,31 +576,31 @@
 
             directionsService.route(request, function(response, status) {
                 $('#distance_loading').hide();
-                
+
                 if (status === 'OK') {
                     var route = response.routes[0];
                     var leg = route.legs[0];
                     var distance = leg.distance.value / 1000; // Convert meters to km
                     var duration = leg.duration.text;
-                    
+
                     // Calculate additional cost
                     var additionalCost = 0;
                     if (maxDistance && additionalPerKm && distance > maxDistance) {
                         additionalCost = (distance - maxDistance) * additionalPerKm;
                     }
-                    
+
                     // Update display
                     $('#distance_value').text(distance.toFixed(1) + ' km');
                     $('#duration_value').text(duration);
                     $('#additional_cost').text(additionalCost > 0 ? formatRupiah(additionalCost) : 'No additional cost');
-                    
+
                     // Update distance input
                     $('#bk_distance_input').val(distance.toFixed(1));
                     $('#bk_distance').val(distance.toFixed(1));
-                    
+
                     // Update estimated price
                     updateEstimatedPrice();
-                    
+
                     $('#distance_result').show();
                 } else {
                     alert('Unable to calculate distance. Please check your address and try again.');
@@ -626,13 +632,13 @@
                 function findFirstAvailableDate() {
                     var today = new Date();
                     var currentDate = new Date(today);
-                    
+
                     // Check up to 30 days ahead
                     for (var i = 0; i < 30; i++) {
-                        var dateStr = currentDate.getFullYear() + '-' + 
-                            String(currentDate.getMonth() + 1).padStart(2, '0') + '-' + 
+                        var dateStr = currentDate.getFullYear() + '-' +
+                            String(currentDate.getMonth() + 1).padStart(2, '0') + '-' +
                             String(currentDate.getDate()).padStart(2, '0');
-                        
+
                         if (!bookedDates.includes(dateStr)) {
                             return currentDate;
                         }
@@ -656,10 +662,10 @@
                             if (date < today) {
                                 return true;
                             }
-                            
+
                             // Check if date is in booked dates array
-                            var dateStr = date.getFullYear() + '-' + 
-                                String(date.getMonth() + 1).padStart(2, '0') + '-' + 
+                            var dateStr = date.getFullYear() + '-' +
+                                String(date.getMonth() + 1).padStart(2, '0') + '-' +
                                 String(date.getDate()).padStart(2, '0');
                             return bookedDates.includes(dateStr);
                         }
@@ -683,17 +689,17 @@
                         // Add custom styling for different date states
                         var today = new Date();
                         today.setHours(0, 0, 0, 0);
-                        
+
                         // dStr contains the date string in YYYY-MM-DD format
                         // Create a valid Date object from dStr
                         var dateParts = dStr.split('-');
                         var currentDay = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]); // month is 0-indexed
                         currentDay.setHours(0, 0, 0, 0);
-                        
-                        var dateStr = currentDay.getFullYear() + '-' + 
-                            String(currentDay.getMonth() + 1).padStart(2, '0') + '-' + 
+
+                        var dateStr = currentDay.getFullYear() + '-' +
+                            String(currentDay.getMonth() + 1).padStart(2, '0') + '-' +
                             String(currentDay.getDate()).padStart(2, '0');
-                        
+
                         // Past dates
                         if (currentDay < today) {
                             dayElement.classList.add('past-date');
@@ -723,10 +729,10 @@
             // Function to update time slots based on selected date
             function updateTimeSlots(selectedDate) {
                 if (!selectedDate) return;
-                
+
                 // Show loading
                 $('#bk_time').html('<option value="">Loading...</option>');
-                
+
                 // Get existing bookings for selected date
                 var blockedTimes = [];
                 @if (isset($existingBookings) && $existingBookings->count() > 0)
@@ -736,7 +742,7 @@
                             // Block 1 hour 30 minutes from booking time
                             var bookingDateTime = new Date('2000-01-01T' + bookingTime + ':00');
                             for (var i = 0; i < 3; i++) { // 3 slots of 30 minutes = 1.5 hours
-                                var timeStr = bookingDateTime.getHours().toString().padStart(2, '0') + ':' + 
+                                var timeStr = bookingDateTime.getHours().toString().padStart(2, '0') + ':' +
                                              bookingDateTime.getMinutes().toString().padStart(2, '0');
                                 blockedTimes.push(timeStr);
                                 bookingDateTime.setMinutes(bookingDateTime.getMinutes() + 30);
@@ -749,7 +755,7 @@
                 var timeSlots = [];
                 var startHour = 9;
                 var endHour = 19;
-                
+
                 for (var hour = startHour; hour < endHour; hour++) {
                     for (var minute = 0; minute < 60; minute += 30) {
                         var timeStr = hour.toString().padStart(2, '0') + ':' + minute.toString().padStart(2, '0');
@@ -761,11 +767,11 @@
                 var html = '<option value="">Select time</option>';
                 timeSlots.forEach(function(time) {
                     var isBlocked = blockedTimes.includes(time);
-                    html += '<option value="' + time + '" ' + 
+                    html += '<option value="' + time + '" ' +
                            (isBlocked ? 'disabled style="background-color: #f8d7da; color: #721c24;"' : '') + '>' +
                            time + (isBlocked ? ' (Booked)' : '') + '</option>';
                 });
-                
+
                 $('#bk_time').html(html);
             }
 
