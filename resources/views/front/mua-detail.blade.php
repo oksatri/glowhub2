@@ -412,7 +412,7 @@
                                 @if (!empty($mua['link_map']))
                                 <div class="mb-3">
                                     <div class="col-4">
-                                        <a href="{{ $mua['link_map'] }}" target="_blank" class="btn btn-outline-primary w-100">
+                                        <a href="{{ $mua['link_map'] }}" target="_blank" class="btn btn-primary w-100">
                                             <i class="fas fa-route me-1"></i> Check
                                         </a>
                                     </div>
