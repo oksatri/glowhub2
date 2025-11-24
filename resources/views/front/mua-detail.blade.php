@@ -285,7 +285,51 @@
                                     <div class="col-5">
                                         <h6 class="fw-bold mb-2 text-primary">Available Times</h6>
                                         <select class="form-select" id="bk_time">
+                                            @php
+                                                // Parse operational hours using PHP
+                                                $operationalHours = $mua->operational_hours ?? '09:00 - 18:00';
+                                                $times = explode('-', $operationalHours);
+                                                $startHour = 9;
+                                                $endHour = 18;
+
+                                                if (count($times) >= 2) {
+                                                    $startTime = trim($times[0]);
+                                                    $endTime = trim($times[1]);
+
+                                                    // Parse start time
+                                                    $startParts = explode(':', str_replace('.', ':', $startTime));
+                                                    $startHour = (int)($startParts[0] ?? 9);
+
+                                                    // Parse end time
+                                                    $endParts = explode(':', str_replace('.', ':', $endTime));
+                                                    $endHour = (int)($endParts[0] ?? 18);
+
+                                                    // Validate hours
+                                                    $startHour = max(0, min(23, $startHour));
+                                                    $endHour = max(0, min(23, $endHour));
+                                                }
+
+                                                // Generate time slots
+                                                $timeSlots = [];
+                                                for ($hour = $startHour; $hour <= $endHour; $hour++) {
+                                                    $timeSlots[] = sprintf('%02d:00', $hour);
+                                                    $timeSlots[] = sprintf('%02d:30', $hour);
+                                                }
+
+                                                // Remove the last slot if it's beyond end hour
+                                                if (count($timeSlots) > 0) {
+                                                    $lastSlot = end($timeSlots);
+                                                    $lastHour = (int)explode(':', $lastSlot)[0];
+                                                    $lastMinute = (int)explode(':', $lastSlot)[1];
+                                                    if ($lastHour > $endHour || ($lastHour == $endHour && $lastMinute > 0)) {
+                                                        array_pop($timeSlots);
+                                                    }
+                                                }
+                                            @endphp
                                             <option value="">Select date first</option>
+                                            @foreach ($timeSlots as $slot)
+                                                <option value="{{ $slot }}">{{ $slot }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -781,8 +825,52 @@
             function updateTimeSlots(selectedDate) {
                 if (!selectedDate) return;
 
-                // Show loading
-                $('#bk_time').html('<option value="">Memuat jadwal...</option>');
+                // Get the original time slots from PHP (stored as data attribute)
+                var timeSlots = [];
+                @php
+                    // Re-generate the same time slots for JavaScript use
+                    $operationalHours = $mua->operational_hours ?? '09:00 - 18:00';
+                    $times = explode('-', $operationalHours);
+                    $startHour = 9;
+                    $endHour = 18;
+
+                    if (count($times) >= 2) {
+                        $startTime = trim($times[0]);
+                        $endTime = trim($times[1]);
+
+                        // Parse start time
+                        $startParts = explode(':', str_replace('.', ':', $startTime));
+                        $startHour = (int)($startParts[0] ?? 9);
+
+                        // Parse end time
+                        $endParts = explode(':', str_replace('.', ':', $endTime));
+                        $endHour = (int)($endParts[0] ?? 18);
+
+                        // Validate hours
+                        $startHour = max(0, min(23, $startHour));
+                        $endHour = max(0, min(23, $endHour));
+                    }
+
+                    // Generate time slots
+                    $phpTimeSlots = [];
+                    for ($hour = $startHour; $hour <= $endHour; $hour++) {
+                        $phpTimeSlots[] = sprintf('%02d:00', $hour);
+                        $phpTimeSlots[] = sprintf('%02d:30', $hour);
+                    }
+
+                    // Remove the last slot if it's beyond end hour
+                    if (count($phpTimeSlots) > 0) {
+                        $lastSlot = end($phpTimeSlots);
+                        $lastHour = (int)explode(':', $lastSlot)[0];
+                        $lastMinute = (int)explode(':', $lastSlot)[1];
+                        if ($lastHour > $endHour || ($lastHour == $endHour && $lastMinute > 0)) {
+                            array_pop($phpTimeSlots);
+                        }
+                    }
+                @endphp
+
+                // Convert PHP array to JavaScript
+                timeSlots = @json_encode($phpTimeSlots ?? []);
 
                 // Get existing bookings for selected date
                 var blockedTimes = [];
@@ -803,41 +891,6 @@
                         }
                     @endforeach
                 @endif
-
-                // Parse operational hours
-                var operationalHours = parseOperationalHours('{{ $mua->operational_hours ?? '' }}');
-                console.log('Operational hours from DB:', '{{ $mua->operational_hours ?? '' }}');
-                console.log('Parsed operational hours:', operationalHours);
-
-                // Generate time slots based on operational hours (30-minute intervals)
-                var timeSlots = [];
-                var currentHour = operationalHours.startHour;
-                var currentMinute = operationalHours.startMinute;
-                var endHour = operationalHours.endHour;
-                var endMinute = operationalHours.endMinute;
-
-                // Round start time to nearest 30 minutes (upwards)
-                if (currentMinute > 0 && currentMinute < 30) {
-                    currentMinute = 30;
-                } else if (currentMinute > 30) {
-                    currentHour++;
-                    currentMinute = 0;
-                }
-
-                // Generate slots - include the end time slot if it's exactly on a 30-minute boundary
-                while (currentHour < endHour || (currentHour === endHour && currentMinute <= endMinute)) {
-                    var timeStr = currentHour.toString().padStart(2, '0') + ':' +
-                                 currentMinute.toString().padStart(2, '0');
-                    timeSlots.push(timeStr);
-
-                    // Increment by 30 minutes
-                    currentMinute += 30;
-                    if (currentMinute >= 60) {
-                        currentMinute = 0;
-                        currentHour++;
-                    }
-                }
-                console.log('Generated time slots:', timeSlots);
 
                 // Update time select
                 var html = '<option value="">Pilih waktu</option>';
