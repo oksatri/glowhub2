@@ -284,11 +284,6 @@
                                     <!-- Time Slots -->
                                     <div class="col-5">
                                         <h6 class="fw-bold mb-2 text-primary">Available Times</h6>
-                                        @php
-                                            // Simple time slots for initial display (will be updated by JavaScript)
-                                            $timeSlots = ['09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30'];
-                                            $selectedTime = $timeSlots[0] ?? null;
-                                        @endphp
                                         <select class="form-select" id="bk_time">
                                             <option value="">Select date first</option>
                                         </select>
@@ -819,7 +814,7 @@
                 var endHour = operationalHours.endHour;
                 var endMinute = operationalHours.endMinute;
 
-                // Round start time to nearest 30 minutes
+                // Round start time to nearest 30 minutes (upwards)
                 if (currentMinute > 0 && currentMinute < 30) {
                     currentMinute = 30;
                 } else if (currentMinute > 30) {
@@ -827,8 +822,8 @@
                     currentMinute = 0;
                 }
 
-                // Generate slots
-                while (currentHour < endHour || (currentHour === endHour && currentMinute < endMinute)) {
+                // Generate slots - include the end time slot if it's exactly on a 30-minute boundary
+                while (currentHour < endHour || (currentHour === endHour && currentMinute <= endMinute)) {
                     var timeStr = currentHour.toString().padStart(2, '0') + ':' +
                                  currentMinute.toString().padStart(2, '0');
                     timeSlots.push(timeStr);
