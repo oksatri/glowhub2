@@ -720,12 +720,74 @@
                 });
             }
 
+            // Function to parse operational hours string (e.g., '09:00 - 18:00' or '09.00 - 18.00')
+            function parseOperationalHours(operationalHours) {
+                if (!operationalHours) {
+                    // Default to 9 AM - 6 PM if not set
+                    return { startHour: 9, startMinute: 0, endHour: 18, endMinute: 0 };
+                }
+
+                try {
+                    // Normalize the input (replace dots with colons, remove spaces around dashes)
+                    let normalized = operationalHours
+                        .replace(/\./g, ':')  // replace all dots with colons
+                        .replace(/\s*-\s*/g, '-');  // normalize spaces around dash
+
+                    // Split into start and end times
+                    let times = normalized.split('-').map(t => t.trim());
+
+                    if (times.length >= 2) {
+                        // Parse start time (handle both ':' and '.' as separators)
+                        let startTime = times[0].split(':');
+                        let startHour = parseInt(startTime[0]) || 9;
+                        let startMinute = 0;
+
+                        // Handle minutes if present
+                        if (startTime.length > 1) {
+                            // Ensure minutes are exactly 2 digits
+                            let minutes = startTime[1].padEnd(2, '0').substring(0, 2);
+                            startMinute = parseInt(minutes) || 0;
+                        }
+
+                        // Parse end time (handle both ':' and '.' as separators)
+                        let endTime = times[1].split(':');
+                        let endHour = parseInt(endTime[0]) || 18;
+                        let endMinute = 0;
+
+                        // Handle minutes if present
+                        if (endTime.length > 1) {
+                            // Ensure minutes are exactly 2 digits
+                            let minutes = endTime[1].padEnd(2, '0').substring(0, 2);
+                            endMinute = parseInt(minutes) || 0;
+                        }
+
+                        // Validate hours
+                        startHour = Math.min(23, Math.max(0, startHour));
+                        endHour = Math.min(23, Math.max(0, endHour));
+                        startMinute = Math.min(59, Math.max(0, startMinute));
+                        endMinute = Math.min(59, Math.max(0, endMinute));
+
+                        return {
+                            startHour: startHour,
+                            startMinute: startMinute,
+                            endHour: endHour,
+                            endMinute: endMinute
+                        };
+                    }
+                } catch (e) {
+                    console.error('Error parsing operational hours:', e);
+                }
+
+                // Fallback to default if parsing fails
+                return { startHour: 9, startMinute: 0, endHour: 18, endMinute: 0 };
+            }
+
             // Function to update time slots based on selected date
             function updateTimeSlots(selectedDate) {
                 if (!selectedDate) return;
 
                 // Show loading
-                $('#bk_time').html('<option value="">Loading...</option>');
+                $('#bk_time').html('<option value="">Memuat jadwal...</option>');
 
                 // Get existing bookings for selected date
                 var blockedTimes = [];
@@ -733,38 +795,65 @@
                     @foreach ($existingBookings as $booking)
                         if ('{{ $booking->selected_date->format('Y-m-d') }}' === selectedDate) {
                             var bookingTime = '{{ $booking->selected_time }}';
-                            // Block 1 hour 30 minutes from booking time
+                            // Block 1 hour 30 minutes from booking time (3 slots of 30 minutes)
                             var bookingDateTime = new Date('2000-01-01T' + bookingTime + ':00');
-                            for (var i = 0; i < 3; i++) { // 3 slots of 30 minutes = 1.5 hours
+                            for (var i = 0; i < 3; i++) {
                                 var timeStr = bookingDateTime.getHours().toString().padStart(2, '0') + ':' +
                                              bookingDateTime.getMinutes().toString().padStart(2, '0');
-                                blockedTimes.push(timeStr);
+                                if (!blockedTimes.includes(timeStr)) {
+                                    blockedTimes.push(timeStr);
+                                }
                                 bookingDateTime.setMinutes(bookingDateTime.getMinutes() + 30);
                             }
                         }
                     @endforeach
                 @endif
 
-                // Generate time slots
-                var timeSlots = [];
-                var startHour = 9;
-                var endHour = 19;
+                // Parse operational hours
+                var operationalHours = parseOperationalHours('{{ $mua->operational_hours ?? '' }}');
 
-                for (var hour = startHour; hour < endHour; hour++) {
-                    for (var minute = 0; minute < 60; minute += 30) {
-                        var timeStr = hour.toString().padStart(2, '0') + ':' + minute.toString().padStart(2, '0');
-                        timeSlots.push(timeStr);
+                // Generate time slots based on operational hours (30-minute intervals)
+                var timeSlots = [];
+                var currentHour = operationalHours.startHour;
+                var currentMinute = operationalHours.startMinute;
+                var endHour = operationalHours.endHour;
+                var endMinute = operationalHours.endMinute;
+
+                // Round start time to nearest 30 minutes
+                if (currentMinute > 0 && currentMinute < 30) {
+                    currentMinute = 30;
+                } else if (currentMinute > 30) {
+                    currentHour++;
+                    currentMinute = 0;
+                }
+
+                // Generate slots
+                while (currentHour < endHour || (currentHour === endHour && currentMinute < endMinute)) {
+                    var timeStr = currentHour.toString().padStart(2, '0') + ':' +
+                                 currentMinute.toString().padStart(2, '0');
+                    timeSlots.push(timeStr);
+
+                    // Increment by 30 minutes
+                    currentMinute += 30;
+                    if (currentMinute >= 60) {
+                        currentMinute = 0;
+                        currentHour++;
                     }
                 }
 
                 // Update time select
-                var html = '<option value="">Select time</option>';
-                timeSlots.forEach(function(time) {
-                    var isBlocked = blockedTimes.includes(time);
-                    html += '<option value="' + time + '" ' +
-                           (isBlocked ? 'disabled style="background-color: #f8d7da; color: #721c24;"' : '') + '>' +
-                           time + (isBlocked ? ' (Booked)' : '') + '</option>';
-                });
+                var html = '<option value="">Pilih waktu</option>';
+                if (timeSlots.length === 0) {
+                    html = '<option value="" disabled>Tidak ada jadwal tersedia</option>';
+                } else {
+                    timeSlots.forEach(function(time) {
+                        var isBlocked = blockedTimes.includes(time);
+                        var displayTime = time + (isBlocked ? ' (Sudah dibooking)' : '');
+                        html += '<option value="' + time + '" ' +
+                               (isBlocked ? 'disabled style="background-color: #f8d7da; color: #721c24;"' : '') + '>' +
+                               displayTime + '</option>';
+                    });
+                }
 
                 $('#bk_time').html(html);
             }
