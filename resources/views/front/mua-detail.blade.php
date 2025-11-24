@@ -395,7 +395,7 @@
                                     <input type="text" name="whatsapp" id="bk_whatsapp" class="form-control"
                                         value="{{ optional(auth()->user())->phone ?? '' }}" required>
                                 </div>
-                                <div class="mb-3">
+                                <div>
                                     <label class="form-label small">Address</label>
                                     <input type="text" name="address" id="bk_address" class="form-control" required
                                            placeholder="Enter your complete address">
@@ -447,7 +447,7 @@
 
                                 <button type="submit" id="bookNowBtn" class="btn w-100 btn-lg fw-bold"
                                     style="background: linear-gradient(135deg, #845d70 0%, #6d4c5a 100%); color: white; border: none; border-radius: 25px; padding: 15px;">
-                                    <i class="fas fa-calendar-check me-2"></i>Book Now
+                                    <i class="fas fa-calendar-check me-2"></i>Send Request
                                 </button>
                             </form>
                         </div>
