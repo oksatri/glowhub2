@@ -171,7 +171,7 @@
                                             Service area available
                                         @endif
                                     </p>
-                                    <p class="small text-secondary fst-italic">
+                                    <p class="small text-white fst-italic">
                                         {{ $mua['description'] }}
                                     </p>
                                 </div>
