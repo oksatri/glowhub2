@@ -440,7 +440,7 @@
                                         <div class="fw-semibold">Estimated Price</div>
                                         <div class="small text-muted">Final price confirmed after MUA approval</div>
                                     </div>
-                                    <div id="estimatedPriceDisplay" class="h5 fw-bold text-primary mb-0">
+                                    <div id="estimatedPriceDisplay" class="h3 fw-bold text-primary mb-0">
                                         Rp 0
                                     </div>
                                 </div>
