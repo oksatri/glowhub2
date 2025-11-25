@@ -131,10 +131,7 @@ class MuaController extends Controller
     {
         $mua = \App\Models\Mua::with(['services', 'portfolios' => function ($q) {
             $q->with('service');
-        }, 'rel_city'])->find($id);
-        if (! $mua) {
-            abort(404, 'MUA not found');
-        }
+        }, 'rel_city'])->findOrFail($id);
 
         // determine active service: by requested service_id or fallback to cheapest
         $serviceId = $request->get('service_id');
@@ -152,7 +149,7 @@ class MuaController extends Controller
             'mua_name' => $mua->name, // Add separate MUA name field
             'service_name' => $activeService ? $activeService->service_name : null, // Add service name field
             'description' => $activeService ? $activeService->description : null,
-            'location' => trim($mua->rel_city->name ?? ''),
+            'location' => trim($mua && $mua->rel_city ? $mua->rel_city->name : ($mua->city ?? '')),
             'rating' => (float) ($mua->rating ?? 4.5),
             'price' => $activeService ? (int) $activeService->price : null,
             'image' => $mua->image ? asset('uploads/' . $mua->image) : asset('images/product-item1.jpg'),
@@ -347,17 +344,16 @@ class MuaController extends Controller
                 ]));
             }
 
-                // Also notify admins via Notification system and broadcast event
-                try {
-                    Notification::send($admins, new NewBookingNotification($booking));
-                    event(new BookingCreated($booking));
-                } catch (\Exception $e) {
-                    logger()->error('Failed to notify admins: ' . $e->getMessage());
-                }
+            // Also notify admins via Notification system and broadcast event
+            try {
+                Notification::send($admins, new NewBookingNotification($booking));
+                event(new BookingCreated($booking));
+                Log::info('Notifications and events sent successfully');
             } catch (\Exception $e) {
-                // don't fail booking if notification fails; log later
-                logger()->error('Failed to send email notifications for booking: ' . $e->getMessage());
+                Log::error('Failed to notify admins: ' . $e->getMessage());
             }
+
+            Log::info('Email sending process completed for booking: ' . $booking->id);
 
             return response()->json([
                 'status' => 'success',
