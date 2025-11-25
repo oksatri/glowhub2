@@ -110,12 +110,12 @@
                                 <div class="row g-2">
                                     <div class="col-md-4">
                                         <label class="form-label small fw-medium">Key</label>
-                                        <input type="text" name="instructions[{{ $index }}][key]" class="form-control form-control-sm" value="{{ $key }}"
+                                        <input type="text" name="instructions[{{ $index }}][key]" class="form-control form-control-sm" value="{{ is_string($key) ? htmlspecialchars($key, ENT_QUOTES, 'UTF-8') : htmlspecialchars((string)$key, ENT_QUOTES, 'UTF-8') }}"
                                                style="border: 1px solid #E5E7EB; font-size: 0.875rem;">
                                     </div>
                                     <div class="col-md-8">
                                         <label class="form-label small fw-medium">Value</label>
-                                        <input type="text" name="instructions[{{ $index }}][value]" class="form-control form-control-sm" value="{{ $value }}"
+                                        <input type="text" name="instructions[{{ $index }}][value]" class="form-control form-control-sm" value="{{ is_string($value) ? htmlspecialchars($value, ENT_QUOTES, 'UTF-8') : htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8') }}"
                                                style="border: 1px solid #E5E7EB; font-size: 0.875rem;">
                                     </div>
                                 </div>
