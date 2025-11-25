@@ -251,29 +251,35 @@
                                     @endphp
                                     {{-- @foreach ($portfolio as $index => $val) --}}
                                     @if (isset($portfolio) && !empty($portfolio) && count($portfolio) > 0)
-                                        <div class="portfolio-grid">
+                                        <div class="row g-3">
                                             @foreach ($portfolio as $index => $item)
-                                                <div class="portfolio-item" data-bs-toggle="modal" data-bs-target="#portfolioModal{{ $index }}">
-                                                    <img src="{{ $item['image'] ?? asset('images/portfolio-placeholder.jpg') }}" alt="Portfolio">
-                                                    <div class="portfolio-badge">{{ $item['service_name'] ?? 'Makeup' }}</div>
-                                                </div>
-
-                                                <!-- Portfolio Modal -->
-                                                <div class="modal fade" id="portfolioModal{{ $index }}" tabindex="-1">
-                                                    <div class="modal-dialog modal-lg modal-dialog-centered">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title">{{ $item['service_name'] ?? 'Portfolio' }}</h5>
-                                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                            </div>
-                                                            <div class="modal-body text-center">
-                                                                <img src="{{ $item['image'] ?? asset('images/portfolio-placeholder.jpg') }}" class="img-fluid rounded" alt="Portfolio">
-                                                            </div>
+                                                <div class="col-6">
+                                                    <div class="portfolio-item position-relative" data-bs-toggle="modal" data-bs-target="#portfolioModal{{ $index }}">
+                                                        <img src="{{ $item['image'] ?? asset('images/portfolio-placeholder.jpg') }}" alt="Portfolio" class="img-fluid rounded">
+                                                        <div class="position-absolute top-0 start-0 m-2">
+                                                            <span class="badge {{ $badgeClasses[array_rand($badgeClasses)] }}">{{ $item['service_name'] ?? 'Portfolio' }}</span>
                                                         </div>
                                                     </div>
                                                 </div>
                                             @endforeach
                                         </div>
+
+                                        @foreach ($portfolio as $index => $item)
+                                            <!-- Portfolio Modal -->
+                                            <div class="modal fade" id="portfolioModal{{ $index }}" tabindex="-1">
+                                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">{{ $item['service_name'] ?? 'Portfolio' }}</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                        </div>
+                                                        <div class="modal-body text-center">
+                                                            <img src="{{ $item['image'] ?? asset('images/portfolio-placeholder.jpg') }}" class="img-fluid rounded" alt="Portfolio">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
                                     @else
                                         <div class="text-center py-4">
                                             <i class="fas fa-camera fa-3x text-muted mb-3"></i>
