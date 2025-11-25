@@ -158,7 +158,7 @@
                             <div class="card-body p-4">
                                 <!-- Service Name & MUA Name -->
                                 <div class="text-center mb-3">
-                                    <h4 class="mb-2 text-primary fw-bold">
+                                    <h4 class="mb-2 fw-bold">
                                         {{ $mua['service_name'] ?? 'Service Available' }}
                                     </h4>
                                 </div>
