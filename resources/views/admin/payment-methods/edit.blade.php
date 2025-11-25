@@ -1,83 +1,149 @@
 @extends('back._parts.master')
+@section('page-title', 'Edit Payment Method')
+@section('content')
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h2 mb-1" style="color: #2D3748; font-weight:600;">Edit Payment Method</h1>
+            <p class="text-muted small mb-0">Update an existing payment method — elegant and simple.</p>
+        </div>
+        <a href="{{ route('admin.payment-methods.index') }}" class="btn px-3 py-2"
+            style="background:white; border:1px solid #E5E7EB; color:#374151;">
+            <i class="fas fa-arrow-left me-2"></i>Back to list
+        </a>
+    </div>
 
-@section('title', 'Edit Payment Method')
+    <div class="card border-0 shadow-sm">
+        <div class="card-body px-4 py-4">
+            <form id="payment-method-form" action="{{ route('admin.payment-methods.update', $paymentMethod) }}" method="POST">
+                @csrf
+                @method('PUT')
 
-@push('styles')
-<style>
-    .form-container {
-        background: white;
-        border-radius: 10px;
-        padding: 30px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
-    .form-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 20px 30px;
-        margin: -30px -30px 30px -30px;
-        border-radius: 10px 10px 0 0;
-    }
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold" style="color: #374151;">Payment Method Name <span class="text-danger">*</span></label>
+                            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
+                                   value="{{ old('name', $paymentMethod->name) }}" placeholder="e.g., Bank Transfer - BCA" required
+                                   style="border: 1px solid #E5E7EB; font-size: 0.95rem;">
+                            @error('name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold" style="color: #374151;">Code <span class="text-danger">*</span></label>
+                            <input type="text" name="code" class="form-control @error('code') is-invalid @enderror"
+                                   value="{{ old('code', $paymentMethod->code) }}" placeholder="e.g., bca_va" required
+                                   style="border: 1px solid #E5E7EB; font-size: 0.95rem;">
+                            @error('code')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
 
-    .form-header h3 {
-        margin: 0;
-        font-size: 20px;
-        font-weight: 600;
-    }
+                <div class="mb-3">
+                    <label class="form-label fw-semibold" style="color: #374151;">Description <span class="text-danger">*</span></label>
+                    <textarea name="description" class="form-control @error('description') is-invalid @enderror"
+                              rows="3" placeholder="e.g., Transfer ke Virtual Account BCA" required
+                              style="border: 1px solid #E5E7EB; font-size: 0.95rem;">{{ old('description', $paymentMethod->description) }}</textarea>
+                    @error('description')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
 
-    .instruction-group {
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 15px;
-        margin-bottom: 15px;
-        background: #f8f9fa;
-    }
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold" style="color: #374151;">Sort Order</label>
+                            <input type="number" name="sort_order" class="form-control @error('sort_order') is-invalid @enderror"
+                                   value="{{ old('sort_order', $paymentMethod->sort_order) }}" min="0" placeholder="0"
+                                   style="border: 1px solid #E5E7EB; font-size: 0.95rem;">
+                            @error('sort_order')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <div class="form-check mt-4">
+                                <input class="form-check-input" type="checkbox" name="is_active" id="is_active"
+                                       {{ old('is_active', $paymentMethod->is_active) ? 'checked' : '' }} value="1"
+                                       style="border: 1px solid #D1D5DB;">
+                                <label class="form-check-label fw-medium" for="is_active" style="color: #374151;">
+                                    Active
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-    .instruction-group h5 {
-        color: #667eea;
-        margin: 0 0 10px;
-        font-size: 16px;
-    }
+                <div class="mb-4">
+                    <h5 class="mb-3" style="color: #1F2937; font-weight: 600;">📋 Payment Instructions</h5>
+                    <p class="text-muted mb-3" style="font-size: 0.95rem;">Add key-value pairs for payment instructions (e.g., account_name, bank_name, steps)</p>
 
-    .btn-remove-instruction {
-        background: #dc3545;
-        color: white;
-        border: none;
-        padding: 5px 10px;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 12px;
-    }
+                    <div id="instructions-container" class="mb-3">
+                        @php
+                            $instructions = $paymentMethod->instructions ?? [];
+                            $index = 0;
+                        @endphp
 
-    .btn-remove-instruction:hover {
-        background: #c82333;
-    }
+                        @foreach($instructions as $key => $value)
+                            <div class="instruction-group p-3 mb-3 rounded" style="background: #F9FAFB; border: 1px solid #E5E7EB;" id="instruction-{{ $index }}">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="mb-0" style="color: #374151; font-weight: 500;">Instruction {{ $index + 1 }}</h6>
+                                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeInstruction({{ $index }})">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                <div class="row g-2">
+                                    <div class="col-md-4">
+                                        <label class="form-label small fw-medium">Key</label>
+                                        <input type="text" name="instructions[{{ $index }}][key]" class="form-control form-control-sm" value="{{ $key }}"
+                                               style="border: 1px solid #E5E7EB; font-size: 0.875rem;">
+                                    </div>
+                                    <div class="col-md-8">
+                                        <label class="form-label small fw-medium">Value</label>
+                                        <input type="text" name="instructions[{{ $index }}][value]" class="form-control form-control-sm" value="{{ $value }}"
+                                               style="border: 1px solid #E5E7EB; font-size: 0.875rem;">
+                                    </div>
+                                </div>
+                            </div>
+                            @php($index++)
+                        @endforeach
+                    </div>
 
-    .btn-add-instruction {
-        background: #28a745;
-        color: white;
-        border: none;
-        padding: 8px 15px;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 14px;
-        margin-top: 10px;
-    }
+                    <button type="button" id="add-instruction" class="btn px-3 py-2"
+                            style="background: #ECFDF5; border: 1px solid #059669; color: #065F46; font-weight: 500;">
+                        <i class="fas fa-plus me-2"></i>Add Instruction
+                    </button>
+                </div>
 
-    .btn-add-instruction:hover {
-        background: #218838;
-    }
-
-    .form-actions {
-        background: #f8f9fa;
-        padding: 20px;
-        margin: 30px -30px -30px -30px;
-        border-radius: 0 0 10px 10px;
-        text-align: right;
-    }
-</style>
-@endpush
-
+                <div class="mt-4 d-flex align-items-center gap-2">
+                    <button type="submit" class="btn px-4 py-2 rounded-pill text-white"
+                        style="background: linear-gradient(135deg,#667EEA 0%,#764BA2 100%); border:none;">
+                        <i class="fas fa-save me-2"></i>Save Changes
+                    </button>
+                    <a href="{{ route('admin.payment-methods.index') }}" class="btn px-4 py-2"
+                        style="background:transparent; color:#6B7280; border: 1px solid #E5E7EB;">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @push('scripts')
 <script>
 $(document).ready(function() {
@@ -86,22 +152,23 @@ $(document).ready(function() {
     // Add instruction
     $('#add-instruction').on('click', function() {
         var html = `
-            <div class="instruction-group" id="instruction-${instructionIndex}">
-                <h5>Instruction ${instructionIndex + 1}</h5>
-                <div class="row">
-                    <div class="col-md-3">
-                        <label class="form-label">Key</label>
-                        <input type="text" name="instructions[${instructionIndex}][key]" class="form-control" placeholder="e.g., account_name">
+            <div class="instruction-group p-3 mb-3 rounded" style="background: #F9FAFB; border: 1px solid #E5E7EB;" id="instruction-${instructionIndex}">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="mb-0" style="color: #374151; font-weight: 500;">Instruction ${instructionIndex + 1}</h6>
+                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeInstruction(${instructionIndex})">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="row g-2">
+                    <div class="col-md-4">
+                        <label class="form-label small fw-medium">Key</label>
+                        <input type="text" name="instructions[${instructionIndex}][key]" class="form-control form-control-sm" placeholder="e.g., account_name"
+                               style="border: 1px solid #E5E7EB; font-size: 0.875rem;">
                     </div>
                     <div class="col-md-8">
-                        <label class="form-label">Value</label>
-                        <input type="text" name="instructions[${instructionIndex}][value]" class="form-control" placeholder="e.g., PT GlowHub Indonesia">
-                    </div>
-                    <div class="col-md-1">
-                        <label class="form-label">&nbsp;</label><br>
-                        <button type="button" class="btn-remove-instruction" onclick="removeInstruction(${instructionIndex})">
-                            <i class="fas fa-trash"></i>
-                        </button>
+                        <label class="form-label small fw-medium">Value</label>
+                        <input type="text" name="instructions[${instructionIndex}][value]" class="form-control form-control-sm" placeholder="e.g., PT GlowHub Indonesia"
+                               style="border: 1px solid #E5E7EB; font-size: 0.875rem;">
                     </div>
                 </div>
             </div>
@@ -153,126 +220,3 @@ $(document).ready(function() {
 });
 </script>
 @endpush
-
-@section('content')
-<div class="container-fluid">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="form-container">
-                <div class="form-header">
-                    <h3>✏️ Edit Payment Method: {{ $paymentMethod->name }}</h3>
-                </div>
-
-                <form id="payment-method-form" action="{{ route('admin.payment-methods.update', $paymentMethod) }}" method="POST">
-                    @csrf
-                    @method('PUT')
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">Payment Method Name <span class="text-danger">*</span></label>
-                                <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
-                                       value="{{ old('name', $paymentMethod->name) }}" placeholder="e.g., Bank Transfer - BCA" required>
-                                @error('name')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label">Code <span class="text-danger">*</span></label>
-                                <input type="text" name="code" class="form-control @error('code') is-invalid @enderror"
-                                       value="{{ old('code', $paymentMethod->code) }}" placeholder="e.g., bca_va" required>
-                                @error('code')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Description <span class="text-danger">*</span></label>
-                        <textarea name="description" class="form-control @error('description') is-invalid @enderror"
-                                  rows="3" placeholder="e.g., Transfer ke Virtual Account BCA" required>{{ old('description', $paymentMethod->description) }}</textarea>
-                        @error('description')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label class="form-label">Sort Order</label>
-                                <input type="number" name="sort_order" class="form-control @error('sort_order') is-invalid @enderror"
-                                       value="{{ old('sort_order', $paymentMethod->sort_order) }}" min="0" placeholder="0">
-                                @error('sort_order')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <div class="form-check mt-4">
-                                    <input class="form-check-input" type="checkbox" name="is_active" id="is_active"
-                                           {{ old('is_active', $paymentMethod->is_active) ? 'checked' : '' }} value="1">
-                                    <label class="form-check-label" for="is_active">
-                                        Active
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mb-4">
-                        <h5>📋 Instructions</h5>
-                        <p class="text-muted">Add key-value pairs for payment instructions (e.g., account_name, bank_name, steps)</p>
-
-                        <div id="instructions-container">
-                            @php
-                                $instructions = $paymentMethod->instructions ?? [];
-                                $index = 0;
-                            @endphp
-
-                            @foreach($instructions as $key => $value)
-                                <div class="instruction-group" id="instruction-{{ $index }}">
-                                    <h5>Instruction {{ $index + 1 }}</h5>
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <label class="form-label">Key</label>
-                                            <input type="text" name="instructions[{{ $index }}][key]" class="form-control" value="{{ $key }}">
-                                        </div>
-                                        <div class="col-md-8">
-                                            <label class="form-label">Value</label>
-                                            <input type="text" name="instructions[{{ $index }}][value]" class="form-control" value="{{ $value }}">
-                                        </div>
-                                        <div class="col-md-1">
-                                            <label class="form-label">&nbsp;</label><br>
-                                            <button type="button" class="btn-remove-instruction" onclick="removeInstruction({{ $index }})">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                @php($index++)
-                            @endforeach
-                        </div>
-
-                        <button type="button" id="add-instruction" class="btn-add-instruction">
-                            <i class="fas fa-plus me-2"></i>Add Instruction
-                        </button>
-                    </div>
-
-                    <div class="form-actions">
-                        <a href="{{ route('admin.payment-methods.index') }}" class="btn btn-secondary me-2">
-                            <i class="fas fa-times me-2"></i>Cancel
-                        </a>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save me-2"></i>Update Payment Method
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-@endsection
