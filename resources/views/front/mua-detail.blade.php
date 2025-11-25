@@ -1,7 +1,7 @@
-@extends('front.app')
+@extends('front._parts.master')
 
-@section('title', ($mua['name'] ?? 'MUA Profile') . ' - ' . ($siteSetting->site_name ?? 'GlowHub'))
-@section('meta-description', ($mua['description'] ?? 'Professional makeup artist services') . ' - ' . ($siteSetting->site_tagline ?? ''))
+@section('meta_title', ($mua['name'] ?? 'MUA Profile') . ' - ' . ($siteSetting->site_name ?? 'GlowHub'))
+@section('meta_description', ($mua['description'] ?? 'Professional makeup artist services') . ' - ' . ($siteSetting->site_tagline ?? ''))
 
 @section('content')
 <style>
