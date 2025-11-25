@@ -338,13 +338,23 @@
 
                             <!-- Card Body -->
                             <div class="px-3 py-2" style="background-color:#F7BCC6;">
+                                <!-- Service Name at top -->
+                                <div class="mb-2">
+                                    <h6 class="mb-0 text-truncate" title="{{ $mua['name'] }}" style="font-size: 0.9rem; font-weight: 600;">
+                                        {{ $mua['name'] }}
+                                    </h6>
+                                    @if (!empty($mua['mua_name']))
+                                        <small class="text-muted" style="font-size: 0.75rem;">by {{ $mua['mua_name'] }}</small>
+                                    @endif
+                                </div>
+
                                 <!-- Location at top -->
                                 <div class="d-flex align-items-center mb-2 small" style="font-size: 0.78rem;">
                                     <i class="fas fa-map-marker-alt me-1" style="color:#D23B3B;"></i>
                                     <span class="text-dark text-truncate fw-semibold" title="{{ $mua['location'] }}">
                                         {{ $mua['location'] ?: '-' }}</span>
                                 </div>
-                                
+
                                 <div class="mb-1">
                                     @if (!empty($mua['category']))
                                         <div class="small text-muted text-truncate" style="font-size: 0.74rem;"

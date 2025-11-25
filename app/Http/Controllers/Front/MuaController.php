@@ -68,7 +68,8 @@ class MuaController extends Controller
                 // keep id as MUA id for detail route
                 'id' => $mua ? $mua->id : null,
                 'service_id' => $service->id,
-                'name' => $mua->name ?? $service->service_name,
+                'name' => $service->service_name, // Always show service name instead of MUA name
+                'mua_name' => $mua->name ?? null, // Add separate field for MUA name if needed
                 'location' => $mua ? trim(optional($mua->rel_city)->name ?: ($mua->city ?? '')) : '',
                 'rating' => $mua ? (float) ($mua->rating ?? 0) : 0,
                 'reviews_count' => $mua->reviews_count ?? 0,
@@ -145,9 +146,11 @@ class MuaController extends Controller
             $activeService = $mua->services->sortBy('price')->first();
         }
 
-        $muaArr = [
+        $muaData = [
             'id' => $mua->id,
-            'name' => $mua->name,
+            'name' => $activeService ? $activeService->service_name : $mua->name, // Show service name if available, otherwise MUA name
+            'mua_name' => $mua->name, // Add separate MUA name field
+            'service_name' => $activeService ? $activeService->service_name : null, // Add service name field
             'description' => $activeService ? $activeService->description : null,
             'location' => trim($mua->rel_city->name ?? ''),
             'rating' => (float) ($mua->rating ?? 4.5),
@@ -239,7 +242,7 @@ class MuaController extends Controller
             ->get(['selected_date', 'selected_time']);
 
         return view('front.mua-detail', [
-            'mua' => $muaArr,
+            'mua' => $muaData,
             'portfolio' => $portfolio,
             'features' => $features,
             'activeService' => $activeService,
@@ -267,7 +270,7 @@ class MuaController extends Controller
             ]);
 
             // Debug: Log received data
-            \Log::info('Booking request data:', [
+            Log::info('Booking request data:', [
                 'selected_date' => $request->input('selected_date'),
                 'selected_time' => $request->input('selected_time'),
                 'services' => $request->input('services'),

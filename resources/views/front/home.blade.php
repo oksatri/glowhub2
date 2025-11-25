@@ -210,18 +210,28 @@
                                         </div>
 
                                         <div class="w-100" style="aspect-ratio: 3 / 4; overflow:hidden;">
-                                            <img src="{{ $cardImage }}" alt="{{ $m->name ?? $service->service_name }}"
+                                            <img src="{{ $cardImage }}" alt="{{ $service->service_name }}"
                                                 style="width:100%; height:100%; object-fit:cover;">
                                         </div>
 
                                         <div class="px-3 py-2" style="background-color:#F7BCC6;">
+                                            <!-- Service Name at top -->
+                                            <div class="mb-2">
+                                                <h6 class="mb-0 text-truncate" title="{{ $service->service_name }}" style="font-size: 0.9rem; font-weight: 600;">
+                                                    {{ $service->service_name }}
+                                                </h6>
+                                                @if ($m && $m->name)
+                                                    <small class="text-muted" style="font-size: 0.75rem;">by {{ $m->name }}</small>
+                                                @endif
+                                            </div>
+
                                             <!-- Location at top -->
                                             <div class="d-flex align-items-center mb-2 small" style="font-size: 0.78rem;">
                                                 <i class="fas fa-map-marker-alt me-1" style="color:#D23B3B;"></i>
                                                 <span class="text-dark text-truncate fw-semibold" title="{{ $location }}">
                                                     {{ $location ?: '-' }}</span>
                                             </div>
-                                            
+
                                             <div class="mb-1">
                                                 @if (!empty($service->categori_service))
                                                     <div class="small text-muted text-truncate" style="font-size: 0.74rem;" title="{{ $service->categori_service }}">

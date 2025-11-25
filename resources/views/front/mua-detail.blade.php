@@ -141,7 +141,7 @@
                             <!-- Profile Image -->
                             <div class="position-relative">
                                 <div style="width:100%; aspect-ratio:3/4; overflow:hidden;">
-                                    <img src="{{ $mua['image'] }}" alt="{{ $mua['name'] }}"
+                                    <img src="{{ $mua['image'] }}" alt="{{ $mua['service_name'] ?? $mua['name'] }}"
                                         style="width:100%; height:100%; object-fit:cover;">
                                 </div>
                                 <!-- Location Badge -->
@@ -155,6 +155,16 @@
 
                             <!-- Profile Info -->
                             <div class="card-body p-4">
+                                <!-- Service Name & MUA Name -->
+                                <div class="text-center mb-3">
+                                    <h4 class="mb-2 text-primary fw-bold">
+                                        {{ $mua['service_name'] ?? 'Service Available' }}
+                                    </h4>
+                                    @if (!empty($mua['mua_name']))
+                                        <small class="text-muted">by {{ $mua['mua_name'] }}</small>
+                                    @endif
+                                </div>
+
                                 <!-- Location at top -->
                                 {{-- <div class="text-center mb-3">
                                     <div class="d-flex justify-content-center align-items-center mb-2">
