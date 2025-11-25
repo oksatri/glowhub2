@@ -22,7 +22,8 @@
             Add Payment Method
         </a>
     </div>
-
+@push('styles')
+    <style>
     .sortable-item {
         cursor: move;
         transition: all 0.3s ease;
