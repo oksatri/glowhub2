@@ -116,6 +116,11 @@ Route::middleware('auth')->group(function () {
         // Users management
         Route::resource('users', UserController::class, ['as' => 'admin']);
 
+        // Payment Methods management
+        Route::resource('payment-methods', \App\Http\Controllers\Back\PaymentMethodController::class, ['as' => 'admin']);
+        Route::post('payment-methods/reorder', [\App\Http\Controllers\Back\PaymentMethodController::class, 'reorder'])->name('admin.payment-methods.reorder');
+        Route::post('payment-methods/{paymentMethod}/toggle', [\App\Http\Controllers\Back\PaymentMethodController::class, 'toggleStatus'])->name('admin.payment-methods.toggle');
+
         // MUA management (admin area)
         // Provide GET /muas that redirects to /admin/muas for admins so the
         // GET method is available (previously only POST /muas existed because
