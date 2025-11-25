@@ -759,12 +759,19 @@
                     return;
                 }
 
+                // Convert date to YYYY-MM-DD format if needed
+                var dateObj = new Date(selectedDate);
+                var formattedDate = dateObj.toISOString().split('T')[0];
+                console.log('Original date:', selectedDate, 'Formatted date:', formattedDate);
+
                 // selected time from select
                 var selectedTime = $('#bk_time').val();
                 if (!selectedTime) {
                     alert('Please select a time slot');
                     return;
                 }
+
+                console.log('Selected time:', selectedTime);
 
                 // services (collect ids)
                 var services = [];
@@ -790,7 +797,7 @@
 
                 // Debug: Log data sebelum dikirim
                 console.log('Sending data:', {
-                    selected_date: selectedDate,
+                    selected_date: formattedDate,
                     selected_time: selectedTime,
                     services: services,
                     mua_service_id: muaServiceId,
@@ -804,9 +811,9 @@
                 console.log('Form action URL:', url);
 
                 // Check if all required data is present
-                if (!selectedDate || !selectedTime || !name || !email || !whatsapp || !address) {
+                if (!formattedDate || !selectedTime || !name || !email || !whatsapp || !address) {
                     console.error('Missing required data:', {
-                        selected_date: !!selectedDate,
+                        selected_date: !!formattedDate,
                         selected_time: !!selectedTime,
                         name: !!name,
                         email: !!email,
@@ -827,7 +834,7 @@
                         whatsapp: whatsapp,
                         address: address,
                         distance: $('#bk_distance').val() || null,
-                        selected_date: selectedDate,
+                        selected_date: formattedDate,
                         selected_time: selectedTime,
                         services: services,
                         mua_service_id: $('#bk_mua_service_id').val() || null

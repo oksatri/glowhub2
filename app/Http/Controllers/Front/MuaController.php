@@ -263,7 +263,7 @@ class MuaController extends Controller
                 'whatsapp' => 'required|string',
                 'address' => 'required|string',
                 'distance' => 'nullable|numeric',
-                'selected_date' => 'required|date',
+                'selected_date' => 'required|date_format:Y-m-d',
                 'selected_time' => 'required|string',
                 'services' => 'nullable|array',
                 'mua_service_id' => 'nullable|integer'
