@@ -185,8 +185,8 @@
         <p>Best regards,<br>The {{ $muaName }} Team & GlowHub</p>
 
         <div class="footer">
-            <p>This is an automated notification from GlowHub Booking System</p>
-            <p>&copy; {{ date('Y') }} GlowHub. All rights reserved.</p>
+            <p>This is an automated notification from <strong>GlowHub Platform</strong></p>
+            <p>&copy; {{ date('Y') }} GlowHub. Your Beauty & Wellness Partner.</p>
         </div>
     </div>
 </body>
