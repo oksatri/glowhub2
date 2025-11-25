@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Events\BookingCreated;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\NewBookingNotification;
 use App\Mail\BookingAdminNotification;
@@ -263,6 +264,14 @@ class MuaController extends Controller
                 'selected_time' => 'required|string',
                 'services' => 'nullable|array',
                 'mua_service_id' => 'nullable|integer'
+            ]);
+
+            // Debug: Log received data
+            \Log::info('Booking request data:', [
+                'selected_date' => $request->input('selected_date'),
+                'selected_time' => $request->input('selected_time'),
+                'services' => $request->input('services'),
+                'mua_service_id' => $request->input('mua_service_id')
             ]);
 
             // Persist booking

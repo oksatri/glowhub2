@@ -445,7 +445,7 @@
                                     </h3>
                                 </div>
 
-                                <button type="submit" id="bookNowBtn" class="btn w-100 btn-lg fw-bold"
+                                <button type="button" id="bookNowBtn" class="btn w-100 btn-lg fw-bold"
                                     style="background: linear-gradient(135deg, #845d70 0%, #6d4c5a 100%); color: white; border: none; border-radius: 25px; padding: 15px;">
                                     <i class="fas fa-calendar-check me-2"></i>Send Request
                                 </button>
@@ -742,7 +742,9 @@
             });
 
             // Book Now handler - collects selected date/time/services and submits to server
-            $('#bookNowBtn').on('click', function() {
+            $('#bookNowBtn').on('click', function(e) {
+                e.preventDefault(); // Prevent form submission and page refresh
+
                 // selected date from date input
                 var selectedDate = $('#bk_date').val();
                 if (!selectedDate) {
@@ -778,6 +780,14 @@
                     alert('Please complete your contact information');
                     return;
                 }
+
+                // Debug: Log data sebelum dikirim
+                console.log('Sending data:', {
+                    selected_date: selectedDate,
+                    selected_time: selectedTime,
+                    services: services,
+                    mua_service_id: muaServiceId
+                });
 
                 var url = $('#bookingForm').attr('action');
 
