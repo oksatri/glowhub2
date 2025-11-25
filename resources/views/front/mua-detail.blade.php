@@ -793,10 +793,29 @@
                     selected_date: selectedDate,
                     selected_time: selectedTime,
                     services: services,
-                    mua_service_id: muaServiceId
+                    mua_service_id: muaServiceId,
+                    name: name,
+                    email: email,
+                    whatsapp: whatsapp,
+                    address: address
                 });
 
                 var url = $('#bookingForm').attr('action');
+                console.log('Form action URL:', url);
+
+                // Check if all required data is present
+                if (!selectedDate || !selectedTime || !name || !email || !whatsapp || !address) {
+                    console.error('Missing required data:', {
+                        selected_date: !!selectedDate,
+                        selected_time: !!selectedTime,
+                        name: !!name,
+                        email: !!email,
+                        whatsapp: !!whatsapp,
+                        address: !!address
+                    });
+                    alert('Please fill all required fields');
+                    return;
+                }
 
                 $.ajax({
                     url: url,
@@ -834,22 +853,33 @@
                     },
                     error: function(xhr) {
                         console.log('XHR Status:', xhr.status);
-                        console.log('XHR Response:', xhr.responseText);
-                        console.log('XHR ResponseJSON:', xhr.responseJSON);
+                        console.log('XHR Response Text:', xhr.responseText);
+                        console.log('XHR Response JSON:', xhr.responseJSON);
+                        console.log('XHR Headers:', xhr.getAllResponseHeaders());
 
                         var msg = 'Booking failed.';
-                        if (xhr.responseJSON && xhr.responseJSON.message) msg = xhr.responseJSON.message;
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            msg = xhr.responseJSON.message;
+                        }
                         if (xhr.responseJSON && xhr.responseJSON.errors) {
                             var err = xhr.responseJSON.errors;
-                            msg += '\n' + Object.values(err).map(function(v) {
+                            var errorList = Object.values(err).map(function(v) {
                                 return v.join(', ');
                             }).join('\n');
+                            msg += '\n\nValidation Errors:\n' + errorList;
                         }
                         if (xhr.status === 422) {
-                            msg = 'Validation error: ' + msg;
+                            msg = 'Validation Error: ' + msg;
                         } else if (xhr.status === 500) {
-                            msg = 'Server error: ' + msg;
+                            msg = 'Server Error: ' + msg;
+                            console.log('Full error response:', xhr);
+                        } else if (xhr.status === 404) {
+                            msg = 'Route not found. Please check the URL.';
+                        } else if (xhr.status === 403) {
+                            msg = 'Access forbidden. CSRF token may be invalid.';
                         }
+
+                        console.log('Final error message:', msg);
                         alert(msg);
                     }
                 });

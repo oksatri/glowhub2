@@ -293,8 +293,7 @@ class MuaController extends Controller
                 'selected_date' => $request->input('selected_date'),
                 'selected_time' => $request->input('selected_time'),
                 'services' => $request->input('services') ?: null,
-                'status' => 'pending',
-                'service_price' => $basePrice
+                'status' => 'pending'
             ]);
 
             // Send email notifications to admin, MUA, and client
