@@ -284,13 +284,13 @@
                                     <div class="col-7">
                                         <label class="form-label small mb-1">Select Date</label>
                                         <input type="date" class="form-control" id="bk_date">
-                                        <small class="text-muted d-block mt-1">You can change month and year from the
+                                        <small class="text-muted d-block">You can change month and year from the
                                             picker.</small>
                                     </div>
 
                                     <!-- Time Slots -->
                                     <div class="col-5">
-                                        <h6 class="fw-bold mb-2 text-primary">Available Times</h6>
+                                        <label class="form-label small mb-1">Available Times</label>
                                         @php
                                             $timeSlots = [];
                                             $selectedTime = null;
@@ -322,7 +322,7 @@
 
                                             $selectedTime = $timeSlots[0] ?? null;
                                         @endphp
-                                        <select class="form-select" id="bk_time">
+                                        <select class="form-control" id="bk_time">
                                             <option value="">Select time</option>
                                             @foreach ($timeSlots as $time)
                                                 <option value="{{ $time }}" {{ $time == $selectedTime ? 'selected' : '' }}>
@@ -330,10 +330,7 @@
                                                 </option>
                                             @endforeach
                                         </select>
-                                        <small class="text-warning d-block mt-2">
-                                            <i class="fas fa-info-circle me-1"></i>
-                                            <strong>Note:</strong> Jam yang kamu pilih adalah waktu MUA selesai makeup-mu
-                                        </small>
+                                        <small class="text-muted d-block">The time you selected is the time when the MUA finishes your makeup</small>
                                     </div>
                                 </div>
                             </div>
