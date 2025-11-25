@@ -104,9 +104,9 @@
                                 </td>
                                 <td class="px-4">
                                     @if($paymentMethod->is_active)
-                                        <span class="badge rounded-pill px-3 py-2" style="background: #ECFDF5; color: #065F46; font-weight: 500;">Active</span>
+                                        <span onclick="$('#toggle-btn-{{ $paymentMethod->id }}').click();" class="badge rounded-pill px-3 py-2 pointer" style="background: #ECFDF5; color: #065F46; font-weight: 500;">Active</span>
                                     @else
-                                        <span class="badge rounded-pill px-3 py-2" style="background: #F3F4F6; color: #374151; font-weight: 500;">Inactive</span>
+                                        <span onclick="$('#toggle-btn-{{ $paymentMethod->id }}').click();" class="badge rounded-pill px-3 py-2 pointer" style="background: #F3F4F6; color: #374151; font-weight: 500;">Inactive</span>
                                     @endif
                                 </td>
                                 <td class="px-4 text-end">
@@ -116,7 +116,7 @@
                                             style="background: #F9FAFB; border: 1px solid #E5E7EB; color: #374151; font-weight: 500; padding: 0.5rem 1rem;">
                                             <i class="fas fa-edit me-2 opacity-70"></i> Edit
                                         </a>
-                                        <a href="{{ route('admin.payment-methods.toggle', $paymentMethod) }}"
+                                        <a id="toggle-btn-{{ $paymentMethod->id }}" style="display: none;" href="{{ route('admin.payment-methods.toggle', $paymentMethod) }}"
                                             class="btn btn-sm d-inline-flex align-items-center toggle-status-btn"
                                             style="background: #FEF3C7; border: 1px solid #D97706; color: #92400E; font-weight: 500; padding: 0.5rem 1rem;"
                                             data-id="{{ $paymentMethod->id }}" data-name="{{ $paymentMethod->name }}">
@@ -162,170 +162,3 @@
         </div>
     </div>
 @endsection
-@push('styles')
-    <style>
-    .sortable-item {
-        cursor: move;
-        transition: all 0.3s ease;
-    }
-
-    .sortable-item:hover {
-        background-color: #f8f9fa;
-    }
-
-    .sortable-item.sortable-ghost {
-        opacity: 0.4;
-        background: #f0f0f0;
-    }
-
-    .status-badge {
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 600;
-    }
-
-    .status-active {
-        background: #d4edda;
-        color: #155724;
-    }
-
-    .status-inactive {
-        background: #f8d7da;
-        color: #721c24;
-    }
-
-    .action-buttons {
-        display: flex;
-        gap: 5px;
-        flex-wrap: wrap;
-    }
-
-    .btn-sm {
-        padding: 5px 10px;
-        font-size: 12px;
-        border-radius: 5px;
-        border: none;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .btn-edit {
-        background: #007bff;
-        color: white;
-    }
-
-    .btn-edit:hover {
-        background: #0056b3;
-    }
-
-    .btn-delete {
-        background: #dc3545;
-        color: white;
-    }
-
-    .btn-delete:hover {
-        background: #c82333;
-    }
-
-    .btn-toggle {
-        background: #6c757d;
-        color: white;
-    }
-
-    .btn-toggle:hover {
-        background: #545b62;
-    }
-
-    .drag-handle {
-        cursor: move;
-        color: #6c757d;
-        font-size: 18px;
-        margin-right: 10px;
-    }
-
-    .instructions-preview {
-        max-width: 200px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-</style>
-@endpush
-
-@push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-<script>
-$(document).ready(function() {
-    // Initialize sortable
-    new Sortable(document.getElementById('payment-methods-list'), {
-        handle: '.drag-handle',
-        animation: 150,
-        ghostClass: 'sortable-ghost',
-        onEnd: function(evt) {
-            var orders = {};
-            var items = document.querySelectorAll('#payment-methods-list tr');
-            items.forEach(function(item, index) {
-                var id = item.dataset.id;
-                orders[index] = id;
-            });
-
-            $.ajax({
-                url: '{{ route("admin.payment-methods.reorder") }}',
-                method: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    orders: orders
-                },
-                success: function(response) {
-                    console.log('Order updated successfully');
-                },
-                error: function(xhr) {
-                    console.error('Error updating order:', xhr.responseText);
-                }
-            });
-        }
-    });
-
-    // Toggle status
-    $('.toggle-status-btn').on('click', function(e) {
-        e.preventDefault();
-        var btn = $(this);
-        var url = btn.attr('href');
-        var name = btn.data('name');
-
-        if (confirm('Are you sure you want to toggle the status of "' + name + '"?')) {
-            $.ajax({
-                url: url,
-                method: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    location.reload();
-                },
-                error: function(xhr) {
-                    alert('Error: ' + xhr.responseText);
-                }
-            });
-        }
-    });
-
-    // Delete confirmation
-    $('.delete-btn').on('click', function(e) {
-        e.preventDefault();
-        var btn = $(this);
-        var title = btn.data('title');
-        var id = btn.data('id');
-
-        if (confirm('Are you sure you want to delete "' + title + '"? This action cannot be undone.')) {
-            // Find the parent form and submit it
-            var form = btn.closest('.delete-form');
-            if (form) {
-                form.submit();
-            }
-        }
-    });
-});
-</script>
-@endpush
