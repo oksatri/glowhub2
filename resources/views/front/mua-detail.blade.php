@@ -317,7 +317,7 @@
                                 <div class="alert alert-info small">
                                     <i class="fas fa-info-circle me-2"></i>
                                     <strong>Booking Information:</strong> Selected time = makeup completion time.
-                                    MUA arrives 30 minutes before and needs 1 hour for service.
+                                    If you book 06:00, then 05:30 (travel) and 06:00 (completion) will be blocked.
                                 </div>
                                 <div class="row g-3">
                                     <div class="col-6">
@@ -664,33 +664,24 @@
                     @foreach ($existingBookings as $booking)
                         if ('{{ $booking->selected_date->format('Y-m-d') }}' === selectedDate) {
                             var bookingTime = '{{ $booking->selected_time }}';
-                            // Parse booking time (HH:MM format)
+                            // Parse booking time (HH:MM format) - this is COMPLETION time
                             var bookingDateTime = new Date('2000-01-01T' + bookingTime + ':00');
 
-                            // Block 1.5 hours total: 30 min travel BEFORE + 1 hour makeup
-                            // Start blocking 30 minutes before booking time
-                            var blockStart = new Date(bookingDateTime);
-                            blockStart.setMinutes(blockStart.getMinutes() - 30);
-
-                            // End blocking at booking time
-                            var blockEnd = new Date(bookingDateTime);
-
-                            // Generate all 30-minute slots in the blocking period
-                            var currentSlot = new Date(blockStart);
-                            while (currentSlot < blockEnd) {
-                                var timeStr = currentSlot.getHours().toString().padStart(2, '0') + ':' +
-                                             currentSlot.getMinutes().toString().padStart(2, '0');
-                                if (!blockedTimes.includes(timeStr)) {
-                                    blockedTimes.push(timeStr);
-                                }
-                                currentSlot.setMinutes(currentSlot.getMinutes() + 30);
-                            }
-
-                            // Also block the booking time slot itself (when makeup is finished)
+                            // Block the booking completion time slot
                             var bookingTimeStr = bookingDateTime.getHours().toString().padStart(2, '0') + ':' +
                                                  bookingDateTime.getMinutes().toString().padStart(2, '0');
                             if (!blockedTimes.includes(bookingTimeStr)) {
                                 blockedTimes.push(bookingTimeStr);
+                            }
+
+                            // Block 30 minutes BEFORE booking time (travel time)
+                            var travelTime = new Date(bookingDateTime);
+                            travelTime.setMinutes(travelTime.getMinutes() - 30);
+
+                            var travelTimeStr = travelTime.getHours().toString().padStart(2, '0') + ':' +
+                                               travelTime.getMinutes().toString().padStart(2, '0');
+                            if (!blockedTimes.includes(travelTimeStr)) {
+                                blockedTimes.push(travelTimeStr);
                             }
                         }
                     @endforeach
