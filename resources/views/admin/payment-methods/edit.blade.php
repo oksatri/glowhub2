@@ -115,7 +115,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         <label class="form-label small fw-medium">Value</label>
-                                        <input type="text" name="instructions[{{ $index }}][value]" class="form-control form-control-sm" value="{{ is_string($value) ? htmlspecialchars($value, ENT_QUOTES, 'UTF-8') : htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8') }}"
+                                        <input type="text" name="instructions[{{ $index }}][value]" class="form-control form-control-sm" value="{{ is_array($value) ? htmlspecialchars(json_encode($value), ENT_QUOTES, 'UTF-8') : (is_string($value) ? htmlspecialchars($value, ENT_QUOTES, 'UTF-8') : htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8')) }}"
                                                style="border: 1px solid #E5E7EB; font-size: 0.875rem;">
                                     </div>
                                 </div>
