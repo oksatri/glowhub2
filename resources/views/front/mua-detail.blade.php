@@ -330,6 +330,10 @@
                                                 </option>
                                             @endforeach
                                         </select>
+                                        <small class="text-warning d-block mt-2">
+                                            <i class="fas fa-info-circle me-1"></i>
+                                            <strong>Note:</strong> Jam yang kamu pilih adalah waktu MUA selesai makeup-mu
+                                        </small>
                                     </div>
                                 </div>
                             </div>
