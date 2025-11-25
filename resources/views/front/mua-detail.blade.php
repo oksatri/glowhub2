@@ -314,6 +314,11 @@
                         <div class="card-body p-3">
                             <!-- Simple Date & Time Selection -->
                             <div class="calendar-section mb-4">
+                                <div class="alert alert-info small">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    <strong>Booking Information:</strong> Selected time = makeup completion time.
+                                    MUA arrives 30 minutes before and needs 1 hour for service.
+                                </div>
                                 <div class="row g-3">
                                     <div class="col-6">
                                         <label class="form-label small mb-1">Select Date</label>
@@ -364,7 +369,7 @@
                                                 </option>
                                             @endforeach
                                         </select>
-                                        <small class="text-muted d-block">The time you selected is the time when the MUA finishes your makeup</small>
+                                        <small class="text-muted d-block">The time you selected is when the MUA finishes your makeup (1 hour service + 30 min travel time)</small>
                                     </div>
                                 </div>
                             </div>
@@ -625,22 +630,6 @@
                     maxDate: new Date().fp_incr(30), // Limit to 30 days ahead
                     dateFormat: 'Y-m-d',
                     defaultDate: firstAvailableDate,
-                    disable: [
-                        function(date) {
-                            // Disable all past dates
-                            var today = new Date();
-                            today.setHours(0, 0, 0, 0);
-                            if (date < today) {
-                                return true;
-                            }
-
-                            // Check if date is in booked dates array
-                            var dateStr = date.getFullYear() + '-' +
-                                String(date.getMonth() + 1).padStart(2, '0') + '-' +
-                                String(date.getDate()).padStart(2, '0');
-                            return bookedDates.includes(dateStr);
-                        }
-                    ],
                     locale: {
                         firstDayOfWeek: 1,
                         weekdays: {
@@ -655,37 +644,6 @@
                     onChange: function(selectedDates, dateStr, instance) {
                         // Update time slots dynamically when date changes
                         updateTimeSlots(dateStr);
-                    },
-                    onDayCreate: function(dObj, dStr, fp, dayElement) {
-                        // Add custom styling for different date states
-                        var today = new Date();
-                        today.setHours(0, 0, 0, 0);
-
-                        // dStr contains the date string in YYYY-MM-DD format
-                        // Create a valid Date object from dStr
-                        var dateParts = dStr.split('-');
-                        var currentDay = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]); // month is 0-indexed
-                        currentDay.setHours(0, 0, 0, 0);
-
-                        var dateStr = currentDay.getFullYear() + '-' +
-                            String(currentDay.getMonth() + 1).padStart(2, '0') + '-' +
-                            String(currentDay.getDate()).padStart(2, '0');
-
-                        // Past dates
-                        if (currentDay < today) {
-                            dayElement.classList.add('past-date');
-                            dayElement.title = 'Tanggal sudah lewat';
-                        }
-                        // Booked dates
-                        else if (bookedDates.includes(dateStr)) {
-                            dayElement.classList.add('booked-date');
-                            dayElement.title = 'Tanggal sudah dibooking';
-                        }
-                        // Today
-                        else if (currentDay.getTime() === today.getTime()) {
-                            dayElement.classList.add('today-date');
-                            dayElement.title = 'Hari ini';
-                        }
                     },
                     onReady: function(selectedDates, dateStr, instance) {
                         // Initialize time slots for the default selected date
@@ -706,15 +664,33 @@
                     @foreach ($existingBookings as $booking)
                         if ('{{ $booking->selected_date->format('Y-m-d') }}' === selectedDate) {
                             var bookingTime = '{{ $booking->selected_time }}';
-                            // Block 1 hour 30 minutes from booking time (3 slots of 30 minutes)
+                            // Parse booking time (HH:MM format)
                             var bookingDateTime = new Date('2000-01-01T' + bookingTime + ':00');
-                            for (var i = 0; i < 3; i++) {
-                                var timeStr = bookingDateTime.getHours().toString().padStart(2, '0') + ':' +
-                                             bookingDateTime.getMinutes().toString().padStart(2, '0');
+
+                            // Block 1.5 hours total: 30 min travel BEFORE + 1 hour makeup
+                            // Start blocking 30 minutes before booking time
+                            var blockStart = new Date(bookingDateTime);
+                            blockStart.setMinutes(blockStart.getMinutes() - 30);
+
+                            // End blocking at booking time
+                            var blockEnd = new Date(bookingDateTime);
+
+                            // Generate all 30-minute slots in the blocking period
+                            var currentSlot = new Date(blockStart);
+                            while (currentSlot < blockEnd) {
+                                var timeStr = currentSlot.getHours().toString().padStart(2, '0') + ':' +
+                                             currentSlot.getMinutes().toString().padStart(2, '0');
                                 if (!blockedTimes.includes(timeStr)) {
                                     blockedTimes.push(timeStr);
                                 }
-                                bookingDateTime.setMinutes(bookingDateTime.getMinutes() + 30);
+                                currentSlot.setMinutes(currentSlot.getMinutes() + 30);
+                            }
+
+                            // Also block the booking time slot itself (when makeup is finished)
+                            var bookingTimeStr = bookingDateTime.getHours().toString().padStart(2, '0') + ':' +
+                                                 bookingDateTime.getMinutes().toString().padStart(2, '0');
+                            if (!blockedTimes.includes(bookingTimeStr)) {
+                                blockedTimes.push(bookingTimeStr);
                             }
                         }
                     @endforeach
@@ -736,7 +712,7 @@
                 } else {
                     timeSlots.forEach(function(time) {
                         var isBlocked = blockedTimes.includes(time);
-                        var displayTime = time + (isBlocked ? ' (Sudah dibooking)' : '');
+                        var displayTime = time + (isBlocked ? ' (Tidak tersedia)' : '');
                         html += '<option value="' + time + '" ' +
                                (isBlocked ? 'disabled style="background-color: #f8d7da; color: #721c24;"' : '') + '>' +
                                displayTime + '</option>';
