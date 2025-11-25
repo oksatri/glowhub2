@@ -816,14 +816,22 @@
                         }
                     },
                     error: function(xhr) {
+                        console.log('XHR Status:', xhr.status);
+                        console.log('XHR Response:', xhr.responseText);
+                        console.log('XHR ResponseJSON:', xhr.responseJSON);
+
                         var msg = 'Booking failed.';
-                        if (xhr.responseJSON && xhr.responseJSON.message) msg = xhr.responseJSON
-                            .message;
+                        if (xhr.responseJSON && xhr.responseJSON.message) msg = xhr.responseJSON.message;
                         if (xhr.responseJSON && xhr.responseJSON.errors) {
                             var err = xhr.responseJSON.errors;
                             msg += '\n' + Object.values(err).map(function(v) {
                                 return v.join(', ');
                             }).join('\n');
+                        }
+                        if (xhr.status === 422) {
+                            msg = 'Validation error: ' + msg;
+                        } else if (xhr.status === 500) {
+                            msg = 'Server error: ' + msg;
                         }
                         alert(msg);
                     }

@@ -251,67 +251,98 @@ class MuaController extends Controller
      */
     public function book(Request $request, $id)
     {
-        // Validate booking data
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email',
-            'whatsapp' => 'required|string',
-            'address' => 'required|string',
-            'distance' => 'nullable|numeric',
-            'selected_date' => 'required|date',
-            'selected_time' => 'required|string',
-            'services' => 'nullable|array',
-            'mua_service_id' => 'nullable|integer'
-        ]);
-
-        // Persist booking
-        $service = \App\Models\MuaService::find($request->input('mua_service_id'));
-        $basePrice = $service ? $service->price : 0;
-
-        $booking = Booking::create([
-            'mua_id' => $id,
-            'mua_service_id' => $request->input('mua_service_id'),
-            'customer_id' => Auth::check() ? Auth::id() : null,
-            'customer_name' => $request->input('name'),
-            'customer_email' => $request->input('email'),
-            'customer_whatsapp' => $request->input('whatsapp'),
-            'customer_address' => $request->input('address'),
-            'distance_km' => $request->input('distance'),
-            'selected_date' => $request->input('selected_date'),
-            'selected_time' => $request->input('selected_time'),
-            'services' => $request->input('services') ?: null,
-            'status' => 'pending',
-            'service_price' => $basePrice
-        ]);
-
-        // Send email notifications to admin, MUA, and client
         try {
-            // Send to admin
-            $admins = User::where('role', 'admin')->get();
-            foreach ($admins as $admin) {
-                Mail::to($admin->email)->send(new BookingAdminNotification($booking));
+            // Validate booking data
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email',
+                'whatsapp' => 'required|string',
+                'address' => 'required|string',
+                'distance' => 'nullable|numeric',
+                'selected_date' => 'required|date',
+                'selected_time' => 'required|string',
+                'services' => 'nullable|array',
+                'mua_service_id' => 'nullable|integer'
+            ]);
+
+            // Persist booking
+            $service = \App\Models\MuaService::find($request->input('mua_service_id'));
+            $basePrice = $service ? $service->price : 0;
+
+            $booking = Booking::create([
+                'mua_id' => $id,
+                'mua_service_id' => $request->input('mua_service_id'),
+                'customer_id' => Auth::check() ? Auth::id() : null,
+                'customer_name' => $request->input('name'),
+                'customer_email' => $request->input('email'),
+                'customer_whatsapp' => $request->input('whatsapp'),
+                'customer_address' => $request->input('address'),
+                'distance_km' => $request->input('distance'),
+                'selected_date' => $request->input('selected_date'),
+                'selected_time' => $request->input('selected_time'),
+                'services' => $request->input('services') ?: null,
+                'status' => 'pending',
+                'service_price' => $basePrice
+            ]);
+
+            // Send email notifications to admin, MUA, and client
+            try {
+                // Send to admin
+                $admins = User::where('role', 'admin')->get();
+                foreach ($admins as $admin) {
+                    try {
+                        Mail::to($admin->email)->send(new BookingAdminNotification($booking));
+                    } catch (\Exception $e) {
+                        logger()->error('Failed to send admin email: ' . $e->getMessage());
+                    }
+                }
+
+                // Send to MUA
+                if ($booking->mua && $booking->mua->user && $booking->mua->user->email) {
+                    try {
+                        Mail::to($booking->mua->user->email)->send(new BookingMuaNotification($booking));
+                    } catch (\Exception $e) {
+                        logger()->error('Failed to send MUA email: ' . $e->getMessage());
+                    }
+                }
+
+                // Send to client
+                try {
+                    Mail::to($booking->customer_email)->send(new BookingClientNotification($booking));
+                } catch (\Exception $e) {
+                    logger()->error('Failed to send client email: ' . $e->getMessage());
+                }
+
+                // Also notify admins via Notification system and broadcast event
+                try {
+                    Notification::send($admins, new NewBookingNotification($booking));
+                    event(new BookingCreated($booking));
+                } catch (\Exception $e) {
+                    logger()->error('Failed to notify admins: ' . $e->getMessage());
+                }
+            } catch (\Exception $e) {
+                // don't fail booking if notification fails; log later
+                logger()->error('Failed to send email notifications for booking: ' . $e->getMessage());
             }
 
-            // Send to MUA
-            if ($booking->mua && $booking->mua->user && $booking->mua->user->email) {
-                Mail::to($booking->mua->user->email)->send(new BookingMuaNotification($booking));
-            }
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Booking request submitted successfully! MUA will contact you soon.',
+                'booking_id' => 'BK' . $booking->id
+            ]);
 
-            // Send to client
-            Mail::to($booking->customer_email)->send(new BookingClientNotification($booking));
-
-            // Also notify admins via Notification system and broadcast event
-            Notification::send($admins, new NewBookingNotification($booking));
-            event(new BookingCreated($booking));
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
         } catch (\Exception $e) {
-            // don't fail booking if notification fails; log later
-            logger()->error('Failed to send email notifications for booking: ' . $e->getMessage());
+            logger()->error('Booking creation failed: ' . $e->getMessage());
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Booking failed: ' . $e->getMessage()
+            ], 500);
         }
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Booking request submitted successfully! MUA will contact you soon.',
-            'booking_id' => 'BK' . $booking->id
-        ]);
     }
 }
