@@ -69,6 +69,14 @@
                         </li>
 
                         <li class="sidebar-item">
+                            <a class="sidebar-link {{ request()->is('payment-methods*') ? 'active' : '' }}" href="{{ url('payment-methods') }}"
+                                aria-expanded="false">
+                                <i data-feather="credit-card" class="feather-icon"></i>
+                                <span class="hide-menu">Payment Methods</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item">
                             <a class="sidebar-link {{ request()->is('settings') || request()->is('settings/*') ? 'active' : '' }}"
                                 href="{{ url('settings') }}" aria-expanded="false">
                                 <i data-feather="settings" class="feather-icon"></i>
