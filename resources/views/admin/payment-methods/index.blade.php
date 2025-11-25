@@ -61,7 +61,6 @@
                             <tr class="sortable-item" data-id="{{ $paymentMethod->id }}" style="border-bottom: 1px solid #F3F4F6;">
                                 <td class="px-4" style="padding-top: 1rem; padding-bottom: 1rem;">
                                     <div class="d-flex align-items-center">
-                                        <span class="drag-handle me-2" style="cursor: move; color: #9CA3AF; font-size: 1.25rem;">☰</span>
                                         <span class="badge rounded-pill px-3 py-2" style="background: #EFF6FF; color: #1E40AF; font-weight: 600; min-width: 32px;">
                                             {{ $paymentMethod->sort_order }}
                                         </span>
