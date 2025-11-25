@@ -169,11 +169,12 @@
                             @php($index++)
                         @endforeach
                     </div>
-
+                    <div class="text-end">
                     <button type="button" id="add-instruction" class="btn px-4 py-2"
                             style="background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%); border: none; color: white; font-weight: 500;">
                         <i class="fas fa-plus-circle me-2"></i>Tambah Kategori Instruksi
                     </button>
+                    </div>
                 </div>
 
                 <div class="mt-4 d-flex align-items-center gap-2">
