@@ -160,9 +160,6 @@
                                     <h4 class="mb-2 text-primary fw-bold">
                                         {{ $mua['service_name'] ?? 'Service Available' }}
                                     </h4>
-                                    @if (!empty($mua['mua_name']))
-                                        <small class="text-muted">by {{ $mua['mua_name'] }}</small>
-                                    @endif
                                 </div>
 
                                 <!-- Location at top -->

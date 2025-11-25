@@ -343,9 +343,6 @@
                                     <h6 class="mb-0 text-truncate" title="{{ $mua['name'] }}" style="font-size: 0.9rem; font-weight: 600;">
                                         {{ $mua['name'] }}
                                     </h6>
-                                    @if (!empty($mua['mua_name']))
-                                        <small class="text-muted" style="font-size: 0.75rem;">by {{ $mua['mua_name'] }}</small>
-                                    @endif
                                 </div>
 
                                 <!-- Location at top -->

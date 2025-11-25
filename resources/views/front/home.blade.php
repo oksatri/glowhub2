@@ -220,9 +220,6 @@
                                                 <h6 class="mb-0 text-truncate" title="{{ $service->service_name }}" style="font-size: 0.9rem; font-weight: 600;">
                                                     {{ $service->service_name }}
                                                 </h6>
-                                                @if ($m && $m->name)
-                                                    <small class="text-muted" style="font-size: 0.75rem;">by {{ $m->name }}</small>
-                                                @endif
                                             </div>
 
                                             <!-- Location at top -->
