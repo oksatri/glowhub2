@@ -152,7 +152,7 @@ class MuaController extends Controller
             'location' => trim($mua && $mua->rel_city ? $mua->rel_city->name : ($mua->city ?? '')),
             'rating' => (float) ($mua->rating ?? 4.5),
             'price' => $activeService ? (int) $activeService->price : null,
-            'image' => $mua->image ? asset('uploads/' . $mua->image) : asset('images/product-item1.jpg'),
+            'image' => $mua->portfolios->first()->image ? asset('uploads/' . $mua->portfolios->first()->image) : asset('images/product-item1.jpg'),
             'max_distance' => $mua->max_distance,
             'operational_hours' => $mua->operational_hours,
             'additional_charge' => $mua->additional_charge,
