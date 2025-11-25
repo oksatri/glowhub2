@@ -115,7 +115,7 @@
                                             style="background: #F9FAFB; border: 1px solid #E5E7EB; color: #374151; font-weight: 500; padding: 0.5rem 1rem;">
                                             <i class="fas fa-edit me-2 opacity-70"></i> Edit
                                         </a>
-                                        <a id="toggle-btn-{{ $paymentMethod->id }}" style="display: none;" href="{{ route('admin.payment-methods.toggle', $paymentMethod) }}"
+                                        <a id="toggle-btn-{{ $paymentMethod->id }}" style="display: none !important;" href="{{ route('admin.payment-methods.toggle', $paymentMethod) }}"
                                             class="btn btn-sm d-inline-flex align-items-center toggle-status-btn"
                                             style="background: #FEF3C7; border: 1px solid #D97706; color: #92400E; font-weight: 500; padding: 0.5rem 1rem;"
                                             data-id="{{ $paymentMethod->id }}" data-name="{{ $paymentMethod->name }}">
