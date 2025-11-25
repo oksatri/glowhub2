@@ -842,6 +842,9 @@
                     return;
                 }
 
+                // Disable book now button to prevent double clicks
+                $('#bookNowBtn').prop('disabled', true);
+                $('#bookNowBtn').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
                 $.ajax({
                     url: url,
                     method: 'POST',
@@ -872,8 +875,14 @@
                             setTimeout(function() {
                                 $('.alert.alert-success').remove();
                             }, 5000);
+                            // Re-enable book now button
+                            $('#bookNowBtn').prop('disabled', false);
+                            $('#bookNowBtn').html('<i class="fas fa-calendar-check me-2"></i>Send Request');
                         } else {
                             alert(res.message || 'Booking failed');
+                            // Re-enable book now button
+                            $('#bookNowBtn').prop('disabled', false);
+                            $('#bookNowBtn').html('<i class="fas fa-calendar-check me-2"></i>Send Request');
                         }
                     },
                     error: function(xhr) {
