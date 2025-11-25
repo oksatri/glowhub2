@@ -277,11 +277,11 @@
                             <p class="mb-0 small opacity-75">Choose your preferred date and time</p>
                         </div>
 
-                        <div class="card-body p-4">
+                        <div class="card-body p-3">
                             <!-- Simple Date & Time Selection -->
                             <div class="calendar-section mb-4">
                                 <div class="row g-3">
-                                    <div class="col-7">
+                                    <div class="col-6">
                                         <label class="form-label small mb-1">Select Date</label>
                                         <input type="date" class="form-control" id="bk_date">
                                         <small class="text-muted d-block">You can change month and year from the
@@ -289,7 +289,7 @@
                                     </div>
 
                                     <!-- Time Slots -->
-                                    <div class="col-5">
+                                    <div class="col-6">
                                         <label class="form-label small mb-1">Available Times</label>
                                         @php
                                             $timeSlots = [];
