@@ -206,13 +206,13 @@
                                 <div class="row text-center">
                                     <div class="col-6">
                                         <div class="border-end">
-                                            <h6 class="fw-bold text-primary mb-1">Starting From</h6>
+                                            <h6 class="fw-bold mb-1">Starting From</h6>
                                             <p class="h5 text-success fw-bold mb-0">Rp
                                                 {{ number_format($mua['price'], 0, ',', '.') }}</p>
                                         </div>
                                     </div>
                                     <div class="col-6">
-                                        <h6 class="fw-bold text-primary mb-1">Schedule</h6>
+                                        <h6 class="fw-bold mb-1">Schedule</h6>
                                         <p class="fw-semibold text-dark mb-0">
                                             @if (!empty($mua['operational_hours']))
                                                 {{ $mua['operational_hours'] }}
@@ -235,7 +235,7 @@
                         <!-- Portfolio Section -->
                         <div class="card shadow-sm border-0 rounded-3">
                             <div class="card-body p-4">
-                                <h5 class="fw-bold text-primary mb-3">
+                                <h5 class="fw-bold mb-3">
                                     <i class="fas fa-images me-2"></i>Portfolio
                                 </h5>
                                 <div class="row g-3">
