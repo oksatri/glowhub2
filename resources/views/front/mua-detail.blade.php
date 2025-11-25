@@ -352,6 +352,7 @@
                                                 <input class="form-check-input service-checkbox" type="checkbox"
                                                     name="feature_names[]" value="{{ $feature['name'] }}"
                                                     data-price="{{ $feature['min_price'] ?? $feature['max_price'] ?? $feature['extra_price'] ?? 0 }}"
+                                                    data-service-id="{{ $activeService->id ?? null }}"
                                                     id="feature{{ $idx }}"
                                                     @if (!$hasPriceRange)
                                                         checked disabled
@@ -547,6 +548,7 @@
             var maxDistance = {{ $mua['max_distance'] ?? 'null' }};
             var additionalPerKm = {{ $mua['additional_charge'] ?? 'null' }};
             var basePrice = {{ $mua['price'] ?? 0 }};
+            window.activeServiceId = {{ $activeService->id ?? 'null' }};
             function formatRupiah(num) {
                 num = num || 0;
                 return 'Rp ' + num.toLocaleString('id-ID');
@@ -775,15 +777,31 @@
 
                 // services (collect ids)
                 var services = [];
+                var serviceIds = [];
                 $('.service-checkbox:checked').each(function() {
                     var val = $(this).val();
-                    if (val !== undefined && val !== null) services.push(val);
+                    var dataId = $(this).data('service-id');
+                    if (val !== undefined && val !== null) {
+                        services.push(val);
+                        if (dataId) {
+                            serviceIds.push(parseInt(dataId));
+                        }
+                    }
                 });
 
-                // set selected mua_service_id as first selected service id (if any)
-                var muaServiceId = services.length ? services[0] : null;
+                // Fallback: use activeService from window if available
+                if (serviceIds.length === 0 && window.activeServiceId) {
+                    serviceIds.push(parseInt(window.activeServiceId));
+                }
+
+                // set selected mua_service_id as first selected service ID (if any)
+                var muaServiceId = serviceIds.length ? serviceIds[0] : null;
                 $('#bk_mua_service_id').val(muaServiceId);
                 $('#bk_services').val(JSON.stringify(services));
+
+                console.log('Services names:', services);
+                console.log('Service IDs:', serviceIds);
+                console.log('Selected service ID:', muaServiceId);
 
                 // contact
                 var name = $('#bk_name').val();
