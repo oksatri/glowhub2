@@ -297,32 +297,55 @@ class MuaController extends Controller
             ]);
 
             // Send email notifications to admin, MUA, and client
-            try {
-                // Send to admin
-                $admins = User::where('role', 'admin')->get();
-                foreach ($admins as $admin) {
-                    try {
-                        Mail::to($admin->email)->send(new BookingAdminNotification($booking));
-                    } catch (\Exception $e) {
-                        logger()->error('Failed to send admin email: ' . $e->getMessage());
-                    }
-                }
+            Log::info('Starting email sending process for booking: ' . $booking->id);
 
-                // Send to MUA
-                if ($booking->mua && $booking->mua->user && $booking->mua->user->email) {
-                    try {
-                        Mail::to($booking->mua->user->email)->send(new BookingMuaNotification($booking));
-                    } catch (\Exception $e) {
-                        logger()->error('Failed to send MUA email: ' . $e->getMessage());
-                    }
-                }
+            // Send to admin
+            $admins = User::where('role', 'admin')->get();
+            Log::info('Found admins: ' . $admins->count());
 
-                // Send to client
+            foreach ($admins as $admin) {
                 try {
-                    Mail::to($booking->customer_email)->send(new BookingClientNotification($booking));
+                    Log::info('Attempting to send admin email to: ' . $admin->email);
+                    Mail::to($admin->email)->send(new BookingAdminNotification($booking));
+                    Log::info('Admin email sent successfully to: ' . $admin->email);
                 } catch (\Exception $e) {
-                    logger()->error('Failed to send client email: ' . $e->getMessage());
+                    Log::error('Failed to send admin email: ' . $e->getMessage());
+                    Log::error('Admin email details: ' . json_encode([
+                        'admin_email' => $admin->email,
+                        'booking_id' => $booking->id
+                    ]));
                 }
+            }
+
+            // Send to MUA
+            if ($booking->mua && $booking->mua->user && $booking->mua->user->email) {
+                try {
+                    Log::info('Attempting to send MUA email to: ' . $booking->mua->user->email);
+                    Mail::to($booking->mua->user->email)->send(new BookingMuaNotification($booking));
+                    Log::info('MUA email sent successfully to: ' . $booking->mua->user->email);
+                } catch (\Exception $e) {
+                    Log::error('Failed to send MUA email: ' . $e->getMessage());
+                    Log::error('MUA email details: ' . json_encode([
+                        'mua_email' => $booking->mua->user->email,
+                        'booking_id' => $booking->id
+                    ]));
+                }
+            } else {
+                Log::warning('No MUA email found for booking: ' . $booking->id);
+            }
+
+            // Send to client
+            try {
+                Log::info('Attempting to send client email to: ' . $booking->customer_email);
+                Mail::to($booking->customer_email)->send(new BookingClientNotification($booking));
+                Log::info('Client email sent successfully to: ' . $booking->customer_email);
+            } catch (\Exception $e) {
+                Log::error('Failed to send client email: ' . $e->getMessage());
+                Log::error('Client email details: ' . json_encode([
+                    'client_email' => $booking->customer_email,
+                    'booking_id' => $booking->id
+                ]));
+            }
 
                 // Also notify admins via Notification system and broadcast event
                 try {
