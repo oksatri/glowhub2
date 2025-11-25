@@ -90,34 +90,66 @@
 
                 <div class="mb-4">
                     <h5 class="mb-3" style="color: #1F2937; font-weight: 600;">📋 Payment Instructions</h5>
-                    <p class="text-muted mb-3" style="font-size: 0.95rem;">Add key-value pairs for payment instructions (e.g., account_name, bank_name, steps)</p>
+                    <p class="text-muted mb-3" style="font-size: 0.95rem;">Kelola instruksi pembayaran step by step untuk memudahkan pelanggan</p>
 
                     <div id="instructions-container" class="mb-3">
-                        <div class="instruction-group p-3 mb-3 rounded" style="background: #F9FAFB; border: 1px solid #E5E7EB;" id="instruction-0">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <h6 class="mb-0" style="color: #374151; font-weight: 500;">Instruction 1</h6>
+                        <!-- Default instruction -->
+                        <div class="instruction-group p-4 mb-3 rounded border" style="background: #F9FAFB; border: 1px solid #E5E7EB;" id="instruction-0">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="mb-0" style="color: #374151; font-weight: 600;">
+                                    <i class="fas fa-list-ol me-2 text-primary"></i>Instruksi 1
+                                </h6>
                                 <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeInstruction(0)">
-                                    <i class="fas fa-times"></i>
+                                    <i class="fas fa-trash me-1"></i>Hapus
                                 </button>
                             </div>
-                            <div class="row g-2">
-                                <div class="col-md-4">
-                                    <label class="form-label small fw-medium">Key</label>
-                                    <input type="text" name="instructions[0][key]" class="form-control form-control-sm" placeholder="e.g., account_name"
-                                           style="border: 1px solid #E5E7EB; font-size: 0.875rem;">
+
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-3">
+                                    <label class="form-label fw-medium text-muted">Kategori</label>
+                                    <input type="text" name="instructions[0][key]" class="form-control"
+                                           placeholder="e.g., steps, account_info"
+                                           style="border: 1px solid #E5E7EB; font-size: 0.9rem;">
+                                    <small class="text-muted">Nama kategori instruksi</small>
                                 </div>
-                                <div class="col-md-8">
-                                    <label class="form-label small fw-medium">Value</label>
-                                    <input type="text" name="instructions[0][value]" class="form-control form-control-sm" placeholder="e.g., PT GlowHub Indonesia"
-                                           style="border: 1px solid #E5E7EB; font-size: 0.875rem;">
+                                <div class="col-md-9">
+                                    <label class="form-label fw-medium text-muted">Tipe Data</label>
+                                    <select name="instructions[0][type]" class="form-select" onchange="toggleInstructionType(0)"
+                                            style="border: 1px solid #E5E7EB; font-size: 0.9rem;">
+                                        <option value="text" selected>Teks Tunggal</option>
+                                        <option value="array">Array/Steps</option>
+                                    </select>
+                                    <small class="text-muted">Pilih tipe data untuk instruksi ini</small>
+                                </div>
+                            </div>
+
+                            <!-- Single Text Value -->
+                            <div id="single-value-0">
+                                <label class="form-label fw-medium text-muted">Nilai</label>
+                                <input type="text" name="instructions[0][single_value]" class="form-control"
+                                       placeholder="Masukkan nilai instruksi"
+                                       style="border: 1px solid #E5E7EB; font-size: 0.9rem;">
+                            </div>
+
+                            <!-- Array/Steps Value -->
+                            <div id="array-value-0" class="d-none">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <label class="form-label fw-medium text-muted mb-0">Step-by-Step Instructions</label>
+                                    <button type="button" class="btn btn-sm btn-outline-success" onclick="addStep(0)">
+                                        <i class="fas fa-plus me-1"></i>Tambah Step
+                                    </button>
+                                </div>
+
+                                <div id="steps-container-0" class="mb-2">
+                                    <!-- Steps will be added here dynamically -->
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <button type="button" id="add-instruction" class="btn px-3 py-2"
-                            style="background: #ECFDF5; border: 1px solid #059669; color: #065F46; font-weight: 500;">
-                        <i class="fas fa-plus me-2"></i>Add Instruction
+                    <button type="button" id="add-instruction" class="btn px-4 py-2"
+                            style="background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%); border: none; color: white; font-weight: 500;">
+                        <i class="fas fa-plus-circle me-2"></i>Tambah Kategori Instruksi
                     </button>
                 </div>
 
@@ -138,34 +170,67 @@
 @push('scripts')
 <script>
 $(document).ready(function() {
-    var instructionIndex = 1;
+    var instructionIndex = 1; // Start from 1 since instruction 0 already exists
+    var stepCounters = {};
 
-    // Add instruction
+    // Add new instruction
     $('#add-instruction').on('click', function() {
         var html = `
-            <div class="instruction-group p-3 mb-3 rounded" style="background: #F9FAFB; border: 1px solid #E5E7EB;" id="instruction-${instructionIndex}">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h6 class="mb-0" style="color: #374151; font-weight: 500;">Instruction ${instructionIndex + 1}</h6>
+            <div class="instruction-group p-4 mb-3 rounded border" style="background: #F9FAFB; border: 1px solid #E5E7EB;" id="instruction-${instructionIndex}">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="mb-0" style="color: #374151; font-weight: 600;">
+                        <i class="fas fa-list-ol me-2 text-primary"></i>Instruksi ${instructionIndex + 1}
+                    </h6>
                     <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeInstruction(${instructionIndex})">
-                        <i class="fas fa-times"></i>
+                        <i class="fas fa-trash me-1"></i>Hapus
                     </button>
                 </div>
-                <div class="row g-2">
-                    <div class="col-md-4">
-                        <label class="form-label small fw-medium">Key</label>
-                        <input type="text" name="instructions[${instructionIndex}][key]" class="form-control form-control-sm" placeholder="e.g., account_name"
-                               style="border: 1px solid #E5E7EB; font-size: 0.875rem;">
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-3">
+                        <label class="form-label fw-medium text-muted">Kategori</label>
+                        <input type="text" name="instructions[${instructionIndex}][key]" class="form-control"
+                               placeholder="e.g., steps, account_info"
+                               style="border: 1px solid #E5E7EB; font-size: 0.9rem;">
+                        <small class="text-muted">Nama kategori instruksi</small>
                     </div>
-                    <div class="col-md-8">
-                        <label class="form-label small fw-medium">Value</label>
-                        <input type="text" name="instructions[${instructionIndex}][value]" class="form-control form-control-sm" placeholder="e.g., PT GlowHub Indonesia"
-                               style="border: 1px solid #E5E7EB; font-size: 0.875rem;">
+                    <div class="col-md-9">
+                        <label class="form-label fw-medium text-muted">Tipe Data</label>
+                        <select name="instructions[${instructionIndex}][type]" class="form-select" onchange="toggleInstructionType(${instructionIndex})"
+                                style="border: 1px solid #E5E7EB; font-size: 0.9rem;">
+                            <option value="text" selected>Teks Tunggal</option>
+                            <option value="array">Array/Steps</option>
+                        </select>
+                        <small class="text-muted">Pilih tipe data untuk instruksi ini</small>
+                    </div>
+                </div>
+
+                <!-- Single Text Value -->
+                <div id="single-value-${instructionIndex}">
+                    <label class="form-label fw-medium text-muted">Nilai</label>
+                    <input type="text" name="instructions[${instructionIndex}][single_value]" class="form-control"
+                           placeholder="Masukkan nilai instruksi"
+                           style="border: 1px solid #E5E7EB; font-size: 0.9rem;">
+                </div>
+
+                <!-- Array/Steps Value -->
+                <div id="array-value-${instructionIndex}" class="d-none">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <label class="form-label fw-medium text-muted mb-0">Step-by-Step Instructions</label>
+                        <button type="button" class="btn btn-sm btn-outline-success" onclick="addStep(${instructionIndex})">
+                            <i class="fas fa-plus me-1"></i>Tambah Step
+                        </button>
+                    </div>
+
+                    <div id="steps-container-${instructionIndex}" class="mb-2">
+                        <!-- Steps will be added here dynamically -->
                     </div>
                 </div>
             </div>
         `;
 
         $('#instructions-container').append(html);
+        stepCounters[instructionIndex] = 0;
         instructionIndex++;
     });
 
@@ -174,28 +239,95 @@ $(document).ready(function() {
         $('#instruction-' + index).remove();
     };
 
-    // Form validation
-    $('#payment-method-form').on('submit', function(e) {
-        var instructions = {};
-        $('input[name^="instructions"]').each(function() {
-            var name = $(this).attr('name');
-            var matches = name.match(/instructions\[(\d+)\]\[(\w+)\]/);
-            if (matches) {
-                var index = matches[1];
-                var key = matches[2];
-                if (!instructions[index]) {
-                    instructions[index] = {};
-                }
-                instructions[index][key] = $(this).val();
+    // Toggle instruction type (text vs array)
+    window.toggleInstructionType = function(index) {
+        var type = $('select[name="instructions[' + index + '][type]"]').val();
+        var singleDiv = $('#single-value-' + index);
+        var arrayDiv = $('#array-value-' + index);
+
+        if (type === 'array') {
+            singleDiv.addClass('d-none');
+            arrayDiv.removeClass('d-none');
+            // Add initial step if container is empty
+            if ($('#steps-container-' + index + ' .step-item').length === 0) {
+                addStep(index);
             }
+        } else {
+            singleDiv.removeClass('d-none');
+            arrayDiv.addClass('d-none');
+        }
+    };
+
+    // Add step to instruction
+    window.addStep = function(instructionIndex) {
+        var stepIndex = stepCounters[instructionIndex] || 0;
+        var html = `
+            <div class="step-item d-flex align-items-center gap-2 mb-2" id="step-${instructionIndex}-${stepIndex}">
+                <span class="badge bg-primary rounded-circle" style="width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">${stepIndex + 1}</span>
+                <input type="text" name="instructions[${instructionIndex}][steps][]" class="form-control"
+                       placeholder="Step ${stepIndex + 1}"
+                       style="border: 1px solid #E5E7EB; font-size: 0.9rem;">
+                <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeStep(${instructionIndex}, ${stepIndex})">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        `;
+
+        $('#steps-container-' + instructionIndex).append(html);
+        stepCounters[instructionIndex] = stepIndex + 1;
+    };
+
+    // Remove step from instruction
+    window.removeStep = function(instructionIndex, stepIndex) {
+        $('#step-' + instructionIndex + '-' + stepIndex).remove();
+        // Renumber remaining steps
+        renumberSteps(instructionIndex);
+    };
+
+    // Renumber steps after removal
+    function renumberSteps(instructionIndex) {
+        $('#steps-container-' + instructionIndex + ' .step-item').each(function(index) {
+            var newIndex = index;
+            var oldId = $(this).attr('id');
+            var newId = 'step-' + instructionIndex + '-' + newIndex;
+
+            $(this).attr('id', newId);
+            $(this).find('.badge').text(newIndex + 1);
+            $(this).find('input').attr('placeholder', 'Step ' + (newIndex + 1));
+            $(this).find('button').attr('onclick', 'removeStep(' + instructionIndex + ', ' + newIndex + ')');
         });
 
-        // Convert to JSON
-        var instructionsJson = {};
-        Object.keys(instructions).forEach(function(index) {
-            var instruction = instructions[index];
-            if (instruction.key && instruction.value) {
-                instructionsJson[instruction.key] = instruction.value;
+        // Update step counter
+        stepCounters[instructionIndex] = $('#steps-container-' + instructionIndex + ' .step-item').length;
+    }
+
+    // Form validation and submission
+    $('#payment-method-form').on('submit', function(e) {
+        e.preventDefault();
+
+        var instructions = {};
+
+        // Process each instruction
+        $('.instruction-group').each(function(index) {
+            var instructionIndex = $(this).attr('id').replace('instruction-', '');
+            var key = $('input[name="instructions[' + instructionIndex + '][key]"]').val();
+            var type = $('select[name="instructions[' + instructionIndex + '][type]"]').val();
+
+            if (key) {
+                if (type === 'array') {
+                    // Collect steps into array
+                    var steps = [];
+                    $('input[name="instructions[' + instructionIndex + '][steps][]"]').each(function() {
+                        if ($(this).val()) {
+                            steps.push($(this).val());
+                        }
+                    });
+                    instructions[key] = steps;
+                } else {
+                    // Single value
+                    var value = $('input[name="instructions[' + instructionIndex + '][single_value]"]').val();
+                    instructions[key] = value;
+                }
             }
         });
 
@@ -203,10 +335,13 @@ $(document).ready(function() {
         if (!$('input[name="instructions_json"]').length) {
             $('#payment-method-form').append('<input type="hidden" name="instructions_json">');
         }
-        $('input[name="instructions_json"]').val(JSON.stringify(instructionsJson));
+        $('input[name="instructions_json"]').val(JSON.stringify(instructions));
 
         // Remove instruction inputs before submission
-        $('input[name^="instructions"]').remove();
+        $('input[name^="instructions"], select[name^="instructions"]').remove();
+
+        // Submit form
+        this.submit();
     });
 });
 </script>
