@@ -200,7 +200,7 @@ $(document).ready(function() {
     @if(is_array($paymentMethod->instructions ?? []))
         @foreach($paymentMethod->instructions as $key => $value)
             @if(is_array($value))
-                stepCounters[{{ $loop->index0 }}] = {{ count($value) }};
+                stepCounters['{{ $key }}'] = {{ count($value) }};
             @endif
         @endforeach
     @endif
