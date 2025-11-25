@@ -261,25 +261,22 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            @endforeach
-                                        </div>
-
-                                        @foreach ($portfolio as $index => $item)
-                                            <!-- Portfolio Modal -->
-                                            <div class="modal fade" id="portfolioModal{{ $index }}" tabindex="-1">
-                                                <div class="modal-dialog modal-lg modal-dialog-centered">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title">{{ $item['service_name'] ?? 'Portfolio' }}</h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                        </div>
-                                                        <div class="modal-body text-center">
-                                                            <img src="{{ $item['image'] ?? asset('images/portfolio-placeholder.jpg') }}" class="img-fluid rounded" alt="Portfolio">
+                                                 <!-- Portfolio Modal -->
+                                                <div class="modal fade" id="portfolioModal{{ $index }}" tabindex="-1">
+                                                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">{{ $item['service_name'] ?? 'Portfolio' }}</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                            </div>
+                                                            <div class="modal-body text-center">
+                                                                <img src="{{ $item['image'] ?? asset('images/portfolio-placeholder.jpg') }}" class="img-fluid rounded" alt="Portfolio">
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        @endforeach
+                                            @endforeach
+                                        </div>
                                     @else
                                         <div class="text-center py-4">
                                             <i class="fas fa-camera fa-3x text-muted mb-3"></i>
