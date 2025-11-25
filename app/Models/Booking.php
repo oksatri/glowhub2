@@ -19,13 +19,19 @@ class Booking extends Model
         'selected_time',
         'services',
         'status',
-        'admin_note'
+        'admin_note',
+        'mua_note',
+        'revised_price',
+        'price_note',
+        'service_price'
     ];
 
     protected $casts = [
         'services' => 'array',
         'selected_date' => 'date',
-        'distance_km' => 'decimal:2'
+        'distance_km' => 'decimal:2',
+        'revised_price' => 'decimal:2',
+        'service_price' => 'decimal:2'
     ];
 
     public function mua()

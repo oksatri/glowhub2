@@ -10,8 +10,13 @@ use App\Models\RegProvince;
 use Illuminate\Http\Request;
 use App\Events\BookingCreated;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\NewBookingNotification;
+use App\Mail\BookingAdminNotification;
+use App\Mail\BookingMuaNotification;
+use App\Mail\BookingClientNotification;
+use Illuminate\Support\Facades\Mail;
 
 class MuaController extends Controller
 {
@@ -260,10 +265,13 @@ class MuaController extends Controller
         ]);
 
         // Persist booking
+        $service = \App\Models\MuaService::find($request->input('mua_service_id'));
+        $basePrice = $service ? $service->price : 0;
+
         $booking = Booking::create([
             'mua_id' => $id,
             'mua_service_id' => $request->input('mua_service_id'),
-            'customer_id' => auth()->check() ? auth()->id() : null,
+            'customer_id' => Auth::check() ? Auth::id() : null,
             'customer_name' => $request->input('name'),
             'customer_email' => $request->input('email'),
             'customer_whatsapp' => $request->input('whatsapp'),
@@ -272,17 +280,32 @@ class MuaController extends Controller
             'selected_date' => $request->input('selected_date'),
             'selected_time' => $request->input('selected_time'),
             'services' => $request->input('services') ?: null,
-            'status' => 'pending'
+            'status' => 'pending',
+            'service_price' => $basePrice
         ]);
 
-        // Notify admins via Notification system and broadcast event
+        // Send email notifications to admin, MUA, and client
         try {
+            // Send to admin
             $admins = User::where('role', 'admin')->get();
+            foreach ($admins as $admin) {
+                Mail::to($admin->email)->send(new BookingAdminNotification($booking));
+            }
+
+            // Send to MUA
+            if ($booking->mua && $booking->mua->user && $booking->mua->user->email) {
+                Mail::to($booking->mua->user->email)->send(new BookingMuaNotification($booking));
+            }
+
+            // Send to client
+            Mail::to($booking->customer_email)->send(new BookingClientNotification($booking));
+
+            // Also notify admins via Notification system and broadcast event
             Notification::send($admins, new NewBookingNotification($booking));
             event(new BookingCreated($booking));
         } catch (\Exception $e) {
             // don't fail booking if notification fails; log later
-            logger()->error('Failed to notify admins about booking: ' . $e->getMessage());
+            logger()->error('Failed to send email notifications for booking: ' . $e->getMessage());
         }
 
         return response()->json([

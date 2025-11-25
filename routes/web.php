@@ -7,7 +7,8 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Back\UserController;
 use App\Http\Controllers\Front\MuaController as FrontMuaController;
 use App\Http\Controllers\Front\HomeController;
-use App\Http\Controllers\Back\ContentController;
+use App\Http\Controllers\Back\BookingController;
+use App\Http\Controllers\Mua\BookingConfirmationController;
 use App\Http\Controllers\Back\ProfileController;
 use App\Http\Controllers\Back\DashboardController;
 use App\Http\Controllers\Back\SiteSettingController;
@@ -78,6 +79,10 @@ Route::middleware('guest')->group(function () {
     Route::post('/do-forgot', [AuthController::class, 'doForgot'])->name('auth.forgot-password');
 });
 
+// Client booking actions (can be accessed by anyone with booking ID)
+Route::get('/booking/price/accept/{id}', [\App\Http\Controllers\Front\BookingController::class, 'acceptPriceRevision'])->name('booking.price.accept');
+Route::get('/booking/price/reject/{id}', [\App\Http\Controllers\Front\BookingController::class, 'rejectPriceRevision'])->name('booking.price.reject');
+
 // Authenticated routes
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -140,6 +145,12 @@ Route::middleware('auth')->group(function () {
         Route::get('auth-mua/bookings', [\App\Http\Controllers\Back\BookingController::class, 'index'])->name('auth-mua.bookings.index');
         Route::get('auth-mua/bookings/pending', [\App\Http\Controllers\Back\BookingController::class, 'pending'])->name('auth-mua.bookings.pending');
         Route::put('auth-mua/bookings/{id}', [\App\Http\Controllers\Back\BookingController::class, 'update'])->name('auth-mua.bookings.update');
+
+        // MUA Booking Confirmation Routes
+        Route::get('mua/bookings/confirm/{id}', [BookingConfirmationController::class, 'show'])->name('mua.bookings.confirm');
+        Route::post('mua/bookings/confirm/{id}', [BookingConfirmationController::class, 'confirm'])->name('mua.bookings.confirm');
+        Route::post('mua/bookings/reject/{id}', [BookingConfirmationController::class, 'reject'])->name('mua.bookings.reject');
+        Route::post('mua/bookings/revise-price/{id}', [BookingConfirmationController::class, 'revisePrice'])->name('mua.bookings.revise-price');
 
         // MUA management
         Route::resource('muas', BackMuaController::class, [

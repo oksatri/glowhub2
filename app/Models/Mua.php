@@ -29,7 +29,7 @@ class Mua extends Model
 
     public function user()
     {
-        return $this->hasOne(\App\Models\User::class, 'id','user_id');
+        return $this->belongsTo(\App\Models\User::class, 'user_id');
     }
 
     public function services()
