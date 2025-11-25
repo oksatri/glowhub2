@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Front;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class BookingController extends Controller
 {
@@ -74,5 +75,18 @@ class BookingController extends Controller
         }
 
         return view('front.booking.price-rejected', compact('booking'));
+    }
+
+    public function showInvoice($id)
+    {
+        $booking = \App\Models\Booking::with(['mua', 'service', 'bookingPayment.paymentMethod'])->findOrFail($id);
+
+        // Get active payment methods
+        $paymentMethods = \App\Models\PaymentMethod::active()->ordered()->get();
+
+        // Generate invoice number
+        $invoiceNumber = 'INV-' . str_pad($booking->id, 8, '0', STR_PAD_LEFT) . '-' . date('Ymd');
+
+        return view('front.booking.invoice', compact('booking', 'paymentMethods', 'invoiceNumber'));
     }
 }

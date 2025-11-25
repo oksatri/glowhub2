@@ -5,11 +5,14 @@ namespace App\Http\Controllers\Mua;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Mua;
+use App\Models\BookingPayment;
+use App\Models\PaymentMethod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Mail\BookingConfirmedNotification;
 use App\Mail\BookingRejectedNotification;
 use App\Mail\BookingPriceRevisedNotification;
+use App\Mail\BookingInvoiceNotification;
 use Illuminate\Support\Facades\Mail;
 
 class BookingConfirmationController extends Controller
@@ -86,6 +89,18 @@ class BookingConfirmationController extends Controller
             'mua_note' => $request->input('mua_note') ?? null
         ]);
 
+        // Create booking payment record
+        $finalPrice = $booking->revised_price ?? $booking->service_price ?? 0;
+        $bookingPayment = BookingPayment::create([
+            'booking_id' => $booking->id,
+            'amount' => $finalPrice,
+            'status' => 'pending',
+            'payment_reference' => 'INV-' . str_pad($booking->id, 8, '0', STR_PAD_LEFT) . '-' . date('Ymd')
+        ]);
+
+        // Get active payment methods
+        $paymentMethods = PaymentMethod::active()->ordered()->get();
+
         // Send confirmation email to client
         try {
             Mail::to($booking->customer_email)->send(new BookingConfirmedNotification($booking));
@@ -93,8 +108,15 @@ class BookingConfirmationController extends Controller
             logger()->error('Failed to send confirmation email: ' . $e->getMessage());
         }
 
+        // Send invoice email to client
+        try {
+            Mail::to($booking->customer_email)->send(new BookingInvoiceNotification($booking, $bookingPayment, $paymentMethods));
+        } catch (\Exception $e) {
+            logger()->error('Failed to send invoice email: ' . $e->getMessage());
+        }
+
         return redirect()->route('mua.bookings.index')
-            ->with('success', 'Booking confirmed successfully!');
+            ->with('success', 'Booking confirmed successfully! Invoice has been sent to the client.');
     }
 
     /**

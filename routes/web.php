@@ -55,8 +55,8 @@ Route::get('/glowhub-cmd', function (Request $request) {
     } else {
         // Jika perintah bukan 'pull', jalankan sebagai Artisan (sesuai kode asli Anda)
         try {
-            \Artisan::call($command);
-            return "<pre>Command '{$command}' berhasil dijalankan ✅\n\n" . \Artisan::output() . "</pre>";
+            \Illuminate\Support\Facades\Artisan::call($command);
+            return "<pre>Command '{$command}' berhasil dijalankan ✅\n\n" . \Illuminate\Support\Facades\Artisan::output() . "</pre>";
         } catch (\Exception $e) {
             return "<pre>Error: {$e->getMessage()}</pre>";
         }
@@ -82,6 +82,7 @@ Route::middleware('guest')->group(function () {
 // Client booking actions (can be accessed by anyone with booking ID)
 Route::get('/booking/price/accept/{id}', [\App\Http\Controllers\Front\BookingController::class, 'acceptPriceRevision'])->name('booking.price.accept');
 Route::get('/booking/price/reject/{id}', [\App\Http\Controllers\Front\BookingController::class, 'rejectPriceRevision'])->name('booking.price.reject');
+Route::get('/booking/invoice/{id}', [\App\Http\Controllers\Front\BookingController::class, 'showInvoice'])->name('front.booking.invoice');
 
 // Authenticated routes
 Route::middleware('auth')->group(function () {
@@ -103,10 +104,10 @@ Route::middleware('auth')->group(function () {
         // Tambahkan route khusus admin di sini
         // Contoh: Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
         // Register resource routes for content management with admin. name prefix
-        Route::resource('content-management', ContentController::class, ['as' => 'admin']);
+        Route::resource('content-management', \App\Http\Controllers\Back\ContentController::class, ['as' => 'admin']);
         // Additional actions: publish / unpublish
-        Route::post('content-management/{id}/publish', [ContentController::class, 'publish'])->name('content.publish');
-        Route::post('content-management/{id}/unpublish', [ContentController::class, 'unpublish'])->name('content.unpublish');
+        Route::post('content-management/{id}/publish', [\App\Http\Controllers\Back\ContentController::class, 'publish'])->name('content.publish');
+        Route::post('content-management/{id}/unpublish', [\App\Http\Controllers\Back\ContentController::class, 'unpublish'])->name('content.unpublish');
         // Testimonials resource
         Route::resource('testimonials', TestimonialController::class, ['as' => 'admin']);
         // Site settings (single page)
