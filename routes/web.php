@@ -16,6 +16,7 @@ use App\Http\Controllers\Back\TestimonialController;
 use App\Http\Controllers\Back\MuaPortfolioController as BackMuaPortfolioController;
 use App\Http\Controllers\Back\MuaController as BackMuaController;
 use App\Http\Controllers\Back\MuaServiceController as BackMuaServiceController;
+use App\Http\Controllers\Back\PaymentMethodController;
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Http\Request;
@@ -117,9 +118,9 @@ Route::middleware('auth')->group(function () {
         Route::resource('users', UserController::class, ['as' => 'admin']);
 
         // Payment Methods management
-        Route::resource('payment-methods', \App\Http\Controllers\Back\PaymentMethodController::class, ['as' => 'admin']);
-        Route::post('payment-methods/reorder', [\App\Http\Controllers\Back\PaymentMethodController::class, 'reorder'])->name('admin.payment-methods.reorder');
-        Route::post('payment-methods/{paymentMethod}/toggle', [\App\Http\Controllers\Back\PaymentMethodController::class, 'toggleStatus'])->name('admin.payment-methods.toggle');
+        Route::resource('payment-methods', PaymentMethodController::class, ['as' => 'admin']);
+        Route::post('payment-methods/reorder', [PaymentMethodController::class, 'reorder'])->name('admin.payment-methods.reorder');
+        Route::post('payment-methods/{paymentMethod}/toggle', [PaymentMethodController::class, 'toggleStatus'])->name('admin.payment-methods.toggle');
 
         // MUA management (admin area)
         // Provide GET /muas that redirects to /admin/muas for admins so the

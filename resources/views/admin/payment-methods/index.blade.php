@@ -1,4 +1,4 @@
-@extends('admin._parts.master')
+@extends('back._parts.master')
 
 @section('title', 'Payment Methods Management')
 
