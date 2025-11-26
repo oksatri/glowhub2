@@ -313,7 +313,7 @@
 
                         <div class="card-body p-3">
                             <!-- Simple Date & Time Selection -->
-                            <div class="calendar-section mb-4">
+                            <div class="calendar-section">
                                 <div class="alert alert-info small">
                                     <i class="fas fa-info-circle me-2"></i>
                                     <strong>Booking Information:</strong> Selected time = makeup completion time.
