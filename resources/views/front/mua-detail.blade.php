@@ -407,7 +407,7 @@
                                 <div class="alert alert-info small">
                                     <i class="fas fa-info-circle me-2"></i>
                                     <strong>Booking Information:</strong> Selected time = makeup completion time.
-                                    If you book 06:00, then 05:30 (travel) and 06:00 (completion) will be blocked.
+                                    If you book 06:00, then 04:30 (travel) and 06:00 (completion) will be blocked.
                                 </div>
                                 <div class="row g-2">
                                     <div class="col-md-6">
