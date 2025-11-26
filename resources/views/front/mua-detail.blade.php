@@ -547,7 +547,7 @@
                                 @csrf
 
                                 <!-- Contact fields (prefilled if authenticated) -->
-                                <div class="row g-2 mb-2">
+                                <div class="row mb-2">
                                     <div class="col-12">
                                         <label class="form-label small">Your name</label>
                                         <input type="text" name="name" id="bk_name" class="form-control"
@@ -578,7 +578,7 @@
 
                                 <!-- Distance Check Section -->
                                 @if (!empty($mua['link_map']))
-                                <div class="row g-2 mb-2">
+                                <div class="row mb-2">
                                     <div class="col-md-4">
                                         <a href="{{ $mua['link_map'] }}" target="_blank" class="btn btn-primary w-100">
                                             <i class="fas fa-route me-1"></i> Check
