@@ -465,7 +465,7 @@
                             <!-- Features Selection for the active service -->
                             <div class="services-section">
                                 <h6 class="fw-bold mb-2 text-danger">Select Features for This Service</h6>
-                                <div class="row g-1">
+                                <div class="g-1">
                                     @php
                                         $features = $features ?? [];
                                     @endphp
@@ -474,7 +474,7 @@
                                         @php
                                             $hasPriceRange = (!empty($feature['min_price']) && $feature['min_price'] > 0) || (!empty($feature['max_price']) && $feature['max_price'] > 0);
                                         @endphp
-                                        <div class="col-12">
+
                                             <div
                                                 class="form-check p-2 border rounded {{ !$hasPriceRange ? 'bg-light' : '' }}">
                                                 <input class="form-check-input service-checkbox" type="checkbox"
@@ -505,7 +505,7 @@
                                                     @endif
                                                 </label>
                                             </div>
-                                        </div>
+
                                     @endforeach
                                 </div>
                             </div>
