@@ -548,20 +548,20 @@
 
                                 <!-- Contact fields (prefilled if authenticated) -->
                                 <div class="row mb-2">
-                                    <div class="col-12">
+                                    <div class="col-sm-6">
                                         <label class="form-label small">Your name</label>
                                         <input type="text" name="name" id="bk_name" class="form-control"
                                             value="{{ optional(auth()->user())->name ?? '' }}" required>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="form-label small">WhatsApp</label>
+                                        <input type="text" name="whatsapp" id="bk_whatsapp" class="form-control"
+                                        value="{{ optional(auth()->user())->phone ?? '' }}" required>
                                     </div>
                                     <div class="col-12">
                                         <label class="form-label small">Email</label>
                                         <input type="email" name="email" id="bk_email" class="form-control"
                                             value="{{ optional(auth()->user())->email ?? '' }}" required>
-                                    </div>
-                                    <div class="col-12">
-                                        <label class="form-label small">WhatsApp</label>
-                                        <input type="text" name="whatsapp" id="bk_whatsapp" class="form-control"
-                                        value="{{ optional(auth()->user())->phone ?? '' }}" required>
                                     </div>
                                     <div class="col-12">
                                         <label class="form-label small">Address</label>
