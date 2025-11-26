@@ -388,24 +388,10 @@
                                     @if (isset($portfolio) && !empty($portfolio) && count($portfolio) > 0)
                                         @foreach ($portfolio as $index => $item)
                                             <div class="col-6">
-                                                <div class="portfolio-item" data-bs-toggle="modal" data-bs-target="#portfolioModal{{ $index }}">
-                                                    <img src="{{ $item['image'] ?? asset('images/portfolio-placeholder.jpg') }}" alt="Portfolio" class="img-fluid rounded">
+                                                <div class="portfolio-item" data-bs-toggle="modal" data-bs-target="#portfolioModal" data-image-index="{{ $index }}">
+                                                    <img src="{{ $item['image'] }}" alt="Portfolio" class="img-fluid rounded">
                                                     <div class="position-absolute top-0 start-0 m-1">
                                                         <span class="badge {{ $badgeClasses[array_rand($badgeClasses)] }} small">{{ $item['service_name'] ?? 'Portfolio' }}</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                             <!-- Portfolio Modal -->
-                                            <div class="modal fade" id="portfolioModal{{ $index }}" tabindex="-1">
-                                                <div class="modal-dialog modal-lg modal-dialog-centered">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title">{{ $item['service_name'] ?? 'Portfolio' }}</h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                        </div>
-                                                        <div class="modal-body text-center">
-                                                            <img src="{{ $item['image']}}" class="img-fluid rounded" alt="Portfolio">
-                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -433,7 +419,7 @@
                             <p class="mb-0 small opacity-75">Choose your preferred date and time</p>
                         </div>
 
-                        <div class="card-body p-4">
+                        <div class="card-body p-3">
                             <!-- Simple Date & Time Selection -->
                             <div class="calendar-section">
                                 <div class="alert alert-info small">
@@ -628,6 +614,60 @@
             </div>
         </div>
     </section>
+
+    <!-- Portfolio Gallery Modal -->
+    <div class="modal fade" id="portfolioModal" tabindex="-1">
+        <div class="modal-dialog modal-fullscreen modal-dialog-centered">
+            <div class="modal-content bg-dark">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title text-white" id="modalTitle">Portfolio Gallery</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <!-- Carousel -->
+                    <div id="portfolioCarousel" class="carousel slide h-100" data-bs-ride="carousel">
+                        <!-- Carousel Indicators -->
+                        <div class="carousel-indicators position-absolute top-0" style="bottom: auto; margin-top: 1rem;">
+                            @if (isset($portfolio) && !empty($portfolio))
+                                @foreach ($portfolio as $index => $item)
+                                    <button type="button" data-bs-target="#portfolioCarousel" data-bs-slide-to="{{ $index }}"
+                                            class="{{ $index == 0 ? 'active' : '' }}"></button>
+                                @endforeach
+                            @endif
+                        </div>
+
+                        <!-- Carousel Inner -->
+                        <div class="carousel-inner h-100">
+                            @if (isset($portfolio) && !empty($portfolio))
+                                @foreach ($portfolio as $index => $item)
+                                    <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+                                        <div class="d-flex justify-content-center align-items-center h-100">
+                                            <img src="{{ $item['image'] }}" class="img-fluid" alt="Portfolio {{ $index + 1 }}"
+                                                 style="max-height: 90vh; max-width: 100%; object-fit: contain;">
+                                        </div>
+                                        <div class="carousel-caption d-none d-md-block">
+                                            <h5>{{ $item['service_name'] ?? 'Portfolio ' . ($index + 1) }}</h5>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @endif
+                        </div>
+
+                        <!-- Carousel Controls -->
+                        <button class="carousel-control-prev" type="button" data-bs-target="#portfolioCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#portfolioCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @push('style')
@@ -716,6 +756,77 @@
             function formatRupiah(num) {
                 num = num || 0;
                 return 'Rp ' + num.toLocaleString('id-ID');
+            }
+
+            // Portfolio Gallery Modal
+            const portfolioModal = document.getElementById('portfolioModal');
+            const portfolioCarousel = document.getElementById('portfolioCarousel');
+
+            if (portfolioModal && portfolioCarousel) {
+                // When portfolio item is clicked, set the carousel to the correct image
+                portfolioModal.addEventListener('show.bs.modal', function(event) {
+                    const button = event.relatedTarget;
+                    const imageIndex = parseInt(button.getAttribute('data-image-index'));
+
+                    // Update modal title with service name
+                    const modalTitle = document.getElementById('modalTitle');
+                    const serviceName = button.querySelector('.badge').textContent;
+                    modalTitle.textContent = serviceName || 'Portfolio Gallery';
+
+                    // Go to the specific slide
+                    const carousel = bootstrap.Carousel.getInstance(portfolioCarousel);
+                    if (carousel) {
+                        carousel.to(imageIndex);
+                    }
+                });
+
+                // Initialize carousel
+                new bootstrap.Carousel(portfolioCarousel, {
+                    interval: false, // Don't auto-slide
+                    keyboard: true,  // Allow keyboard navigation
+                    ride: false
+                });
+
+                // Keyboard navigation
+                document.addEventListener('keydown', function(e) {
+                    if (portfolioModal.classList.contains('show')) {
+                        const carousel = bootstrap.Carousel.getInstance(portfolioCarousel);
+                        if (carousel) {
+                            if (e.key === 'ArrowLeft') {
+                                carousel.prev();
+                            } else if (e.key === 'ArrowRight') {
+                                carousel.next();
+                            } else if (e.key === 'Escape') {
+                                bootstrap.Modal.getInstance(portfolioModal).hide();
+                            }
+                        }
+                    }
+                });
+
+                // Touch/swipe support for mobile
+                let touchStartX = 0;
+                let touchEndX = 0;
+
+                portfolioCarousel.addEventListener('touchstart', function(e) {
+                    touchStartX = e.changedTouches[0].screenX;
+                });
+
+                portfolioCarousel.addEventListener('touchend', function(e) {
+                    touchEndX = e.changedTouches[0].screenX;
+                    handleSwipe();
+                });
+
+                function handleSwipe() {
+                    const carousel = bootstrap.Carousel.getInstance(portfolioCarousel);
+                    if (carousel) {
+                        if (touchEndX < touchStartX - 50) {
+                            carousel.next(); // Swipe left - next image
+                        }
+                        if (touchEndX > touchStartX + 50) {
+                            carousel.prev(); // Swipe right - previous image
+                        }
+                    }
+                }
             }
 
             // initialize datepicker for booking date
