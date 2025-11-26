@@ -626,13 +626,24 @@
                                     <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
                                         <div class="d-flex justify-content-center align-items-center h-100">
                                             <img src="{{ $item['image'] }}" class="img-fluid" alt="Portfolio {{ $index + 1 }}"
-                                                 style="max-height: 90vh; max-width: 100%; object-fit: contain;">
+                                                 style="max-height: 90vh; max-width: 100%; object-fit: contain;"
+                                                 onerror="this.src='{{ asset('images/product-item1.jpg') }}'; console.log('Image failed to load:', '{{ $item['image'] }}');">
                                         </div>
                                         <div class="carousel-caption d-none d-md-block">
                                             <h5>{{ $item['service_name'] ?? 'Portfolio ' . ($index + 1) }}</h5>
                                         </div>
                                     </div>
                                 @endforeach
+                            @else
+                                <div class="carousel-item active">
+                                    <div class="d-flex justify-content-center align-items-center h-100">
+                                        <div class="text-center text-white">
+                                            <i class="fas fa-camera fa-4x mb-3"></i>
+                                            <h4>No Portfolio Available</h4>
+                                            <p>Portfolio images will be available soon</p>
+                                        </div>
+                                    </div>
+                                </div>
                             @endif
                         </div>
 
@@ -745,6 +756,11 @@
             setTimeout(function() {
                 const portfolioModal = document.getElementById('portfolioModal');
                 const portfolioCarousel = document.getElementById('portfolioCarousel');
+
+                // Debug: Check portfolio data
+                const portfolioData = @json($portfolio ?? []);
+                console.log('Portfolio data from server:', portfolioData);
+                console.log('Portfolio data length:', portfolioData.length);
 
                 if (portfolioModal && portfolioCarousel) {
                     console.log('Portfolio modal and carousel found');
