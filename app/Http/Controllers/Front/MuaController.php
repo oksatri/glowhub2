@@ -154,7 +154,7 @@ class MuaController extends Controller
                 'image' => $p->image ? asset('uploads/' . $p->image) : asset('images/product-item1.jpg'),
                 'service_name' => $p->service->service_name ?? null,
             ];
-        })->toArray();
+        })->values()->toArray(); // Use values() to reset keys to 0,1,2...
 
         $muaData = [
             'id' => $mua->id,
