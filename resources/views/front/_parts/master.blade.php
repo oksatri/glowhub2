@@ -76,7 +76,6 @@
         }
 
         /* Quick overrides to make sure Bootstrap components use the admin primary color */
-
         .bg-primary {
             background-color: var(--bs-primary) !important;
         }
@@ -84,6 +83,223 @@
         .btn-primary {
             background-color: var(--bs-primary) !important;
             border-color: var(--bs-primary) !important;
+        }
+
+        /* === RESPONSIVE & USER-FRIENDLY IMPROVEMENTS === */
+
+        /* Global spacing improvements */
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+        }
+
+        /* Container improvements */
+        .container {
+            max-width: 1200px;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+        }
+
+        /* Card spacing improvements */
+        .card {
+            margin-bottom: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .card-body {
+                padding: 1rem;
+            }
+        }
+
+        /* Form improvements */
+        .form-control, .form-select {
+            border-radius: 8px;
+            padding: 0.75rem;
+            font-size: 0.95rem;
+            border: 1px solid #dee2e6;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--bs-primary);
+            box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary), 0.25);
+        }
+
+        /* Button improvements */
+        .btn {
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 576px) {
+            .btn {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Alert improvements */
+        .alert {
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            padding: 1rem;
+        }
+
+        /* Section spacing */
+        section {
+            padding: 3rem 0;
+        }
+
+        @media (max-width: 768px) {
+            section {
+                padding: 2rem 0;
+            }
+        }
+
+        /* Row spacing */
+        .row {
+            margin-bottom: 1rem;
+        }
+
+        .row:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Column spacing */
+        [class*="col-"] {
+            padding: 0.75rem;
+        }
+
+        @media (max-width: 768px) {
+            [class*="col-"] {
+                padding: 0.5rem;
+            }
+        }
+
+        /* Form label improvements */
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #495057;
+        }
+
+        /* Helper text improvements */
+        .form-text, .text-muted {
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Modal improvements */
+        .modal-content {
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid #dee2e6;
+            padding: 1.5rem;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .modal-header, .modal-body {
+                padding: 1rem;
+            }
+        }
+
+        /* Badge improvements */
+        .badge {
+            border-radius: 6px;
+            font-weight: 500;
+            padding: 0.5rem 0.75rem;
+        }
+
+        /* Breadcrumb improvements */
+        .breadcrumb {
+            background: transparent;
+            padding: 0;
+            margin-bottom: 1rem;
+        }
+
+        /* Pagination improvements */
+        .pagination {
+            margin-bottom: 0;
+        }
+
+        .page-link {
+            border-radius: 6px;
+            margin: 0 2px;
+            border: 1px solid #dee2e6;
+        }
+
+        /* Table improvements */
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table th {
+            font-weight: 600;
+            border-top: none;
+        }
+
+        /* Loading states */
+        .spinner-border-sm {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        /* Responsive typography */
+        h1 { font-size: 2.5rem; }
+        h2 { font-size: 2rem; }
+        h3 { font-size: 1.75rem; }
+        h4 { font-size: 1.5rem; }
+        h5 { font-size: 1.25rem; }
+        h6 { font-size: 1rem; }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.75rem; }
+            h3 { font-size: 1.5rem; }
+            h4 { font-size: 1.25rem; }
+            h5 { font-size: 1.1rem; }
+            h6 { font-size: 1rem; }
+        }
+
+        /* Utility classes for better spacing */
+        .mb-4 { margin-bottom: 1.5rem !important; }
+        .mt-4 { margin-top: 1.5rem !important; }
+        .py-4 { padding-top: 1.5rem !important; padding-bottom: 1.5rem !important; }
+
+        @media (max-width: 768px) {
+            .mb-4 { margin-bottom: 1rem !important; }
+            .mt-4 { margin-top: 1rem !important; }
+            .py-4 { padding-top: 1rem !important; padding-bottom: 1rem !important; }
+        }
+
+        /* Remove unnecessary margins on mobile */
+        @media (max-width: 768px) {
+            .mb-md-0 { margin-bottom: 0 !important; }
+            .mt-md-0 { margin-top: 0 !important; }
         }
     </style>
     @stack('style')

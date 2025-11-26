@@ -7,6 +7,13 @@
         /* === CLEAN & PROFESSIONAL STYLING === */
         .hero-gradient {
             background: linear-gradient(135deg, #ffd6e8 0%, #ffe9f2 100%) !important;
+            padding: 2rem 0 !important;
+        }
+
+        @media (max-width: 768px) {
+            .hero-gradient {
+                padding: 1rem 0 !important;
+            }
         }
 
         .floating-elements {
@@ -49,12 +56,9 @@
         }
 
         @keyframes float {
-
-            0%,
-            100% {
+            0%, 100% {
                 transform: translateY(0px);
             }
-
             50% {
                 transform: translateY(-15px);
             }
@@ -63,6 +67,7 @@
         .breadcrumb-elegant {
             background: none !important;
             padding: 0;
+            margin-bottom: 1rem !important;
         }
 
         .breadcrumb-elegant .breadcrumb-item+.breadcrumb-item::before {
@@ -85,7 +90,129 @@
             text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
         }
 
-        /* === SIMPLE INTERACTIONS === */
+        /* === MUA DETAIL SPECIFIC IMPROVEMENTS === */
+
+        /* Profile Section */
+        .profile-section {
+            margin-bottom: 2rem;
+        }
+
+        .profile-image-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+
+        .profile-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Location Badge */
+        .location-badge {
+            position: absolute;
+            bottom: 1rem;
+            left: 1rem;
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--bs-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        /* Rating Stars */
+        .rating {
+            color: #ffc107;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Portfolio Grid */
+        .portfolio-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .portfolio-item:hover {
+            transform: scale(1.05);
+        }
+
+        .portfolio-item img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+
+        /* Booking Card */
+        .booking-card {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .booking-card .card-header {
+            background: var(--bs-primary);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .booking-card .card-header {
+                padding: 1rem;
+            }
+        }
+
+        /* Calendar Section */
+        .calendar-section {
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .calendar-section {
+                margin-bottom: 1rem;
+            }
+        }
+
+        /* Services Section */
+        .services-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-check {
+            padding: 1rem;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-check:hover {
+            border-color: var(--bs-primary);
+            background-color: rgba(var(--bs-primary), 0.05);
+        }
+
+        .form-check-input:checked {
+            background-color: var(--bs-primary);
+            border-color: var(--bs-primary);
+        }
+
+        /* Alert Info Box */
+        .alert-info {
+            background-color: rgba(var(--bs-primary), 0.1);
+            border-color: var(--bs-primary);
+            color: var(--bs-primary);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Simple Interactions */
         .day-btn:hover:not(.btn-primary) {
             background-color: var(--bs-primary) !important;
             color: white !important;
@@ -96,14 +223,37 @@
             color: white !important;
         }
 
-        .card {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        /* Responsive adjustments for MUA detail */
+        @media (max-width: 768px) {
+            .profile-section .row.g-4 {
+                gap: 1rem !important;
+            }
+
+            .portfolio-item img {
+                height: 100px;
+            }
+
+            .form-check {
+                padding: 0.75rem;
+            }
+
+            .booking-card {
+                margin-top: 1rem;
+            }
         }
 
+        @media (max-width: 576px) {
+            .location-badge {
+                bottom: 0.5rem;
+                left: 0.5rem;
+                padding: 0.375rem 0.75rem;
+                font-size: 0.8rem;
+            }
 
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
+            .alert-info {
+                padding: 0.75rem;
+                font-size: 0.875rem;
+            }
         }
     </style>
     <!-- Hero Section -->
@@ -130,48 +280,37 @@
     </section>
 
     <!-- MUA Detail Section -->
-    <section class="py-5" style="background-color:#FFF4ED;">
+    <section class="py-4" style="background-color:#FFF4ED;">
         <div class="container">
-            <div class="row g-4">
+            <div class="row g-3">
                 <!-- Left Column - Profile & Portfolio -->
                 <div class="col-lg-6">
                     <div class="profile-section">
                         <!-- Profile Card -->
-                        <div class="card shadow-sm border-0 mb-4"
-                            style="background-color:#FDE1E1; border-radius:22px; overflow:hidden;">
+                        <div class="card shadow-sm border-0 mb-3"
+                            style="background-color:#FDE1E1; border-radius:12px; overflow:hidden;">
                             <!-- Profile Image -->
-                            <div class="position-relative">
+                            <div class="position-relative profile-image-container">
                                 <div style="width:100%; aspect-ratio:3/4; overflow:hidden;">
                                     <img src="{{ $mua['image'] }}" alt="{{ $mua['service_name'] ?? $mua['name'] }}"
                                         style="width:100%; height:100%; object-fit:cover;">
                                 </div>
                                 <!-- Location Badge -->
-                                <div class="position-absolute bottom-0 start-0 m-3">
-                                    <span class="badge px-3 py-2 rounded-pill"
-                                        style="background-color:#F7BCC6; color:#4B2E2E;">
-                                        <i class="fas fa-map-marker-alt me-1"></i>{{ $mua['location'] }}
-                                    </span>
+                                <div class="location-badge">
+                                    <i class="fas fa-map-marker-alt me-1"></i>{{ $mua['location'] }}
                                 </div>
                             </div>
 
                             <!-- Profile Info -->
-                            <div class="card-body p-4">
+                            <div class="card-body p-3">
                                 <!-- Service Name & MUA Name -->
-                                <div class="text-center mb-3">
-                                    <h4 class="mb-2 fw-bold">
+                                <div class="text-center mb-2">
+                                    <h5 class="mb-2 fw-bold">
                                         {{ $mua['service_name'] ?? 'Service Available' }}
-                                    </h4>
+                                    </h5>
                                 </div>
 
-                                <!-- Location at top -->
-                                {{-- <div class="text-center mb-3">
-                                    <div class="d-flex justify-content-center align-items-center mb-2">
-                                        <i class="fas fa-map-marker-alt me-2" style="color:#D23B3B;"></i>
-                                        <span class="fw-semibold text-primary">{{ $mua['location'] }}</span>
-                                    </div>
-                                </div> --}}
-
-                                <div class="text-center mb-4">
+                                <div class="text-center mb-3">
                                     <p class="text-muted mb-2">
                                         @if (!empty($mua['max_distance']))
                                             Available within {{ $mua['max_distance'] }} km radius
@@ -185,7 +324,7 @@
                                 </div>
 
                                 <!-- Rating & Reviews -->
-                                <div class="text-center mb-4">
+                                <div class="text-center mb-3">
                                     <div class="rating mb-2">
                                         @for ($i = 1; $i <= 5; $i++)
                                             @if ($i <= floor($mua['rating']))
@@ -207,7 +346,7 @@
                                     <div class="col-6">
                                         <div class="border-end">
                                             <h6 class="fw-bold mb-1">Starting From</h6>
-                                            <p class="h5 text-success fw-bold mb-0">Rp
+                                            <p class="h6 text-success fw-bold mb-0">Rp
                                                 {{ number_format($mua['price'], 0, ',', '.') }}</p>
                                         </div>
                                     </div>
@@ -233,12 +372,12 @@
                         </div>
 
                         <!-- Portfolio Section -->
-                        <div class="card shadow-sm border-0 rounded-3">
-                            <div class="card-body p-4">
-                                <h5 class="fw-bold mb-3">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-body p-3">
+                                <h6 class="fw-bold mb-3">
                                     <i class="fas fa-images me-2"></i>Portfolio
-                                </h5>
-                                <div class="row g-3">
+                                </h6>
+                                <div class="row g-2">
                                     @php
                                         $badgeClasses = [
                                             'bg-primary',
@@ -249,51 +388,37 @@
                                             'bg-secondary',
                                         ];
                                     @endphp
-                                    {{-- @foreach ($portfolio as $index => $val) --}}
                                     @if (isset($portfolio) && !empty($portfolio) && count($portfolio) > 0)
-                                        <div class="row g-3">
-                                            @foreach ($portfolio as $index => $item)
-                                                <div class="col-6">
-                                                    <div class="portfolio-item position-relative" data-bs-toggle="modal" data-bs-target="#portfolioModal{{ $index }}">
-                                                        <img src="{{ $item['image'] ?? asset('images/portfolio-placeholder.jpg') }}" alt="Portfolio" class="img-fluid rounded">
-                                                        <div class="position-absolute top-0 start-0 m-2">
-                                                            <span class="badge {{ $badgeClasses[array_rand($badgeClasses)] }}">{{ $item['service_name'] ?? 'Portfolio' }}</span>
+                                        @foreach ($portfolio as $index => $item)
+                                            <div class="col-6">
+                                                <div class="portfolio-item" data-bs-toggle="modal" data-bs-target="#portfolioModal{{ $index }}">
+                                                    <img src="{{ $item['image'] ?? asset('images/portfolio-placeholder.jpg') }}" alt="Portfolio" class="img-fluid rounded">
+                                                    <div class="position-absolute top-0 start-0 m-2">
+                                                        <span class="badge {{ $badgeClasses[array_rand($badgeClasses)] }}">{{ $item['service_name'] ?? 'Portfolio' }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                             <!-- Portfolio Modal -->
+                                            <div class="modal fade" id="portfolioModal{{ $index }}" tabindex="-1">
+                                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">{{ $item['service_name'] ?? 'Portfolio' }}</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                        </div>
+                                                        <div class="modal-body text-center">
+                                                            <img src="{{ $item['image'] ?? asset('images/portfolio-placeholder.jpg') }}" class="img-fluid rounded" alt="Portfolio">
                                                         </div>
                                                     </div>
                                                 </div>
-                                                 <!-- Portfolio Modal -->
-                                                <div class="modal fade" id="portfolioModal{{ $index }}" tabindex="-1">
-                                                    <div class="modal-dialog modal-lg modal-dialog-centered">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title">{{ $item['service_name'] ?? 'Portfolio' }}</h5>
-                                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                            </div>
-                                                            <div class="modal-body text-center">
-                                                                <img src="{{ $item['image'] ?? asset('images/portfolio-placeholder.jpg') }}" class="img-fluid rounded" alt="Portfolio">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            @endforeach
-                                        </div>
+                                            </div>
+                                        @endforeach
                                     @else
                                         <div class="text-center py-4">
                                             <i class="fas fa-camera fa-3x text-muted mb-3"></i>
                                             <p class="text-muted">Portfolio will be available soon.</p>
                                         </div>
                                     @endif
-                                        {{-- <div class="col-6">
-                                            <div class="portfolio-item position-relative">
-                                                <img src="{{ $val['image'] }}" alt="Portfolio" class="img-fluid rounded"
-                                                    style="height: 120px; width: 100%; object-fit: cover; cursor: pointer;">
-                                                <div class="position-absolute top-0 start-0 m-2">
-                                                    <span
-                                                        class="badge {{ $badgeClasses[array_rand($badgeClasses)] }}">{{ $val['service_name'] }}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endforeach --}}
                                 </div>
                             </div>
                         </div>
@@ -303,11 +428,11 @@
                 <!-- Right Column - Booking Form -->
                 <div class="col-lg-6">
                     <!-- Booking Card -->
-                    <div class="card shadow-sm border-0 rounded-3 mb-4">
-                        <div class="card-header bg-primary text-white text-center py-3">
-                            <h4 class="mb-0">
+                    <div class="booking-card">
+                        <div class="card-header">
+                            <h5 class="mb-1">
                                 <i class="fas fa-calendar-alt me-2"></i>Book Your Session
-                            </h4>
+                            </h5>
                             <p class="mb-0 small opacity-75">Choose your preferred date and time</p>
                         </div>
 
@@ -320,14 +445,14 @@
                                     If you book 06:00, then 05:30 (travel) and 06:00 (completion) will be blocked.
                                 </div>
                                 <div class="row g-3">
-                                    <div class="col-6">
-                                        <label class="form-label small mb-1">Select Date</label>
+                                    <div class="col-md-6">
+                                        <label class="form-label small">Select Date</label>
                                         <input type="date" class="form-control" id="bk_date">
                                     </div>
 
                                     <!-- Time Slots -->
-                                    <div class="col-6">
-                                        <label class="form-label small mb-1">Available Times</label>
+                                    <div class="col-md-6">
+                                        <label class="form-label small">Available Times</label>
                                         @php
                                             $timeSlots = [];
                                             $selectedTime = null;
@@ -372,13 +497,12 @@
                             </div>
 
                             <!-- Features Selection for the active service -->
-                            <div class="services-section mb-4">
+                            <div class="services-section">
                                 <h6 class="fw-bold mb-3 text-primary">Select Features for This Service</h6>
                                 <div class="row g-2">
                                     @php
                                         $features = $features ?? [];
                                     @endphp
-
                                     @foreach ($features as $idx => $feature)
                                         @php
                                             $hasPriceRange = (!empty($feature['min_price']) && $feature['min_price'] > 0) || (!empty($feature['max_price']) && $feature['max_price'] > 0);
@@ -419,52 +543,64 @@
                                 </div>
                             </div>
 
-
                             <!-- Booking Form -->
                             <form id="bookingForm" method="POST" action="{{ route('mua.book', $mua['id']) }}">
                                 @csrf
 
                                 <!-- Contact fields (prefilled if authenticated) -->
-
-                                <label class="form-label small">Your name</label>
-                                <input type="text" name="name" id="bk_name" class="form-control"
-                                    value="{{ optional(auth()->user())->name ?? '' }}" required>
-                                <label class="form-label small">Email</label>
-                                <input type="email" name="email" id="bk_email" class="form-control"
-                                    value="{{ optional(auth()->user())->email ?? '' }}" required>
-                                <label class="form-label small">WhatsApp</label>
-                                <input type="text" name="whatsapp" id="bk_whatsapp" class="form-control"
-                                value="{{ optional(auth()->user())->phone ?? '' }}" required>
-                                <label class="form-label small">Address</label>
-                                <input type="text" name="address" id="bk_address" class="form-control" required>
-                                @if (!empty($mua['max_distance']) && !empty($mua['additional_charge']))
-                                    <small class="text-muted d-block">
-                                        Locations beyond {{ $mua['max_distance'] }} km from the MUA may incur an
-                                        additional charge of Rp {{ number_format($mua['additional_charge'], 0, ',', '.') }}
-                                        per km.
-                                    </small>
-                                @endif
+                                <div class="row g-2 mb-3">
+                                    <div class="col-12">
+                                        <label class="form-label small">Your name</label>
+                                        <input type="text" name="name" id="bk_name" class="form-control"
+                                            value="{{ optional(auth()->user())->name ?? '' }}" required>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label small">Email</label>
+                                        <input type="email" name="email" id="bk_email" class="form-control"
+                                            value="{{ optional(auth()->user())->email ?? '' }}" required>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label small">WhatsApp</label>
+                                        <input type="text" name="whatsapp" id="bk_whatsapp" class="form-control"
+                                        value="{{ optional(auth()->user())->phone ?? '' }}" required>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label small">Address</label>
+                                        <input type="text" name="address" id="bk_address" class="form-control" required>
+                                        @if (!empty($mua['max_distance']) && !empty($mua['additional_charge']))
+                                            <small class="text-muted d-block mt-1">
+                                                Locations beyond {{ $mua['max_distance'] }} km from the MUA may incur an
+                                                additional charge of Rp {{ number_format($mua['additional_charge'], 0, ',', '.') }}
+                                                per km.
+                                            </small>
+                                        @endif
+                                    </div>
+                                </div>
 
                                 <!-- Distance Check Section -->
                                 @if (!empty($mua['link_map']))
-
-                                <div class="col-4">
-                                    <a href="{{ $mua['link_map'] }}" target="_blank" class="btn btn-primary w-100">
-                                        <i class="fas fa-route me-1"></i> Check
-                                    </a>
+                                <div class="row g-2 mb-3">
+                                    <div class="col-md-4">
+                                        <a href="{{ $mua['link_map'] }}" target="_blank" class="btn btn-primary w-100">
+                                            <i class="fas fa-route me-1"></i> Check
+                                        </a>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <small class="text-muted">
+                                            <i class="fas fa-map-marker-alt me-1"></i>
+                                            Click "Check" to calculate distance from MUA location
+                                        </small>
+                                    </div>
                                 </div>
-                                <small class="text-muted d-block mt-1">
-                                    <i class="fas fa-map-marker-alt me-1"></i>
-                                    Click "Check" to calculate distance from MUA location
-                                </small>
-
                                 @endif
 
-
-                                <label class="form-label small">Estimated Distance (km)</label>
-                                <input type="number" min="0" class="form-control" id="bk_distance_input"
-                                        placeholder="e.g. 5" inputmode="decimal">
-
+                                <div class="row g-2 mb-3">
+                                    <div class="col-12">
+                                        <label class="form-label small">Estimated Distance (km)</label>
+                                        <input type="number" min="0" class="form-control" id="bk_distance_input"
+                                            placeholder="e.g. 5" inputmode="decimal">
+                                    </div>
+                                </div>
 
                                 <!-- Hidden inputs populated by JS -->
                                 <input type="hidden" name="distance" id="bk_distance">
@@ -484,7 +620,7 @@
 
                                 <button type="button" id="bookNowBtn" class="btn w-100 btn-lg fw-bold"
                                     style="background: linear-gradient(135deg, #845d70 0%, #6d4c5a 100%); color: white; border: none; border-radius: 25px; padding: 15px;">
-                                    <i class="fas fa-calendar-check me-2"></i>Send Request
+                                    <i class="fas fa-calendar-check me-2"></i>Send Request
                                 </button>
                             </form>
                         </div>
