@@ -159,24 +159,6 @@
             background: var(--bs-primary);
             color: white;
             text-align: center;
-            padding: 1rem;
-        }
-
-        @media (max-width: 768px) {
-            .booking-card .card-header {
-                padding: 0.75rem;
-            }
-        }
-
-        /* Calendar Section */
-        .calendar-section {
-            margin-bottom: 1rem;
-        }
-
-        @media (max-width: 768px) {
-            .calendar-section {
-                margin-bottom: 0.75rem;
-            }
         }
 
         /* Services Section */
@@ -446,7 +428,7 @@
                                                 try {
                                                     $start = new \DateTime($m[1] . ':' . $m[2]);
                                                     $end = new \DateTime($m[3] . ':' . $m[4]);
-                                                    while ($start < $end) {
+                                                    while ($start <= $end) {
                                                         $timeSlots[] = $start->format('H:i');
                                                         $start->modify('+30 minutes');
                                                     }
@@ -928,21 +910,18 @@
                             // Parse booking time (HH:MM format) - this is COMPLETION time
                             var bookingDateTime = new Date('2000-01-01T' + bookingTime + ':00');
 
-                            // Block the booking completion time slot
-                            var bookingTimeStr = bookingDateTime.getHours().toString().padStart(2, '0') + ':' +
-                                                 bookingDateTime.getMinutes().toString().padStart(2, '0');
-                            if (!blockedTimes.includes(bookingTimeStr)) {
-                                blockedTimes.push(bookingTimeStr);
-                            }
+                            // Block 1.5 hours BEFORE completion time (90 minutes = 3 slots of 30 minutes each)
+                            // If completion time is 06:00, block: 04:30, 05:00, 05:30, and 06:00
+                            for (var i = 3; i >= 0; i--) {
+                                var blockedTime = new Date(bookingDateTime);
+                                blockedTime.setMinutes(blockedTime.getMinutes() - (i * 30));
 
-                            // Block 30 minutes BEFORE booking time (travel time)
-                            var travelTime = new Date(bookingDateTime);
-                            travelTime.setMinutes(travelTime.getMinutes() - 30);
+                                var blockedTimeStr = blockedTime.getHours().toString().padStart(2, '0') + ':' +
+                                                     blockedTime.getMinutes().toString().padStart(2, '0');
 
-                            var travelTimeStr = travelTime.getHours().toString().padStart(2, '0') + ':' +
-                                               travelTime.getMinutes().toString().padStart(2, '0');
-                            if (!blockedTimes.includes(travelTimeStr)) {
-                                blockedTimes.push(travelTimeStr);
+                                if (!blockedTimes.includes(blockedTimeStr)) {
+                                    blockedTimes.push(blockedTimeStr);
+                                }
                             }
                         }
                     @endforeach
