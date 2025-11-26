@@ -172,6 +172,7 @@
             border-radius: 6px;
             margin-bottom: 0.5rem;
             transition: all 0.3s ease;
+            background-color: white; /* Default white background */
         }
 
         .form-check:hover {
@@ -179,8 +180,25 @@
             background-color: rgba(var(--bs-primary), 0.05);
         }
 
+        .form-check-input:checked ~ .form-check-label {
+            color: var(--bs-primary);
+            font-weight: 600;
+        }
+
         .form-check-input:checked {
             background-color: var(--bs-primary);
+            border-color: var(--bs-primary);
+        }
+
+        /* When checkbox is checked, change background to light primary */
+        .form-check:has(.form-check-input:checked) {
+            background-color: rgba(var(--bs-primary), 0.1);
+            border-color: var(--bs-primary);
+        }
+
+        /* Fallback for browsers that don't support :has() */
+        .form-check.checked {
+            background-color: rgba(var(--bs-primary), 0.1);
             border-color: var(--bs-primary);
         }
 
@@ -861,6 +879,27 @@
                     // Remove this handler after execution
                     $(this).off('shown.bs.modal');
                 });
+            });
+
+            // Handle feature checkbox changes for visual feedback
+            $('.service-checkbox').on('change', function() {
+                const $formCheck = $(this).closest('.form-check');
+
+                if ($(this).is(':checked')) {
+                    // Add checked class for fallback
+                    $formCheck.addClass('checked');
+                } else {
+                    // Remove checked class
+                    $formCheck.removeClass('checked');
+                }
+            });
+
+            // Initialize checkbox states on page load
+            $('.service-checkbox').each(function() {
+                const $formCheck = $(this).closest('.form-check');
+                if ($(this).is(':checked')) {
+                    $formCheck.addClass('checked');
+                }
             });
 
             // initialize datepicker for booking date
