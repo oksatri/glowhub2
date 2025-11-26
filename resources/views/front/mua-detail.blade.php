@@ -323,8 +323,6 @@
                                     <div class="col-6">
                                         <label class="form-label small mb-1">Select Date</label>
                                         <input type="date" class="form-control" id="bk_date">
-                                        <small class="text-muted d-block">You can change month and year from the
-                                            picker.</small>
                                     </div>
 
                                     <!-- Time Slots -->
@@ -369,7 +367,6 @@
                                                 </option>
                                             @endforeach
                                         </select>
-                                        <small class="text-muted d-block">The time you selected is when the MUA finishes your makeup (1 hour service + 30 min travel time)</small>
                                     </div>
                                 </div>
                             </div>
