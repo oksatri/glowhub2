@@ -433,7 +433,7 @@
                             <p class="mb-0 small opacity-75">Choose your preferred date and time</p>
                         </div>
 
-                        <div class="card-body p-2">
+                        <div class="card-body p-4">
                             <!-- Simple Date & Time Selection -->
                             <div class="calendar-section">
                                 <div class="alert alert-info small">
