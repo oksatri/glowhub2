@@ -758,40 +758,45 @@
                 return 'Rp ' + num.toLocaleString('id-ID');
             }
 
-            // Portfolio Gallery Modal
-            const portfolioModal = document.getElementById('portfolioModal');
-            const portfolioCarousel = document.getElementById('portfolioCarousel');
+            // Portfolio Gallery Modal - Initialize after DOM is ready
+            setTimeout(function() {
+                const portfolioModal = document.getElementById('portfolioModal');
+                const portfolioCarousel = document.getElementById('portfolioCarousel');
 
-            if (portfolioModal && portfolioCarousel) {
-                // When portfolio item is clicked, set the carousel to the correct image
-                portfolioModal.addEventListener('show.bs.modal', function(event) {
-                    const button = event.relatedTarget;
-                    const imageIndex = parseInt(button.getAttribute('data-image-index'));
+                if (portfolioModal && portfolioCarousel) {
+                    console.log('Portfolio modal and carousel found');
 
-                    // Update modal title with service name
-                    const modalTitle = document.getElementById('modalTitle');
-                    const serviceName = button.querySelector('.badge').textContent;
-                    modalTitle.textContent = serviceName || 'Portfolio Gallery';
+                    // Initialize carousel first
+                    const carousel = new bootstrap.Carousel(portfolioCarousel, {
+                        interval: false, // Don't auto-slide
+                        keyboard: true,  // Allow keyboard navigation
+                        ride: false
+                    });
 
-                    // Go to the specific slide
-                    const carousel = bootstrap.Carousel.getInstance(portfolioCarousel);
-                    if (carousel) {
-                        carousel.to(imageIndex);
-                    }
-                });
+                    // When portfolio item is clicked, set the carousel to the correct image
+                    portfolioModal.addEventListener('show.bs.modal', function(event) {
+                        console.log('Modal is being shown');
+                        const button = event.relatedTarget;
+                        const imageIndex = parseInt(button.getAttribute('data-image-index'));
 
-                // Initialize carousel
-                new bootstrap.Carousel(portfolioCarousel, {
-                    interval: false, // Don't auto-slide
-                    keyboard: true,  // Allow keyboard navigation
-                    ride: false
-                });
+                        console.log('Image index:', imageIndex);
 
-                // Keyboard navigation
-                document.addEventListener('keydown', function(e) {
-                    if (portfolioModal.classList.contains('show')) {
-                        const carousel = bootstrap.Carousel.getInstance(portfolioCarousel);
-                        if (carousel) {
+                        // Update modal title with service name
+                        const modalTitle = document.getElementById('modalTitle');
+                        if (modalTitle) {
+                            const serviceName = button.querySelector('.badge')?.textContent || 'Portfolio Gallery';
+                            modalTitle.textContent = serviceName;
+                        }
+
+                        // Go to the specific slide
+                        setTimeout(function() {
+                            carousel.to(imageIndex);
+                        }, 100);
+                    });
+
+                    // Keyboard navigation
+                    document.addEventListener('keydown', function(e) {
+                        if (portfolioModal.classList.contains('show')) {
                             if (e.key === 'ArrowLeft') {
                                 carousel.prev();
                             } else if (e.key === 'ArrowRight') {
@@ -800,25 +805,22 @@
                                 bootstrap.Modal.getInstance(portfolioModal).hide();
                             }
                         }
-                    }
-                });
+                    });
 
-                // Touch/swipe support for mobile
-                let touchStartX = 0;
-                let touchEndX = 0;
+                    // Touch/swipe support for mobile
+                    let touchStartX = 0;
+                    let touchEndX = 0;
 
-                portfolioCarousel.addEventListener('touchstart', function(e) {
-                    touchStartX = e.changedTouches[0].screenX;
-                });
+                    portfolioCarousel.addEventListener('touchstart', function(e) {
+                        touchStartX = e.changedTouches[0].screenX;
+                    });
 
-                portfolioCarousel.addEventListener('touchend', function(e) {
-                    touchEndX = e.changedTouches[0].screenX;
-                    handleSwipe();
-                });
+                    portfolioCarousel.addEventListener('touchend', function(e) {
+                        touchEndX = e.changedTouches[0].screenX;
+                        handleSwipe();
+                    });
 
-                function handleSwipe() {
-                    const carousel = bootstrap.Carousel.getInstance(portfolioCarousel);
-                    if (carousel) {
+                    function handleSwipe() {
                         if (touchEndX < touchStartX - 50) {
                             carousel.next(); // Swipe left - next image
                         }
@@ -826,8 +828,32 @@
                             carousel.prev(); // Swipe right - previous image
                         }
                     }
+                } else {
+                    console.log('Portfolio modal or carousel not found');
                 }
-            }
+            }, 500); // Delay to ensure DOM is ready
+
+            // jQuery fallback for portfolio click
+            $('.portfolio-item').on('click', function() {
+                const imageIndex = $(this).data('image-index');
+                const serviceName = $(this).find('.badge').text() || 'Portfolio Gallery';
+
+                console.log('jQuery click handler - Image index:', imageIndex);
+
+                // Update modal title
+                $('#modalTitle').text(serviceName);
+
+                // Show modal
+                $('#portfolioModal').modal('show');
+
+                // Go to specific slide after modal is shown
+                $('#portfolioModal').on('shown.bs.modal', function() {
+                    const carousel = bootstrap.Carousel.getInstance(document.getElementById('portfolioCarousel'));
+                    if (carousel) {
+                        carousel.to(imageIndex);
+                    }
+                });
+            });
 
             // initialize datepicker for booking date
             if (typeof flatpickr !== 'undefined') {
