@@ -464,7 +464,7 @@
 
                             <!-- Features Selection for the active service -->
                             <div class="services-section">
-                                <h6 class="fw-bold mb-2 text-primary">Select Features for This Service</h6>
+                                <h6 class="fw-bold mb-2 text-danger">Select Features for This Service</h6>
                                 <div class="row g-1">
                                     @php
                                         $features = $features ?? [];
