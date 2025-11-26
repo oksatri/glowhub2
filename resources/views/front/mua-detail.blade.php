@@ -429,18 +429,14 @@
                                 <label class="form-label small">Your name</label>
                                 <input type="text" name="name" id="bk_name" class="form-control"
                                     value="{{ optional(auth()->user())->name ?? '' }}" required>
-
-
                                 <label class="form-label small">Email</label>
                                 <input type="email" name="email" id="bk_email" class="form-control"
                                     value="{{ optional(auth()->user())->email ?? '' }}" required>
-
                                 <label class="form-label small">WhatsApp</label>
                                 <input type="text" name="whatsapp" id="bk_whatsapp" class="form-control"
                                 value="{{ optional(auth()->user())->phone ?? '' }}" required>
                                 <label class="form-label small">Address</label>
-                                <input type="text" name="address" id="bk_address" class="form-control" required
-                                        placeholder="Enter your complete address">
+                                <input type="text" name="address" id="bk_address" class="form-control" required>
                                 @if (!empty($mua['max_distance']) && !empty($mua['additional_charge']))
                                     <small class="text-muted d-block">
                                         Locations beyond {{ $mua['max_distance'] }} km from the MUA may incur an
@@ -466,7 +462,7 @@
 
 
                                 <label class="form-label small">Estimated Distance (km)</label>
-                                <input type="number" min="0" step="0.1" class="form-control" id="bk_distance_input"
+                                <input type="number" min="0" class="form-control" id="bk_distance_input"
                                         placeholder="e.g. 5" inputmode="decimal">
 
 
