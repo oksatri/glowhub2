@@ -749,6 +749,10 @@
                 if (portfolioModal && portfolioCarousel) {
                     console.log('Portfolio modal and carousel found');
 
+                    // Remove existing event listeners to prevent duplicates
+                    const newModal = portfolioModal.cloneNode(true);
+                    portfolioModal.parentNode.replaceChild(newModal, portfolioModal);
+
                     // Initialize carousel first
                     const carousel = new bootstrap.Carousel(portfolioCarousel, {
                         interval: false, // Don't auto-slide
@@ -757,7 +761,7 @@
                     });
 
                     // When portfolio item is clicked, set the carousel to the correct image
-                    portfolioModal.addEventListener('show.bs.modal', function(event) {
+                    newModal.addEventListener('show.bs.modal', function(event) {
                         console.log('Modal is being shown');
                         const button = event.relatedTarget;
                         const imageIndex = parseInt(button.getAttribute('data-image-index'));
@@ -779,13 +783,13 @@
 
                     // Keyboard navigation
                     document.addEventListener('keydown', function(e) {
-                        if (portfolioModal.classList.contains('show')) {
+                        if (newModal.classList.contains('show')) {
                             if (e.key === 'ArrowLeft') {
                                 carousel.prev();
                             } else if (e.key === 'ArrowRight') {
                                 carousel.next();
                             } else if (e.key === 'Escape') {
-                                bootstrap.Modal.getInstance(portfolioModal).hide();
+                                bootstrap.Modal.getInstance(newModal).hide();
                             }
                         }
                     });
@@ -816,8 +820,11 @@
                 }
             }, 500); // Delay to ensure DOM is ready
 
-            // jQuery fallback for portfolio click
-            $('.portfolio-item').on('click', function() {
+            // jQuery fallback for portfolio click - with event cleanup
+            $('.portfolio-item').off('click').on('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
                 const imageIndex = $(this).data('image-index');
                 const serviceName = $(this).find('.badge').text() || 'Portfolio Gallery';
 
@@ -829,12 +836,14 @@
                 // Show modal
                 $('#portfolioModal').modal('show');
 
-                // Go to specific slide after modal is shown
-                $('#portfolioModal').on('shown.bs.modal', function() {
+                // Go to specific slide after modal is shown - remove previous handler first
+                $('#portfolioModal').off('shown.bs.modal').on('shown.bs.modal', function() {
                     const carousel = bootstrap.Carousel.getInstance(document.getElementById('portfolioCarousel'));
                     if (carousel) {
                         carousel.to(imageIndex);
                     }
+                    // Remove this handler after execution
+                    $(this).off('shown.bs.modal');
                 });
             });
 
