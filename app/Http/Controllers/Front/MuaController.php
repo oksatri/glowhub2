@@ -143,22 +143,6 @@ class MuaController extends Controller
             $activeService = $mua->services->sortBy('price')->first();
         }
 
-        $muaData = [
-            'id' => $mua->id,
-            'name' => $activeService ? $activeService->service_name : $mua->name, // Show service name if available, otherwise MUA name
-            'mua_name' => $mua->name, // Add separate MUA name field
-            'service_name' => $activeService ? $activeService->service_name : null, // Add service name field
-            'description' => $activeService ? $activeService->description : null,
-            'location' => trim($mua && $mua->rel_city ? $mua->rel_city->name : ($mua->city ?? '')),
-            'rating' => (float) ($mua->rating ?? 4.5),
-            'price' => $activeService ? (int) $activeService->price : null,
-            'image' => $mua->portfolios->first()->image ? asset('uploads/' . $mua->portfolios->first()->image) : asset('images/product-item1.jpg'),
-            'max_distance' => $mua->max_distance,
-            'operational_hours' => $mua->operational_hours,
-            'additional_charge' => $mua->additional_charge,
-            'link_map' => $mua->link_map,
-        ];
-
         // portfolios limited to the active service (if any)
         $portfolioQuery = $mua->portfolios;
         if ($activeService) {
@@ -171,6 +155,22 @@ class MuaController extends Controller
                 'service_name' => $p->service->service_name ?? null,
             ];
         })->toArray();
+
+        $muaData = [
+            'id' => $mua->id,
+            'name' => $activeService ? $activeService->service_name : $mua->name, // Show service name if available, otherwise MUA name
+            'mua_name' => $mua->name, // Add separate MUA name field
+            'service_name' => $activeService ? $activeService->service_name : null, // Add service name field
+            'description' => $activeService ? $activeService->description : null,
+            'location' => trim($mua && $mua->rel_city ? $mua->rel_city->name : ($mua->city ?? '')),
+            'rating' => (float) ($mua->rating ?? 4.5),
+            'price' => $activeService ? (int) $activeService->price : null,
+            'image' => @$portfolioQuery->where('mua_service_id', $activeService->id)->first()->image ? asset('uploads/' . $portfolioQuery->where('mua_service_id', $activeService->id)->first()->image) : asset('images/product-item1.jpg'),
+            'max_distance' => $mua->max_distance,
+            'operational_hours' => $mua->operational_hours,
+            'additional_charge' => $mua->additional_charge,
+            'link_map' => $mua->link_map,
+        ];
 
         // features inside the active service become selectable options on the form
         $features = [];

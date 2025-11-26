@@ -204,9 +204,6 @@
 
         /* Alert Info Box */
         .alert-info {
-            background-color: rgba(var(--bs-primary), 0.1);
-            border-color: var(--bs-primary);
-            color: var(--bs-primary);
             border-radius: 6px;
             padding: 0.75rem;
             margin-bottom: 0.75rem;
@@ -270,10 +267,10 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb breadcrumb-elegant">
                     <li class="breadcrumb-item"><a href="{{ url('/') }}"
-                            class="text-white text-decoration-none opacity-75 hover-opacity">Home</a></li>
+                            class="text-danger text-decoration-none opacity-75 hover-opacity">Home</a></li>
                     <li class="breadcrumb-item"><a href="{{ url('/mua-listing') }}"
-                            class="text-white text-decoration-none opacity-75 hover-opacity">Find MUA</a></li>
-                    <li class="breadcrumb-item active text-white fw-bold" aria-current="page">{{ $mua['location'] }}</li>
+                            class="text-danger text-decoration-none opacity-75 hover-opacity">Find MUA</a></li>
+                    <li class="breadcrumb-item active text-danger fw-bold" aria-current="page">{{ $mua['location'] }}</li>
                 </ol>
             </nav>
         </div>
@@ -296,7 +293,7 @@
                                         style="width:100%; height:100%; object-fit:cover;">
                                 </div>
                                 <!-- Location Badge -->
-                                <div class="location-badge">
+                                <div class="location-badge text-danger">
                                     <i class="fas fa-map-marker-alt me-1"></i>{{ $mua['location'] }}
                                 </div>
                             </div>
@@ -407,7 +404,7 @@
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                         </div>
                                                         <div class="modal-body text-center">
-                                                            <img src="{{ $item['image'] ?? asset('images/portfolio-placeholder.jpg') }}" class="img-fluid rounded" alt="Portfolio">
+                                                            <img src="{{ $item['image']}}" class="img-fluid rounded" alt="Portfolio">
                                                         </div>
                                                     </div>
                                                 </div>
