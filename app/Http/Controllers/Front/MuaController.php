@@ -296,9 +296,19 @@ class MuaController extends Controller
             // Send email notifications to admin, MUA, and client
             Log::info('Starting email sending process for booking: ' . $booking->id);
 
-            // Send to admin
-            $admins = User::where('role', 'admin')->get();
+            // Send to admin - get users with admin role
+            $admins = User::where('role', 'admin')->whereNotNull('email')->get();
             Log::info('Found admins: ' . $admins->count());
+
+            if ($admins->isEmpty()) {
+                Log::warning('No admin users found with valid email addresses');
+                // Fallback: try to get any admin user
+                $fallbackAdmin = User::where('role', 'admin')->first();
+                if ($fallbackAdmin && $fallbackAdmin->email) {
+                    $admins = collect([$fallbackAdmin]);
+                    Log::info('Using fallback admin: ' . $fallbackAdmin->email);
+                }
+            }
 
             foreach ($admins as $admin) {
                 try {
@@ -314,21 +324,65 @@ class MuaController extends Controller
                 }
             }
 
-            // Send to MUA
-            if ($booking->mua && $booking->mua->user && $booking->mua->user->email) {
+            // Send to MUA - get the MUA user associated with this booking
+            $muaUser = null;
+
+            // Try multiple approaches to find MUA user
+            if ($booking->mua) {
+                // Method 1: Through MUA->user relationship
+                if ($booking->mua->user && $booking->mua->user->email) {
+                    $muaUser = $booking->mua->user;
+                    Log::info('Found MUA user through mua->user relationship: ' . $muaUser->email);
+                }
+                // Method 2: Direct user lookup by mua_id
+                else {
+                    $muaUser = User::where('role', 'mua')
+                        ->whereHas('mua', function($query) use ($booking) {
+                            $query->where('id', $booking->mua_id);
+                        })
+                        ->whereNotNull('email')
+                        ->first();
+
+                    if ($muaUser) {
+                        Log::info('Found MUA user through direct lookup: ' . $muaUser->email);
+                    }
+                }
+            }
+
+            // Method 3: Fallback - find any MUA user
+            if (!$muaUser) {
+                $muaUser = User::where('role', 'mua')
+                    ->whereNotNull('email')
+                    ->first();
+
+                if ($muaUser) {
+                    Log::info('Using fallback MUA user: ' . $muaUser->email);
+                }
+            }
+
+            if ($muaUser && $muaUser->email) {
                 try {
-                    Log::info('Attempting to send MUA email to: ' . $booking->mua->user->email);
-                    Mail::to($booking->mua->user->email)->send(new BookingMuaNotification($booking));
-                    Log::info('MUA email sent successfully to: ' . $booking->mua->user->email);
+                    Log::info('Attempting to send MUA email to: ' . $muaUser->email);
+                    Mail::to($muaUser->email)->send(new BookingMuaNotification($booking));
+                    Log::info('MUA email sent successfully to: ' . $muaUser->email);
                 } catch (\Exception $e) {
                     Log::error('Failed to send MUA email: ' . $e->getMessage());
                     Log::error('MUA email details: ' . json_encode([
-                        'mua_email' => $booking->mua->user->email,
+                        'mua_email' => $muaUser->email,
                         'booking_id' => $booking->id
                     ]));
                 }
             } else {
-                Log::warning('No MUA email found for booking: ' . $booking->id);
+                Log::warning('No MUA user found with valid email for booking: ' . $booking->id);
+                Log::warning('MUA ID: ' . $booking->mua_id);
+                if ($booking->mua) {
+                    Log::warning('MUA details: ' . json_encode([
+                        'mua_id' => $booking->mua->id,
+                        'mua_user_id' => $booking->mua->user_id,
+                        'has_user_relation' => !is_null($booking->mua->user),
+                        'user_email' => $booking->mua->user ? $booking->mua->user->email : 'null'
+                    ]));
+                }
             }
 
             // Send to client
