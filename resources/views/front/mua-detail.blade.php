@@ -425,54 +425,50 @@
                                 @csrf
 
                                 <!-- Contact fields (prefilled if authenticated) -->
-                                <div class="mb-3">
-                                    <label class="form-label small">Your name</label>
-                                    <input type="text" name="name" id="bk_name" class="form-control"
-                                        value="{{ optional(auth()->user())->name ?? '' }}" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label small">Email</label>
-                                    <input type="email" name="email" id="bk_email" class="form-control"
-                                        value="{{ optional(auth()->user())->email ?? '' }}" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label small">WhatsApp</label>
-                                    <input type="text" name="whatsapp" id="bk_whatsapp" class="form-control"
-                                        value="{{ optional(auth()->user())->phone ?? '' }}" required>
-                                </div>
-                                <div>
-                                    <label class="form-label small">Address</label>
-                                    <input type="text" name="address" id="bk_address" class="form-control" required
-                                           placeholder="Enter your complete address">
-                                    @if (!empty($mua['max_distance']) && !empty($mua['additional_charge']))
-                                        <small class="text-muted d-block">
-                                            Locations beyond {{ $mua['max_distance'] }} km from the MUA may incur an
-                                            additional charge of Rp {{ number_format($mua['additional_charge'], 0, ',', '.') }}
-                                            per km.
-                                        </small>
-                                    @endif
-                                </div>
+
+                                <label class="form-label small">Your name</label>
+                                <input type="text" name="name" id="bk_name" class="form-control"
+                                    value="{{ optional(auth()->user())->name ?? '' }}" required>
+
+
+                                <label class="form-label small">Email</label>
+                                <input type="email" name="email" id="bk_email" class="form-control"
+                                    value="{{ optional(auth()->user())->email ?? '' }}" required>
+
+                                <label class="form-label small">WhatsApp</label>
+                                <input type="text" name="whatsapp" id="bk_whatsapp" class="form-control"
+                                value="{{ optional(auth()->user())->phone ?? '' }}" required>
+                                <label class="form-label small">Address</label>
+                                <input type="text" name="address" id="bk_address" class="form-control" required
+                                        placeholder="Enter your complete address">
+                                @if (!empty($mua['max_distance']) && !empty($mua['additional_charge']))
+                                    <small class="text-muted d-block">
+                                        Locations beyond {{ $mua['max_distance'] }} km from the MUA may incur an
+                                        additional charge of Rp {{ number_format($mua['additional_charge'], 0, ',', '.') }}
+                                        per km.
+                                    </small>
+                                @endif
 
                                 <!-- Distance Check Section -->
                                 @if (!empty($mua['link_map']))
-                                <div class="mb-3">
-                                    <div class="col-4">
-                                        <a href="{{ $mua['link_map'] }}" target="_blank" class="btn btn-primary w-100">
-                                            <i class="fas fa-route me-1"></i> Check
-                                        </a>
-                                    </div>
-                                    <small class="text-muted d-block mt-1">
-                                        <i class="fas fa-map-marker-alt me-1"></i>
-                                        Click "Check" to calculate distance from MUA location
-                                    </small>
+
+                                <div class="col-4">
+                                    <a href="{{ $mua['link_map'] }}" target="_blank" class="btn btn-primary w-100">
+                                        <i class="fas fa-route me-1"></i> Check
+                                    </a>
                                 </div>
+                                <small class="text-muted d-block mt-1">
+                                    <i class="fas fa-map-marker-alt me-1"></i>
+                                    Click "Check" to calculate distance from MUA location
+                                </small>
+
                                 @endif
 
-                                <div class="mb-3">
-                                    <label class="form-label small">Estimated Distance (km)</label>
-                                    <input type="number" min="0" step="0.1" class="form-control" id="bk_distance_input"
+
+                                <label class="form-label small">Estimated Distance (km)</label>
+                                <input type="number" min="0" step="0.1" class="form-control" id="bk_distance_input"
                                         placeholder="e.g. 5" inputmode="decimal">
-                                </div>
+
 
                                 <!-- Hidden inputs populated by JS -->
                                 <input type="hidden" name="distance" id="bk_distance">
