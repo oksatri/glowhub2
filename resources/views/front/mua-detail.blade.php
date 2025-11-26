@@ -445,7 +445,7 @@
                                     <input type="text" name="address" id="bk_address" class="form-control" required
                                            placeholder="Enter your complete address">
                                     @if (!empty($mua['max_distance']) && !empty($mua['additional_charge']))
-                                        <small class="text-muted d-block mt-1">
+                                        <small class="text-muted d-block">
                                             Locations beyond {{ $mua['max_distance'] }} km from the MUA may incur an
                                             additional charge of Rp {{ number_format($mua['additional_charge'], 0, ',', '.') }}
                                             per km.
