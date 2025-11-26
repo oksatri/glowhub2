@@ -94,18 +94,18 @@
         .filter-container {
             position: relative;
             overflow: hidden;
-            padding: 1.5rem;
-            border-radius: 15px;
+            padding: 1rem;
+            border-radius: 10px;
             background: linear-gradient(145deg, rgba(255,255,255,0.95) 0%, rgba(248,187,189,0.1) 100%);
             backdrop-filter: blur(10px);
-            box-shadow: 0 6px 24px rgba(132, 93, 112, 0.12);
+            box-shadow: 0 3px 12px rgba(132, 93, 112, 0.08);
             border: 1px solid rgba(255,255,255,0.2);
         }
 
         @media (max-width: 768px) {
             .filter-container {
-                margin: 0.5rem;
-                padding: 1rem;
+                margin: 0.25rem;
+                padding: 0.75rem;
             }
         }
 
@@ -132,8 +132,8 @@
             transition: all 0.3s ease;
             cursor: pointer;
             border: 2px solid #f8bbbd;
-            border-radius: 15px;
-            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            padding: 0.6rem 0.8rem;
             background: rgba(255,255,255,0.9);
             color: #3d2a33;
             font-weight: 500;
@@ -142,7 +142,7 @@
 
         @media (max-width: 768px) {
             .custom-select {
-                padding: 0.6rem 0.8rem;
+                padding: 0.5rem 0.7rem;
                 font-size: 0.85rem;
             }
         }
@@ -161,20 +161,20 @@
 
         /* Filter Actions */
         .filter-actions {
-            margin-top: 1.5rem;
+            margin-top: 1rem;
         }
 
         @media (max-width: 768px) {
             .filter-actions {
-                margin-top: 1rem;
+                margin-top: 0.75rem;
             }
         }
 
         .btn-search {
             background: linear-gradient(135deg, var(--bs-primary) 0%, #6d4c5a 100%);
             border: none;
-            border-radius: 20px;
-            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            padding: 0.6rem 1.2rem;
             color: white;
             font-weight: 600;
             transition: all 0.3s ease;
@@ -183,7 +183,7 @@
 
         @media (max-width: 768px) {
             .btn-search {
-                padding: 0.6rem 1.2rem;
+                padding: 0.5rem 1rem;
                 font-size: 0.85rem;
             }
         }
@@ -196,8 +196,8 @@
         .btn-reset {
             background: transparent;
             border: 2px solid #f8bbbd;
-            border-radius: 20px;
-            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            padding: 0.6rem 1.2rem;
             color: var(--bs-primary);
             font-weight: 600;
             transition: all 0.3s ease;
@@ -206,7 +206,7 @@
 
         @media (max-width: 768px) {
             .btn-reset {
-                padding: 0.6rem 1.2rem;
+                padding: 0.5rem 1rem;
                 font-size: 0.85rem;
             }
         }
@@ -221,97 +221,97 @@
         /* MUA Cards Grid */
         .mua-grid {
             display: grid;
-            gap: 1.5rem;
+            gap: 1rem;
         }
 
         @media (max-width: 768px) {
             .mua-grid {
-                gap: 1rem;
+                gap: 0.75rem;
             }
         }
 
         .mua-card {
             background-color: #FDE1E1;
-            border-radius: 12px;
+            border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .mua-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
         }
 
         .mua-card-body {
-            padding: 1rem;
+            padding: 0.75rem;
             background-color: #F7BCC6;
         }
 
         @media (max-width: 768px) {
             .mua-card-body {
-                padding: 0.75rem;
+                padding: 0.6rem;
             }
         }
 
         /* MUA Card Content */
         .mua-name {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.375rem;
         }
 
         @media (max-width: 768px) {
             .mua-name {
-                font-size: 0.85rem;
+                font-size: 0.8rem;
             }
         }
 
         .mua-location {
-            font-size: 0.78rem;
+            font-size: 0.75rem;
             color: #333;
         }
 
         .mua-category {
-            font-size: 0.74rem;
+            font-size: 0.7rem;
             color: #666;
         }
 
         .mua-rating {
-            font-size: 0.78rem;
+            font-size: 0.75rem;
         }
 
         .mua-price {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
         }
 
         @media (max-width: 768px) {
             .mua-price {
-                font-size: 0.85rem;
+                font-size: 0.8rem;
             }
         }
 
         /* Responsive Typography */
         h1.display-4 {
-            font-size: 2.5rem;
+            font-size: 2rem;
         }
 
         @media (max-width: 768px) {
             h1.display-4 {
-                font-size: 1.8rem !important;
+                font-size: 1.75rem !important;
             }
         }
 
         .subtitle-wrapper p {
-            font-size: 1.1rem;
-            line-height: 1.6;
+            font-size: 1rem;
+            line-height: 1.5;
         }
 
         @media (max-width: 768px) {
             .subtitle-wrapper p {
-                font-size: 1rem !important;
-                padding: 0 1rem;
+                font-size: 0.9rem !important;
+                padding: 0 0.75rem;
             }
         }
 
@@ -323,9 +323,9 @@
         .page-link {
             color: var(--bs-primary);
             border: 1px solid var(--bs-primary);
-            border-radius: 10px;
-            margin: 0 2px;
-            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            margin: 0 1px;
+            padding: 0.4rem 0.6rem;
             transition: all 0.3s ease;
         }
 
@@ -343,9 +343,9 @@
         .btn-outline-danger {
             border-color: var(--bs-primary);
             color: var(--bs-primary);
-            border-radius: 8px;
-            padding: 0.5rem 1rem;
-            font-size: 0.85rem;
+            border-radius: 4px;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
             transition: all 0.3s ease;
         }
 
@@ -356,8 +356,8 @@
 
         @media (max-width: 768px) {
             .btn-outline-danger {
-                padding: 0.4rem 0.8rem;
-                font-size: 0.8rem;
+                padding: 0.3rem 0.6rem;
+                font-size: 0.75rem;
             }
         }
 
@@ -380,34 +380,23 @@
 
         /* Section spacing */
         .section-bg-light {
-            padding: 3rem 0;
+            padding: 2rem 0;
         }
 
         @media (max-width: 768px) {
             .section-bg-light {
-                padding: 2rem 0;
+                padding: 1.5rem 0;
             }
         }
 
-        /* Utility classes */
-        .text-truncate {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+        /* Hero Section */
+        .hero-section {
+            padding: 2rem 0;
         }
 
-        /* Responsive grid adjustments */
-        @media (max-width: 576px) {
-            .col-6 {
-                flex: 0 0 50%;
-                max-width: 50%;
-            }
-        }
-
-        @media (min-width: 577px) and (max-width: 768px) {
-            .col-md-4 {
-                flex: 0 0 33.333333%;
-                max-width: 33.333333%;
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 1.5rem 0;
             }
         }
     </style>
@@ -415,15 +404,15 @@
     <section class="hero-section" style="background: linear-gradient(135deg, var(--bs-light) 0%, #fff4ed 100%);">
         <div class="container">
             <!-- Page Title -->
-            <div class="text-center mb-4">
+            <div class="text-center mb-3">
                 <!-- Main Title -->
-                <h1 class="fw-bold mb-3 display-4"
+                <h1 class="fw-bold mb-2 display-4"
                     style="background: linear-gradient(135deg, var(--bs-primary) 0%, #ff6b9d 50%, var(--bs-primary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 200% 200%; animation: gradientShift 3s ease-in-out infinite; text-shadow: 0 4px 8px rgba(var(--bs-primary), 0.1);">
                     ✨ Find Your Perfect MUA ✨
                 </h1>
 
                 <!-- Subtitle -->
-                <div class="subtitle-wrapper mb-3">
+                <div class="subtitle-wrapper mb-2">
                     <p class="lead text-muted">
                         <span class="highlight-text"
                             style="background: linear-gradient(120deg, rgba(248, 187, 189, 0.3) 0%, rgba(var(--bs-primary), 0.1) 100%); padding: 2px 8px; border-radius: 6px; font-weight: 500;">Temukan
@@ -439,7 +428,7 @@
                     <div class="filter-container">
                         <!-- Filter Form -->
                         <form class="filter-form" method="GET" action="{{ route('mua.listing') }}">
-                            <div class="row g-3">
+                            <div class="row g-2">
                                 <!-- Event Type Filter -->
                                 <div class="col-lg-3 col-md-6">
                                     <div class="filter-group">
@@ -526,15 +515,15 @@
     <!-- MUA Listing Section -->
     <section id="mua-results" class="section-bg-light">
         <div class="container">
-            <div class="row g-3 g-md-4">
+            <div class="row g-2 g-md-3">
                 @foreach ($items as $mua)
                     <!-- MUA Card -->
                     <div class="col-6 col-md-4 col-lg-3">
                         <div class="h-100 mua-card">
                             <!-- Heart Icon -->
-                            <div class="position-absolute top-0 end-0 p-2" style="z-index: 10;">
+                            <div class="position-absolute top-0 end-0 p-1" style="z-index: 10;">
                                 <button type="button" class="btn btn-heart">
-                                    <i class="far fa-heart" style="color:#333; font-size:1.1rem;"></i>
+                                    <i class="far fa-heart" style="color:#333; font-size:1rem;"></i>
                                 </button>
                             </div>
 
@@ -547,14 +536,14 @@
                             <!-- Card Body -->
                             <div class="mua-card-body">
                                 <!-- Service Name -->
-                                <div class="mb-2">
+                                <div class="mb-1">
                                     <h6 class="mua-name text-truncate" title="{{ $mua['name'] }}">
                                         {{ $mua['name'] }}
                                     </h6>
                                 </div>
 
                                 <!-- Location -->
-                                <div class="d-flex align-items-center mb-2 mua-location">
+                                <div class="d-flex align-items-center mb-1 mua-location">
                                     <i class="fas fa-map-marker-alt me-1" style="color:#D23B3B;"></i>
                                     <span class="text-dark text-truncate fw-semibold" title="{{ $mua['location'] }}">
                                         {{ $mua['location'] ?: '-' }}</span>
@@ -583,13 +572,13 @@
                                 </div>
 
                                 <div class="d-flex justify-content-between align-items-center mt-1">
-                                    <small class="text-muted" style="font-size: 0.8rem;">Mulai dari</small>
+                                    <small class="text-muted" style="font-size: 0.7rem;">Mulai dari</small>
                                     <strong class="mua-price text-dark">
                                         {{ $mua['price'] ? 'Rp. ' . number_format($mua['price'], 0, ',', '.') : '-' }}
                                     </strong>
                                 </div>
 
-                                <div class="mt-2 text-center">
+                                <div class="mt-1 text-center">
                                     <a href="{{ route('mua.detail', ['id' => $mua['id'], 'service_id' => $mua['service_id'] ?? null]) }}" class="btn btn-outline-danger btn-sm">
                                         View Porto
                                     </a>
@@ -601,7 +590,7 @@
             </div>
 
             <!-- Pagination -->
-            <nav aria-label="MUA pagination" class="mt-4">
+            <nav aria-label="MUA pagination" class="mt-3">
                 <ul class="pagination justify-content-center">
                     <!-- Previous Button -->
                     <li class="page-item {{ $pagination['current_page'] == 1 ? 'disabled' : '' }}">
@@ -630,7 +619,7 @@
                 </ul>
 
                 <!-- Pagination Info -->
-                <div class="text-center mt-3">
+                <div class="text-center mt-2">
                     <small class="text-muted">
                         Showing {{ ($pagination['current_page'] - 1) * $pagination['per_page'] + 1 }}
                         to {{ min($pagination['current_page'] * $pagination['per_page'], $pagination['total']) }}

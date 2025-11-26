@@ -7,7 +7,7 @@
         /* === CLEAN & PROFESSIONAL STYLING === */
         .hero-gradient {
             background: linear-gradient(135deg, #ffd6e8 0%, #ffe9f2 100%) !important;
-            padding: 2rem 0 !important;
+            padding: 1.5rem 0 !important;
         }
 
         @media (max-width: 768px) {
@@ -33,23 +33,23 @@
         }
 
         .circle-1 {
-            width: 80px;
-            height: 80px;
+            width: 60px;
+            height: 60px;
             top: 20%;
             left: 10%;
         }
 
         .circle-2 {
-            width: 100px;
-            height: 100px;
+            width: 80px;
+            height: 80px;
             top: 60%;
             right: 15%;
             animation-delay: 2s;
         }
 
         .circle-3 {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             top: 40%;
             left: 70%;
             animation-delay: 4s;
@@ -67,7 +67,7 @@
         .breadcrumb-elegant {
             background: none !important;
             padding: 0;
-            margin-bottom: 1rem !important;
+            margin-bottom: 0.75rem !important;
         }
 
         .breadcrumb-elegant .breadcrumb-item+.breadcrumb-item::before {
@@ -94,13 +94,13 @@
 
         /* Profile Section */
         .profile-section {
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
         }
 
         .profile-image-container {
             position: relative;
             overflow: hidden;
-            border-radius: 12px;
+            border-radius: 8px;
         }
 
         .profile-image-container img {
@@ -112,30 +112,30 @@
         /* Location Badge */
         .location-badge {
             position: absolute;
-            bottom: 1rem;
-            left: 1rem;
+            bottom: 0.75rem;
+            left: 0.75rem;
             background: rgba(255, 255, 255, 0.95);
             color: var(--bs-primary);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
+            padding: 0.375rem 0.75rem;
+            border-radius: 16px;
             font-weight: 600;
-            font-size: 0.875rem;
+            font-size: 0.8rem;
         }
 
         /* Rating Stars */
         .rating {
             color: #ffc107;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.375rem;
         }
 
         /* Portfolio Grid */
         .portfolio-item {
             position: relative;
-            border-radius: 8px;
+            border-radius: 6px;
             overflow: hidden;
             cursor: pointer;
             transition: transform 0.3s ease;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
         }
 
         .portfolio-item:hover {
@@ -144,51 +144,51 @@
 
         .portfolio-item img {
             width: 100%;
-            height: 120px;
+            height: 100px;
             object-fit: cover;
         }
 
         /* Booking Card */
         .booking-card {
-            border-radius: 12px;
+            border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
         }
 
         .booking-card .card-header {
             background: var(--bs-primary);
             color: white;
             text-align: center;
-            padding: 1.5rem;
+            padding: 1rem;
         }
 
         @media (max-width: 768px) {
             .booking-card .card-header {
-                padding: 1rem;
+                padding: 0.75rem;
             }
         }
 
         /* Calendar Section */
         .calendar-section {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
 
         @media (max-width: 768px) {
             .calendar-section {
-                margin-bottom: 1rem;
+                margin-bottom: 0.75rem;
             }
         }
 
         /* Services Section */
         .services-section {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
 
         .form-check {
-            padding: 1rem;
+            padding: 0.75rem;
             border: 1px solid #dee2e6;
-            border-radius: 8px;
-            margin-bottom: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
             transition: all 0.3s ease;
         }
 
@@ -207,9 +207,9 @@
             background-color: rgba(var(--bs-primary), 0.1);
             border-color: var(--bs-primary);
             color: var(--bs-primary);
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
+            border-radius: 6px;
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
         }
 
         /* Simple Interactions */
@@ -225,20 +225,20 @@
 
         /* Responsive adjustments for MUA detail */
         @media (max-width: 768px) {
-            .profile-section .row.g-4 {
-                gap: 1rem !important;
+            .profile-section .row.g-3 {
+                gap: 0.5rem !important;
             }
 
             .portfolio-item img {
-                height: 100px;
+                height: 80px;
             }
 
             .form-check {
-                padding: 0.75rem;
+                padding: 0.6rem;
             }
 
             .booking-card {
-                margin-top: 1rem;
+                margin-top: 0.75rem;
             }
         }
 
@@ -246,13 +246,13 @@
             .location-badge {
                 bottom: 0.5rem;
                 left: 0.5rem;
-                padding: 0.375rem 0.75rem;
-                font-size: 0.8rem;
+                padding: 0.25rem 0.5rem;
+                font-size: 0.75rem;
             }
 
             .alert-info {
-                padding: 0.75rem;
-                font-size: 0.875rem;
+                padding: 0.5rem;
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -280,15 +280,15 @@
     </section>
 
     <!-- MUA Detail Section -->
-    <section class="py-4" style="background-color:#FFF4ED;">
+    <section class="py-3" style="background-color:#FFF4ED;">
         <div class="container">
-            <div class="row g-3">
+            <div class="row g-2">
                 <!-- Left Column - Profile & Portfolio -->
                 <div class="col-lg-6">
                     <div class="profile-section">
                         <!-- Profile Card -->
-                        <div class="card shadow-sm border-0 mb-3"
-                            style="background-color:#FDE1E1; border-radius:12px; overflow:hidden;">
+                        <div class="card shadow-sm border-0 mb-2"
+                            style="background-color:#FDE1E1; border-radius:8px; overflow:hidden;">
                             <!-- Profile Image -->
                             <div class="position-relative profile-image-container">
                                 <div style="width:100%; aspect-ratio:3/4; overflow:hidden;">
@@ -302,30 +302,30 @@
                             </div>
 
                             <!-- Profile Info -->
-                            <div class="card-body p-3">
+                            <div class="card-body p-2">
                                 <!-- Service Name & MUA Name -->
                                 <div class="text-center mb-2">
-                                    <h5 class="mb-2 fw-bold">
+                                    <h6 class="mb-1 fw-bold">
                                         {{ $mua['service_name'] ?? 'Service Available' }}
-                                    </h5>
+                                    </h6>
                                 </div>
 
-                                <div class="text-center mb-3">
-                                    <p class="text-muted mb-2">
+                                <div class="text-center mb-2">
+                                    <p class="text-muted mb-1 small">
                                         @if (!empty($mua['max_distance']))
                                             Available within {{ $mua['max_distance'] }} km radius
                                         @else
                                             Service area available
                                         @endif
                                     </p>
-                                    <p class="small text-black fst-italic">
+                                    <p class="small text-black fst-italic mb-0">
                                         {{ $mua['description'] }}
                                     </p>
                                 </div>
 
                                 <!-- Rating & Reviews -->
-                                <div class="text-center mb-3">
-                                    <div class="rating mb-2">
+                                <div class="text-center mb-2">
+                                    <div class="rating mb-1">
                                         @for ($i = 1; $i <= 5; $i++)
                                             @if ($i <= floor($mua['rating']))
                                                 <i class="fas fa-star text-warning"></i>
@@ -345,14 +345,14 @@
                                 <div class="row text-center">
                                     <div class="col-6">
                                         <div class="border-end">
-                                            <h6 class="fw-bold mb-1">Starting From</h6>
-                                            <p class="h6 text-success fw-bold mb-0">Rp
+                                            <h6 class="fw-bold mb-1 small">Starting From</h6>
+                                            <p class="small text-success fw-bold mb-0">Rp
                                                 {{ number_format($mua['price'], 0, ',', '.') }}</p>
                                         </div>
                                     </div>
                                     <div class="col-6">
-                                        <h6 class="fw-bold mb-1">Schedule</h6>
-                                        <p class="fw-semibold text-dark mb-0">
+                                        <h6 class="fw-bold mb-1 small">Schedule</h6>
+                                        <p class="small fw-semibold text-dark mb-0">
                                             @if (!empty($mua['operational_hours']))
                                                 {{ $mua['operational_hours'] }}
                                             @endif
@@ -373,11 +373,11 @@
 
                         <!-- Portfolio Section -->
                         <div class="card shadow-sm border-0">
-                            <div class="card-body p-3">
-                                <h6 class="fw-bold mb-3">
+                            <div class="card-body p-2">
+                                <h6 class="fw-bold mb-2">
                                     <i class="fas fa-images me-2"></i>Portfolio
                                 </h6>
-                                <div class="row g-2">
+                                <div class="row g-1">
                                     @php
                                         $badgeClasses = [
                                             'bg-primary',
@@ -393,8 +393,8 @@
                                             <div class="col-6">
                                                 <div class="portfolio-item" data-bs-toggle="modal" data-bs-target="#portfolioModal{{ $index }}">
                                                     <img src="{{ $item['image'] ?? asset('images/portfolio-placeholder.jpg') }}" alt="Portfolio" class="img-fluid rounded">
-                                                    <div class="position-absolute top-0 start-0 m-2">
-                                                        <span class="badge {{ $badgeClasses[array_rand($badgeClasses)] }}">{{ $item['service_name'] ?? 'Portfolio' }}</span>
+                                                    <div class="position-absolute top-0 start-0 m-1">
+                                                        <span class="badge {{ $badgeClasses[array_rand($badgeClasses)] }} small">{{ $item['service_name'] ?? 'Portfolio' }}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -414,9 +414,9 @@
                                             </div>
                                         @endforeach
                                     @else
-                                        <div class="text-center py-4">
-                                            <i class="fas fa-camera fa-3x text-muted mb-3"></i>
-                                            <p class="text-muted">Portfolio will be available soon.</p>
+                                        <div class="text-center py-3">
+                                            <i class="fas fa-camera fa-2x text-muted mb-2"></i>
+                                            <p class="text-muted small">Portfolio will be available soon.</p>
                                         </div>
                                     @endif
                                 </div>
@@ -430,13 +430,13 @@
                     <!-- Booking Card -->
                     <div class="booking-card">
                         <div class="card-header">
-                            <h5 class="mb-1">
+                            <h6 class="mb-0">
                                 <i class="fas fa-calendar-alt me-2"></i>Book Your Session
-                            </h5>
+                            </h6>
                             <p class="mb-0 small opacity-75">Choose your preferred date and time</p>
                         </div>
 
-                        <div class="card-body p-3">
+                        <div class="card-body p-2">
                             <!-- Simple Date & Time Selection -->
                             <div class="calendar-section">
                                 <div class="alert alert-info small">
@@ -444,7 +444,7 @@
                                     <strong>Booking Information:</strong> Selected time = makeup completion time.
                                     If you book 06:00, then 05:30 (travel) and 06:00 (completion) will be blocked.
                                 </div>
-                                <div class="row g-3">
+                                <div class="row g-2">
                                     <div class="col-md-6">
                                         <label class="form-label small">Select Date</label>
                                         <input type="date" class="form-control" id="bk_date">
@@ -498,18 +498,19 @@
 
                             <!-- Features Selection for the active service -->
                             <div class="services-section">
-                                <h6 class="fw-bold mb-3 text-primary">Select Features for This Service</h6>
-                                <div class="row g-2">
+                                <h6 class="fw-bold mb-2 text-primary">Select Features for This Service</h6>
+                                <div class="row g-1">
                                     @php
                                         $features = $features ?? [];
                                     @endphp
+
                                     @foreach ($features as $idx => $feature)
                                         @php
                                             $hasPriceRange = (!empty($feature['min_price']) && $feature['min_price'] > 0) || (!empty($feature['max_price']) && $feature['max_price'] > 0);
                                         @endphp
                                         <div class="col-12">
                                             <div
-                                                class="form-check p-3 border rounded {{ !$hasPriceRange ? 'bg-light' : '' }}">
+                                                class="form-check p-2 border rounded {{ !$hasPriceRange ? 'bg-light' : '' }}">
                                                 <input class="form-check-input service-checkbox" type="checkbox"
                                                     name="feature_names[]" value="{{ $feature['name'] }}"
                                                     data-price="{{ $feature['min_price'] ?? $feature['max_price'] ?? $feature['extra_price'] ?? 0 }}"
@@ -520,7 +521,7 @@
                                                     @endif>
                                                 <label class="form-check-label d-flex justify-content-between w-100 {{ !$hasPriceRange ? 'text-muted' : '' }}"
                                                     for="feature{{ $idx }}">
-                                                    <span class="fw-semibold">
+                                                    <span class="fw-semibold small">
                                                         {{ $feature['name'] }}
                                                     </span>
                                                     @if ($hasPriceRange)
@@ -543,12 +544,13 @@
                                 </div>
                             </div>
 
+
                             <!-- Booking Form -->
                             <form id="bookingForm" method="POST" action="{{ route('mua.book', $mua['id']) }}">
                                 @csrf
 
                                 <!-- Contact fields (prefilled if authenticated) -->
-                                <div class="row g-2 mb-3">
+                                <div class="row g-2 mb-2">
                                     <div class="col-12">
                                         <label class="form-label small">Your name</label>
                                         <input type="text" name="name" id="bk_name" class="form-control"
@@ -579,7 +581,7 @@
 
                                 <!-- Distance Check Section -->
                                 @if (!empty($mua['link_map']))
-                                <div class="row g-2 mb-3">
+                                <div class="row g-2 mb-2">
                                     <div class="col-md-4">
                                         <a href="{{ $mua['link_map'] }}" target="_blank" class="btn btn-primary w-100">
                                             <i class="fas fa-route me-1"></i> Check
@@ -594,7 +596,7 @@
                                 </div>
                                 @endif
 
-                                <div class="row g-2 mb-3">
+                                <div class="row g-2 mb-2">
                                     <div class="col-12">
                                         <label class="form-label small">Estimated Distance (km)</label>
                                         <input type="number" min="0" class="form-control" id="bk_distance_input"
@@ -608,18 +610,18 @@
                                 <input type="hidden" name="mua_service_id" id="bk_mua_service_id">
 
                                 <!-- Estimated Price -->
-                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
                                     <div>
-                                        <div class="fw-semibold">Estimated Price</div>
+                                        <div class="fw-semibold small">Estimated Price</div>
                                         <div class="small text-muted">Final price confirmed after MUA approval</div>
                                     </div>
-                                    <h3 id="estimatedPriceDisplay" class="text-primary mb-0">
+                                    <h5 id="estimatedPriceDisplay" class="text-primary mb-0">
                                         Rp 0
-                                    </h3>
+                                    </h5>
                                 </div>
 
-                                <button type="button" id="bookNowBtn" class="btn w-100 btn-lg fw-bold"
-                                    style="background: linear-gradient(135deg, #845d70 0%, #6d4c5a 100%); color: white; border: none; border-radius: 25px; padding: 15px;">
+                                <button type="button" id="bookNowBtn" class="btn w-100 fw-bold"
+                                    style="background: linear-gradient(135deg, #845d70 0%, #6d4c5a 100%); color: white; border: none; border-radius: 20px; padding: 12px;">
                                     <i class="fas fa-calendar-check me-2"></i>Send Request
                                 </button>
                             </form>

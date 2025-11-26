@@ -90,46 +90,46 @@
         /* Global spacing improvements */
         body {
             font-family: 'Poppins', sans-serif;
-            line-height: 1.6;
+            line-height: 1.5;
         }
 
         /* Container improvements */
         .container {
             max-width: 1200px;
-            padding-left: 15px;
-            padding-right: 15px;
+            padding-left: 12px;
+            padding-right: 12px;
         }
 
         @media (max-width: 768px) {
             .container {
-                padding-left: 10px;
-                padding-right: 10px;
+                padding-left: 8px;
+                padding-right: 8px;
             }
         }
 
         /* Card spacing improvements */
         .card {
-            margin-bottom: 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
             transition: all 0.3s ease;
         }
 
         .card-body {
-            padding: 1.5rem;
+            padding: 1rem;
         }
 
         @media (max-width: 768px) {
             .card-body {
-                padding: 1rem;
+                padding: 0.75rem;
             }
         }
 
         /* Form improvements */
         .form-control, .form-select {
-            border-radius: 8px;
-            padding: 0.75rem;
-            font-size: 0.95rem;
+            border-radius: 6px;
+            padding: 0.6rem;
+            font-size: 0.9rem;
             border: 1px solid #dee2e6;
             transition: all 0.3s ease;
         }
@@ -141,40 +141,40 @@
 
         /* Button improvements */
         .btn {
-            border-radius: 8px;
-            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            padding: 0.6rem 1.2rem;
             font-weight: 500;
             transition: all 0.3s ease;
         }
 
         @media (max-width: 576px) {
             .btn {
-                padding: 0.6rem 1.2rem;
-                font-size: 0.9rem;
+                padding: 0.5rem 1rem;
+                font-size: 0.85rem;
             }
         }
 
         /* Alert improvements */
         .alert {
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 0.75rem;
+            padding: 0.75rem;
         }
 
         /* Section spacing */
         section {
-            padding: 3rem 0;
+            padding: 2rem 0;
         }
 
         @media (max-width: 768px) {
             section {
-                padding: 2rem 0;
+                padding: 1.5rem 0;
             }
         }
 
         /* Row spacing */
         .row {
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
         }
 
         .row:last-child {
@@ -183,62 +183,62 @@
 
         /* Column spacing */
         [class*="col-"] {
-            padding: 0.75rem;
+            padding: 0.5rem;
         }
 
         @media (max-width: 768px) {
             [class*="col-"] {
-                padding: 0.5rem;
+                padding: 0.375rem;
             }
         }
 
         /* Form label improvements */
         .form-label {
             font-weight: 500;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.375rem;
             color: #495057;
         }
 
         /* Helper text improvements */
         .form-text, .text-muted {
-            font-size: 0.875rem;
+            font-size: 0.8rem;
             margin-top: 0.25rem;
         }
 
         /* Modal improvements */
         .modal-content {
-            border-radius: 12px;
+            border-radius: 10px;
             border: none;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
         }
 
         .modal-header {
             border-bottom: 1px solid #dee2e6;
-            padding: 1.5rem;
+            padding: 1rem;
         }
 
         .modal-body {
-            padding: 1.5rem;
+            padding: 1rem;
         }
 
         @media (max-width: 768px) {
             .modal-header, .modal-body {
-                padding: 1rem;
+                padding: 0.75rem;
             }
         }
 
         /* Badge improvements */
         .badge {
-            border-radius: 6px;
+            border-radius: 4px;
             font-weight: 500;
-            padding: 0.5rem 0.75rem;
+            padding: 0.375rem 0.625rem;
         }
 
         /* Breadcrumb improvements */
         .breadcrumb {
             background: transparent;
             padding: 0;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
         }
 
         /* Pagination improvements */
@@ -247,8 +247,8 @@
         }
 
         .page-link {
-            border-radius: 6px;
-            margin: 0 2px;
+            border-radius: 4px;
+            margin: 0 1px;
             border: 1px solid #dee2e6;
         }
 
@@ -269,31 +269,40 @@
         }
 
         /* Responsive typography */
-        h1 { font-size: 2.5rem; }
-        h2 { font-size: 2rem; }
-        h3 { font-size: 1.75rem; }
-        h4 { font-size: 1.5rem; }
-        h5 { font-size: 1.25rem; }
+        h1 { font-size: 2.25rem; }
+        h2 { font-size: 1.875rem; }
+        h3 { font-size: 1.5rem; }
+        h4 { font-size: 1.25rem; }
+        h5 { font-size: 1.125rem; }
         h6 { font-size: 1rem; }
 
         @media (max-width: 768px) {
-            h1 { font-size: 2rem; }
-            h2 { font-size: 1.75rem; }
-            h3 { font-size: 1.5rem; }
-            h4 { font-size: 1.25rem; }
-            h5 { font-size: 1.1rem; }
-            h6 { font-size: 1rem; }
+            h1 { font-size: 1.875rem; }
+            h2 { font-size: 1.5rem; }
+            h3 { font-size: 1.25rem; }
+            h4 { font-size: 1.125rem; }
+            h5 { font-size: 1rem; }
+            h6 { font-size: 0.925rem; }
         }
 
         /* Utility classes for better spacing */
-        .mb-4 { margin-bottom: 1.5rem !important; }
-        .mt-4 { margin-top: 1.5rem !important; }
-        .py-4 { padding-top: 1.5rem !important; padding-bottom: 1.5rem !important; }
+        .mb-4 { margin-bottom: 1rem !important; }
+        .mt-4 { margin-top: 1rem !important; }
+        .py-4 { padding-top: 1rem !important; padding-bottom: 1rem !important; }
+        .mb-3 { margin-bottom: 0.75rem !important; }
+        .mt-3 { margin-top: 0.75rem !important; }
+        .py-3 { padding-top: 0.75rem !important; padding-bottom: 0.75rem !important; }
+        .mb-2 { margin-bottom: 0.5rem !important; }
+        .mt-2 { margin-top: 0.5rem !important; }
+        .py-2 { padding-top: 0.5rem !important; padding-bottom: 0.5rem !important; }
 
         @media (max-width: 768px) {
-            .mb-4 { margin-bottom: 1rem !important; }
-            .mt-4 { margin-top: 1rem !important; }
-            .py-4 { padding-top: 1rem !important; padding-bottom: 1rem !important; }
+            .mb-4 { margin-bottom: 0.75rem !important; }
+            .mt-4 { margin-top: 0.75rem !important; }
+            .py-4 { padding-top: 0.75rem !important; padding-bottom: 0.75rem !important; }
+            .mb-3 { margin-bottom: 0.5rem !important; }
+            .mt-3 { margin-top: 0.5rem !important; }
+            .py-3 { padding-top: 0.5rem !important; padding-bottom: 0.5rem !important; }
         }
 
         /* Remove unnecessary margins on mobile */
