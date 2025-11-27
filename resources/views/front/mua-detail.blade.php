@@ -412,7 +412,7 @@
                 <div class="col-lg-6">
                     <!-- Booking Card -->
                     <div class="booking-card">
-                        <div class="card-header">
+                        <div class="card-header" style="padding: 10px !important;">
                             <h6 class="mb-0">
                                 <i class="fas fa-calendar-alt me-2"></i>Book Your Session
                             </h6>
