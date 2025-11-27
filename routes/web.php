@@ -145,7 +145,7 @@ Route::middleware('auth')->group(function () {
     });
 
     // MUA routes
-    Route::middleware([RoleMiddleware::class . ':mua'])->group(function () {
+    Route::middleware('auth')->group(function () { // Temporarily remove role middleware
         // Tambahkan route khusus mua di sini
         // Contoh: Route::get('/mua/dashboard', [MuaController::class, 'dashboard'])->name('mua.dashboard');
         // Bookings (MUA-specific route names, under /mua prefix to avoid URI collision)
