@@ -154,7 +154,7 @@ Route::middleware('auth')->group(function () {
         Route::put('auth-mua/bookings/{id}', [\App\Http\Controllers\Back\BookingController::class, 'update'])->name('auth-mua.bookings.update');
 
         // MUA Booking Confirmation Routes
-        Route::get('mua/bookings/confirm/{id}', [BookingConfirmationController::class, 'show'])->name('mua.bookings.confirm');
+        Route::get('mua/bookings/confirm/{id}', [BookingConfirmationController::class, 'show'])->name('mua.bookings.confirm.show');
         Route::post('mua/bookings/confirm/{id}', [BookingConfirmationController::class, 'confirm'])->name('mua.bookings.confirm');
         Route::post('mua/bookings/reject/{id}', [BookingConfirmationController::class, 'reject'])->name('mua.bookings.reject');
         Route::post('mua/bookings/revise-price/{id}', [BookingConfirmationController::class, 'revisePrice'])->name('mua.bookings.revise-price');

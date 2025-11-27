@@ -136,9 +136,9 @@
 
         <p><strong>Action Required:</strong> Please review this booking request and confirm, revise the price, or reject it.</p>
 
-        <a href="{{ route('mua.bookings.confirm', $booking->id) }}" class="btn btn-primary">Confirm Booking</a>
-        <a href="{{ route('mua.bookings.confirm', $booking->id) }}" class="btn btn-warning">Revise Price</a>
-        <a href="{{ route('mua.bookings.confirm', $booking->id) }}" class="btn btn-danger">Reject Booking</a>
+        <a href="{{ route('mua.bookings.confirm.show', $booking->id) }}" class="btn btn-primary">Confirm Booking</a>
+        <a href="{{ route('mua.bookings.confirm.show', $booking->id) }}" class="btn btn-warning">Revise Price</a>
+        <a href="{{ route('mua.bookings.confirm.show', $booking->id) }}" class="btn btn-danger">Reject Booking</a>
 
         <div class="footer">
             <p>This is an automated notification from <strong>GlowHub Platform</strong></p>
