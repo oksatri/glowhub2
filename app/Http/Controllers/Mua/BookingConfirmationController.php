@@ -20,9 +20,8 @@ class BookingConfirmationController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
-        // Temporarily remove role middleware for debugging
-        // $this->middleware('role:mua');
+        // Remove middleware from constructor to avoid issues
+        // We'll handle auth checking manually in methods
     }
 
     /**
@@ -30,6 +29,11 @@ class BookingConfirmationController extends Controller
      */
     public function show($id)
     {
+        // Manual auth checking
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
         $user = Auth::user();
 
         // Manual role checking
@@ -119,7 +123,18 @@ class BookingConfirmationController extends Controller
      */
     public function confirm(Request $request, $id)
     {
+        // Manual auth checking
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
         $user = Auth::user();
+
+        // Manual role checking
+        if ($user->role !== 'mua') {
+            abort(403, 'Unauthorized action. Only MUA users can access this page.');
+        }
+
         $mua = Mua::where('user_id', $user->id)->firstOrFail();
 
         $booking = Booking::where('id', $id)
@@ -166,11 +181,22 @@ class BookingConfirmationController extends Controller
      */
     public function reject(Request $request, $id)
     {
+        // Manual auth checking
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
+        $user = Auth::user();
+
+        // Manual role checking
+        if ($user->role !== 'mua') {
+            abort(403, 'Unauthorized action. Only MUA users can access this page.');
+        }
+
         $request->validate([
             'rejection_reason' => 'required|string|max:500'
         ]);
 
-        $user = Auth::user();
         $mua = Mua::where('user_id', $user->id)->firstOrFail();
 
         $booking = Booking::where('id', $id)
@@ -198,12 +224,23 @@ class BookingConfirmationController extends Controller
      */
     public function revisePrice(Request $request, $id)
     {
+        // Manual auth checking
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
+        $user = Auth::user();
+
+        // Manual role checking
+        if ($user->role !== 'mua') {
+            abort(403, 'Unauthorized action. Only MUA users can access this page.');
+        }
+
         $request->validate([
             'revised_price' => 'required|numeric|min:0',
             'price_note' => 'required|string|max:500'
         ]);
 
-        $user = Auth::user();
         $mua = Mua::where('user_id', $user->id)->firstOrFail();
 
         $booking = Booking::where('id', $id)
