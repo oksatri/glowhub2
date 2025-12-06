@@ -234,13 +234,41 @@ class MuaController extends Controller
             'max_distance' => 'nullable|integer|min:0',
             'operational_hours' => 'nullable|string|max:255',
             'additional_charge' => 'nullable|numeric|min:0',
-            'availability_hours' => 'nullable|array',
-            'availability_hours.*.date' => 'required|date',
-            'availability_hours.*.start_time' => 'required|string',
-            'availability_hours.*.end_time' => 'required|string',
-            'availability_hours.*.reason' => 'nullable|string',
+            'availability_hours' => 'nullable', // Remove strict array validation
             'link_map' => 'nullable|string|max:255',
         ]);
+
+        // Handle availability_hours separately
+        if ($request->has('availability_hours')) {
+            $availabilityData = $request->input('availability_hours');
+            
+            // If it's a string (JSON), decode it
+            if (is_string($availabilityData)) {
+                $availabilityData = json_decode($availabilityData, true) ?? [];
+            }
+            
+            // If it's an array, validate basic structure
+            if (is_array($availabilityData)) {
+                $validatedAvailability = [];
+                foreach ($availabilityData as $slot) {
+                    if (is_array($slot) && isset($slot['date'], $slot['start_time'], $slot['end_time'])) {
+                        $validatedAvailability[] = [
+                            'id' => $slot['id'] ?? uniqid(),
+                            'date' => $slot['date'],
+                            'start_time' => $slot['start_time'],
+                            'end_time' => $slot['end_time'],
+                            'reason' => $slot['reason'] ?? null,
+                            'created_at' => $slot['created_at'] ?? now()->toISOString()
+                        ];
+                    }
+                }
+                $data['availability_hours'] = $validatedAvailability;
+            } else {
+                $data['availability_hours'] = [];
+            }
+        } else {
+            $data['availability_hours'] = [];
+        }
 
         // Debug: Log availability data
         \Log::info('Availability hours data:', [

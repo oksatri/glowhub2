@@ -371,7 +371,12 @@
             if (form) {
                 form.addEventListener('submit', function(e) {
                     console.log('Form submitting, availability data:', availabilityData); // Debug
+                    
+                    // Ensure the hidden input has the latest data
                     availabilityHoursInput.value = JSON.stringify(availabilityData);
+                    
+                    // Log the final value being sent
+                    console.log('Final availability input value:', availabilityHoursInput.value);
                 });
             }
             
