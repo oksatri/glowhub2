@@ -4,11 +4,69 @@ namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Models\Mua;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
 class BookingController extends Controller
 {
+    /**
+     * Check availability for a specific date
+     */
+    public function checkAvailability($muaId, Request $request)
+    {
+        $date = $request->input('date');
+        
+        if (!$date) {
+            return response()->json([]);
+        }
+        
+        // Get MUA data
+        $mua = Mua::find($muaId);
+        if (!$mua) {
+            return response()->json([]);
+        }
+        
+        $unavailableSlots = [];
+        
+        // Get unavailable slots from availability_hours
+        if (!empty($mua->availability_hours)) {
+            $availabilityHours = is_array($mua->availability_hours) ? 
+                $mua->availability_hours : 
+                json_decode($mua->availability_hours, true) ?? [];
+            
+            foreach ($availabilityHours as $slot) {
+                $slotDate = \Carbon\Carbon::parse($slot['date']);
+                if ($slotDate->format('Y-m-d') === $date) {
+                    $unavailableSlots[] = [
+                        'start' => $slot['start_time'],
+                        'end' => $slot['end_time']
+                    ];
+                }
+            }
+        }
+        
+        // Get existing bookings for selected date
+        $existingBookings = Booking::where('mua_id', $muaId)
+            ->where('selected_date', $date)
+            ->whereIn('status', ['pending', 'confirmed', 'completed'])
+            ->get();
+
+        foreach ($existingBookings as $booking) {
+            // Calculate blocked time range (1.5 hours before completion time)
+            $completionTime = new \DateTime($booking->selected_time);
+            $blockedStart = (clone $completionTime)->modify('-90 minutes');
+            $blockedEnd = (clone $completionTime)->modify('+30 minutes');
+            
+            $unavailableSlots[] = [
+                'start' => $blockedStart->format('H:i'),
+                'end' => $blockedEnd->format('H:i')
+            ];
+        }
+            
+        return response()->json($unavailableSlots);
+    }
+
     /**
      * Accept price revision
      */

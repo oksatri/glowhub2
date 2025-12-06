@@ -68,6 +68,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/mua-listing', [FrontMuaController::class, 'index'])->name('mua.listing');
 Route::get('/mua/{id}', [FrontMuaController::class, 'show'])->name('mua.detail');
 Route::post('/mua/{id}/book', [FrontMuaController::class, 'book'])->name('mua.book');
+Route::get('/mua/{id}/check-availability', [\App\Http\Controllers\Front\BookingController::class, 'checkAvailability'])->name('front.bookings.check-availability');
 
 
 // Guest routes

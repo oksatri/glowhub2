@@ -465,7 +465,8 @@
                                             $selectedTime = null;
                                             $unavailableSlots = [];
 
-                                            // Get unavailable slots from availability_hours
+                                            // Get unavailable slots from availability_hours for selected date
+                                            $selectedDate = $_GET['date'] ?? now()->format('Y-m-d'); // Get from URL or default to today
                                             if (!empty($mua['availability_hours'])) {
                                                 $availabilityHours = is_array($mua['availability_hours']) ? 
                                                     $mua['availability_hours'] : 
@@ -473,13 +474,31 @@
                                                 
                                                 foreach ($availabilityHours as $slot) {
                                                     $slotDate = \Carbon\Carbon::parse($slot['date']);
-                                                    if ($slotDate->isToday()) {
+                                                    if ($slotDate->format('Y-m-d') === $selectedDate) {
                                                         $unavailableSlots[] = [
                                                             'start' => $slot['start_time'],
                                                             'end' => $slot['end_time']
                                                         ];
                                                     }
                                                 }
+                                            }
+
+                                            // Get existing bookings for selected date
+                                            $existingBookings = \App\Models\Booking::where('mua_id', $mua['id'])
+                                                ->where('selected_date', $selectedDate)
+                                                ->whereIn('status', ['pending', 'confirmed', 'completed'])
+                                                ->get();
+
+                                            foreach ($existingBookings as $booking) {
+                                                // Calculate blocked time range (1.5 hours before completion time)
+                                                $completionTime = new \DateTime($booking->selected_time);
+                                                $blockedStart = (clone $completionTime)->modify('-90 minutes');
+                                                $blockedEnd = (clone $completionTime)->modify('+30 minutes');
+                                                
+                                                $unavailableSlots[] = [
+                                                    'start' => $blockedStart->format('H:i'),
+                                                    'end' => $blockedEnd->format('H:i')
+                                                ];
                                             }
 
                                             // Generate time slots every 30 minutes based on operational_hours if possible
