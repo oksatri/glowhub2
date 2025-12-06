@@ -365,6 +365,15 @@
                 console.log('Save availability button not found'); // Debug
             }
             
+            // Ensure availability data is saved before form submission
+            const form = document.querySelector('form[method="POST"]');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    console.log('Form submitting, availability data:', availabilityData); // Debug
+                    availabilityHoursInput.value = JSON.stringify(availabilityData);
+                });
+            }
+            
             // Initial render
             renderAvailabilityList();
 

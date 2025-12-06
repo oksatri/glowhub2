@@ -241,6 +241,12 @@ class MuaController extends Controller
             'availability_hours.*.reason' => 'nullable|string',
             'link_map' => 'nullable|string|max:255',
         ]);
+
+        // Debug: Log availability data
+        \Log::info('Availability hours data:', [
+            'availability_hours' => $data['availability_hours'] ?? 'null',
+            'all_request_data' => $request->all()
+        ]);
         // Only city is considered now; no province/district checks.
 
         // handle inline new user creation on update
