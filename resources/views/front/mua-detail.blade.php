@@ -351,22 +351,90 @@
                                         <h6 class="fw-bold mb-1 small">Schedule</h6>
                                         <p class="small fw-semibold text-dark mb-0">
                                             @if (!empty($mua['operational_hours']))
-                                                {{ $mua['operational_hours'] }}
-                                            @endif
-                                            @if (!empty($mua['availability_hours']))
-                                                @if (!empty($mua['operational_hours']))
-                                                    •
-                                                @endif
-                                                {{ $mua['availability_hours'] }}
-                                            @endif
-                                            @if (empty($mua['operational_hours']) && empty($mua['availability_hours']))
-                                                —
+                                                <i class="fas fa-clock me-1"></i>{{ $mua['operational_hours'] }}
                                             @endif
                                         </p>
+                                        @if (!empty($mua['availability_hours']))
+                                            @php
+                                                $availabilityHours = is_array($mua['availability_hours']) ? 
+                                                    $mua['availability_hours'] : 
+                                                    json_decode($mua['availability_hours'], true) ?? [];
+                                            @endphp
+                                            @if (!empty($availabilityHours))
+                                                <div class="mt-2">
+                                                    <small class="text-muted d-block mb-1">
+                                                        <i class="fas fa-calendar-times me-1"></i>Jam tidak tersedia:
+                                                    </small>
+                                                    @foreach ($availabilityHours as $slot)
+                                                        @php
+                                                            $slotDate = \Carbon\Carbon::parse($slot['date']);
+                                                            $isToday = $slotDate->isToday();
+                                                            $isPast = $slotDate->isPast();
+                                                        @endphp
+                                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                                            <small class="{{ $isPast ? 'text-muted text-decoration-line-through' : 'text-warning' }}">
+                                                                {{ $isToday ? 'Hari ini' : $slotDate->format('d M Y') }}
+                                                            </small>
+                                                            <small class="{{ $isPast ? 'text-muted' : 'text-danger' }}">
+                                                                {{ $slot['start_time'] }} - {{ $slot['end_time'] }}
+                                                            </small>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+                                        @endif
+                                        @if (empty($mua['operational_hours']) && empty($mua['availability_hours']))
+                                            <span class="text-muted">—</span>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Availability Section -->
+                        @if (!empty($mua['availability_hours']))
+                            @php
+                                $availabilityHours = is_array($mua['availability_hours']) ? 
+                                    $mua['availability_hours'] : 
+                                    json_decode($mua['availability_hours'], true) ?? [];
+                                
+                                // Filter hanya yang akan datang
+                                $upcomingSlots = array_filter($availabilityHours, function($slot) {
+                                    $slotDate = \Carbon\Carbon::parse($slot['date']);
+                                    return $slotDate->isToday() || $slotDate->isFuture();
+                                });
+                            @endphp
+                            @if (!empty($upcomingSlots))
+                                <div class="card shadow-sm border-0 mt-3">
+                                    <div class="card-body p-3">
+                                        <h6 class="fw-bold mb-3">
+                                            <i class="fas fa-calendar-times me-2 text-warning"></i>Ketersediaan Jam
+                                        </h6>
+                                        <div class="small text-muted mb-2">
+                                            Jam berikut tidak tersedia karena booking di luar platform:
+                                        </div>
+                                        @foreach ($upcomingSlots as $slot)
+                                            @php
+                                                $slotDate = \Carbon\Carbon::parse($slot['date']);
+                                                $isToday = $slotDate->isToday();
+                                            @endphp
+                                            <div class="d-flex justify-content-between align-items-center p-2 mb-2 bg-light rounded">
+                                                <div>
+                                                    <span class="badge {{ $isToday ? 'bg-warning' : 'bg-secondary' }} me-2">
+                                                        {{ $isToday ? 'Hari ini' : $slotDate->format('d M') }}
+                                                    </span>
+                                                    <small class="fw-semibold">{{ $slot['start_time'] }} - {{ $slot['end_time'] }}</small>
+                                                    @if (!empty($slot['reason']))
+                                                        <small class="text-muted ms-2">({{ $slot['reason'] }})</small>
+                                                    @endif
+                                                </div>
+                                                <i class="fas fa-ban text-danger small"></i>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
+                        @endif
 
                         <!-- Portfolio Section -->
                         <div class="card shadow-sm border-0">
