@@ -112,68 +112,69 @@
                 <div class="invalid-feedback">{{ $errors->first('additional_charge') }}</div>
             @endif
         </div>
+        <!-- Availability Management Panel -->
+        <div class="card border-0 shadow-sm mt-4">
+            <div class="card-header bg-white">
+                <h4 class="text-primary mb-0">
+                    <i class="fas fa-calendar-times me-2"></i>Ketersediaan Jam
+                </h4>
+                <small class="text-muted">Tambahkan jam yang tidak tersedia karena booking di luar platform</small>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAvailabilityModal">
+                        <i class="fas fa-plus me-2"></i>Tambah Jam Tidak Tersedia
+                    </button>
+                </div>
+                
+                <div id="availabilityList" class="row g-3">
+                    @php
+                        $availabilityHours = $mua->availability_hours ?? [];
+                        if (!is_array($availabilityHours)) {
+                            $availabilityHours = json_decode($availabilityHours, true) ?? [];
+                        }
+                    @endphp
+                    @if (!empty($availabilityHours))
+                        @foreach ($availabilityHours as $index => $slot)
+                            <div class="col-md-6">
+                                <div class="card border-left-danger">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <h6 class="card-title mb-1">{{ \Carbon\Carbon::parse($slot['date'])->format('d M Y') }}</h6>
+                                                <p class="mb-1"><strong>{{ $slot['start_time'] }} - {{ $slot['end_time'] }}</strong></p>
+                                                @if (!empty($slot['reason']))
+                                                    <small class="text-muted">{{ $slot['reason'] }}</small>
+                                                @endif
+                                            </div>
+                                            <button type="button" class="btn btn-sm btn-outline-danger remove-availability" 
+                                                    data-index="{{ $index }}">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    @else
+                        <div class="col-12">
+                            <div class="text-center text-muted py-4">
+                                <i class="fas fa-calendar-check fa-3x mb-3"></i>
+                                <p>Belum ada jam yang tidak tersedia</p>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+                
+                <!-- Hidden input to store availability data -->
+                <input type="hidden" name="availability_hours" id="availabilityHoursInput" 
+                    value="{{ old('availability_hours', json_encode($availabilityHours ?? [])) }}">
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- Availability Management Panel -->
-<div class="card border-0 shadow-sm mt-4">
-    <div class="card-header bg-white">
-        <h4 class="text-primary mb-0">
-            <i class="fas fa-calendar-times me-2"></i>Ketersediaan Jam
-        </h4>
-        <small class="text-muted">Tambahkan jam yang tidak tersedia karena booking di luar platform</small>
-    </div>
-    <div class="card-body">
-        <div class="mb-3">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAvailabilityModal">
-                <i class="fas fa-plus me-2"></i>Tambah Jam Tidak Tersedia
-            </button>
-        </div>
-        
-        <div id="availabilityList" class="row g-3">
-            @php
-                $availabilityHours = $mua->availability_hours ?? [];
-                if (!is_array($availabilityHours)) {
-                    $availabilityHours = json_decode($availabilityHours, true) ?? [];
-                }
-            @endphp
-            @if (!empty($availabilityHours))
-                @foreach ($availabilityHours as $index => $slot)
-                    <div class="col-md-6">
-                        <div class="card border-left-danger">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <div>
-                                        <h6 class="card-title mb-1">{{ \Carbon\Carbon::parse($slot['date'])->format('d M Y') }}</h6>
-                                        <p class="mb-1"><strong>{{ $slot['start_time'] }} - {{ $slot['end_time'] }}</strong></p>
-                                        @if (!empty($slot['reason']))
-                                            <small class="text-muted">{{ $slot['reason'] }}</small>
-                                        @endif
-                                    </div>
-                                    <button type="button" class="btn btn-sm btn-outline-danger remove-availability" 
-                                            data-index="{{ $index }}">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            @else
-                <div class="col-12">
-                    <div class="text-center text-muted py-4">
-                        <i class="fas fa-calendar-check fa-3x mb-3"></i>
-                        <p>Belum ada jam yang tidak tersedia</p>
-                    </div>
-                </div>
-            @endif
-        </div>
-        
-        <!-- Hidden input to store availability data -->
-        <input type="hidden" name="availability_hours" id="availabilityHoursInput" 
-               value="{{ old('availability_hours', json_encode($availabilityHours ?? [])) }}">
-    </div>
-</div>
+
 
 <!-- Add Availability Modal -->
 <div class="modal fade" id="addAvailabilityModal" tabindex="-1">
