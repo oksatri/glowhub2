@@ -242,12 +242,12 @@
             const saveAvailabilityBtn = document.getElementById('saveAvailability');
             const addAvailabilityModal = document.getElementById('addAvailabilityModal');
             
-            console.log('Availability elements:', {
-                availabilityHoursInput,
-                availabilityList,
-                saveAvailabilityBtn,
-                addAvailabilityModal
-            }); // Debug
+            // console.log('Availability elements:', {
+            //     availabilityHoursInput,
+            //     availabilityList,
+            //     saveAvailabilityBtn,
+            //     addAvailabilityModal
+            // }); // Debug
             
             let availabilityData = [];
             
