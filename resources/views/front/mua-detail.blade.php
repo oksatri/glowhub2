@@ -1019,7 +1019,7 @@
                     let timeSlots = [];
                     
                     // Parse operational hours
-                    const opMatch = operationalHours.match(/(\d{1,2})[:\.]\d{2}).*?(\d{1,2})[:\.]\d{2})/);
+                    const opMatch = operationalHours.match(/(\d{1,2})[:\.](\d{2}).*?(\d{1,2})[:\.](\d{2})/);
                     if (opMatch) {
                         const start = new Date(`2000-01-01T${opMatch[1]}:${opMatch[2]}:00`);
                         const end = new Date(`2000-01-01T${opMatch[3]}:${opMatch[4]}:00`);
