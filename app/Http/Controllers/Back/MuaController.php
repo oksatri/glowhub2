@@ -234,7 +234,11 @@ class MuaController extends Controller
             'max_distance' => 'nullable|integer|min:0',
             'operational_hours' => 'nullable|string|max:255',
             'additional_charge' => 'nullable|numeric|min:0',
-            'availability_hours' => 'nullable|string|max:255',
+            'availability_hours' => 'nullable|array',
+            'availability_hours.*.date' => 'required|date',
+            'availability_hours.*.start_time' => 'required|string',
+            'availability_hours.*.end_time' => 'required|string',
+            'availability_hours.*.reason' => 'nullable|string',
             'link_map' => 'nullable|string|max:255',
         ]);
         // Only city is considered now; no province/district checks.

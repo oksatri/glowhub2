@@ -115,6 +115,103 @@
     </div>
 </div>
 
+<!-- Availability Management Panel -->
+<div class="card border-0 shadow-sm mt-4">
+    <div class="card-header bg-white">
+        <h4 class="text-primary mb-0">
+            <i class="fas fa-calendar-times me-2"></i>Ketersediaan Jam
+        </h4>
+        <small class="text-muted">Tambahkan jam yang tidak tersedia karena booking di luar platform</small>
+    </div>
+    <div class="card-body">
+        <div class="mb-3">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAvailabilityModal">
+                <i class="fas fa-plus me-2"></i>Tambah Jam Tidak Tersedia
+            </button>
+        </div>
+        
+        <div id="availabilityList" class="row g-3">
+            @php
+                $availabilityHours = $mua->availability_hours ?? [];
+                if (!is_array($availabilityHours)) {
+                    $availabilityHours = json_decode($availabilityHours, true) ?? [];
+                }
+            @endphp
+            @if (!empty($availabilityHours))
+                @foreach ($availabilityHours as $index => $slot)
+                    <div class="col-md-6">
+                        <div class="card border-left-danger">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="card-title mb-1">{{ \Carbon\Carbon::parse($slot['date'])->format('d M Y') }}</h6>
+                                        <p class="mb-1"><strong>{{ $slot['start_time'] }} - {{ $slot['end_time'] }}</strong></p>
+                                        @if (!empty($slot['reason']))
+                                            <small class="text-muted">{{ $slot['reason'] }}</small>
+                                        @endif
+                                    </div>
+                                    <button type="button" class="btn btn-sm btn-outline-danger remove-availability" 
+                                            data-index="{{ $index }}">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            @else
+                <div class="col-12">
+                    <div class="text-center text-muted py-4">
+                        <i class="fas fa-calendar-check fa-3x mb-3"></i>
+                        <p>Belum ada jam yang tidak tersedia</p>
+                    </div>
+                </div>
+            @endif
+        </div>
+        
+        <!-- Hidden input to store availability data -->
+        <input type="hidden" name="availability_hours" id="availabilityHoursInput" 
+               value="{{ old('availability_hours', json_encode($availabilityHours ?? [])) }}">
+    </div>
+</div>
+
+<!-- Add Availability Modal -->
+<div class="modal fade" id="addAvailabilityModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Tambah Jam Tidak Tersedia</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Tanggal</label>
+                    <input type="date" class="form-control" id="availabilityDate" required>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label class="form-label">Jam Mulai</label>
+                        <input type="time" class="form-control" id="availabilityStartTime" required>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label">Jam Selesai</label>
+                        <input type="time" class="form-control" id="availabilityEndTime" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Alasan (opsional)</label>
+                    <textarea class="form-control" id="availabilityReason" rows="2" 
+                              placeholder="e.g. Booking di luar platform, event pribadi, dll"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-primary" id="saveAvailability">Simpan</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -122,6 +219,126 @@
             const newUserFields = document.getElementById('newUserFields');
             const serviceCitiesSelect = document.getElementById('serviceCitiesSelect');
             const selectedCitiesList = document.getElementById('selectedCitiesList');
+            
+            // Availability Management
+            const availabilityHoursInput = document.getElementById('availabilityHoursInput');
+            const availabilityList = document.getElementById('availabilityList');
+            const saveAvailabilityBtn = document.getElementById('saveAvailability');
+            const addAvailabilityModal = document.getElementById('addAvailabilityModal');
+            
+            let availabilityData = [];
+            
+            // Load existing availability data
+            try {
+                availabilityData = JSON.parse(availabilityHoursInput.value || '[]');
+            } catch (e) {
+                availabilityData = [];
+            }
+            
+            // Function to render availability list
+            function renderAvailabilityList() {
+                if (!availabilityList) return;
+                
+                if (availabilityData.length === 0) {
+                    availabilityList.innerHTML = `
+                        <div class="col-12">
+                            <div class="text-center text-muted py-4">
+                                <i class="fas fa-calendar-check fa-3x mb-3"></i>
+                                <p>Belum ada jam yang tidak tersedia</p>
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                availabilityList.innerHTML = availabilityData.map((slot, index) => {
+                    const date = new Date(slot.date);
+                    const formattedDate = date.toLocaleDateString('id-ID', { 
+                        day: 'numeric', 
+                        month: 'short', 
+                        year: 'numeric' 
+                    });
+                    
+                    return `
+                        <div class="col-md-6">
+                            <div class="card border-left-danger">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h6 class="card-title mb-1">${formattedDate}</h6>
+                                            <p class="mb-1"><strong>${slot.start_time} - ${slot.end_time}</strong></p>
+                                            ${slot.reason ? `<small class="text-muted">${slot.reason}</small>` : ''}
+                                        </div>
+                                        <button type="button" class="btn btn-sm btn-outline-danger remove-availability" 
+                                                data-index="${index}">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                // Update hidden input
+                availabilityHoursInput.value = JSON.stringify(availabilityData);
+                
+                // Add event listeners to remove buttons
+                availabilityList.querySelectorAll('.remove-availability').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = parseInt(this.dataset.index);
+                        availabilityData.splice(index, 1);
+                        renderAvailabilityList();
+                    });
+                });
+            }
+            
+            // Save availability
+            if (saveAvailabilityBtn) {
+                saveAvailabilityBtn.addEventListener('click', function() {
+                    const date = document.getElementById('availabilityDate').value;
+                    const startTime = document.getElementById('availabilityStartTime').value;
+                    const endTime = document.getElementById('availabilityEndTime').value;
+                    const reason = document.getElementById('availabilityReason').value;
+                    
+                    if (!date || !startTime || !endTime) {
+                        alert('Mohon lengkapi semua field yang wajib diisi');
+                        return;
+                    }
+                    
+                    if (startTime >= endTime) {
+                        alert('Jam mulai harus lebih awal dari jam selesai');
+                        return;
+                    }
+                    
+                    const newSlot = {
+                        id: Date.now().toString(),
+                        date: date,
+                        start_time: startTime,
+                        end_time: endTime,
+                        reason: reason,
+                        created_at: new Date().toISOString()
+                    };
+                    
+                    availabilityData.push(newSlot);
+                    renderAvailabilityList();
+                    
+                    // Reset form and close modal
+                    document.getElementById('availabilityDate').value = '';
+                    document.getElementById('availabilityStartTime').value = '';
+                    document.getElementById('availabilityEndTime').value = '';
+                    document.getElementById('availabilityReason').value = '';
+                    
+                    // Close modal using Bootstrap
+                    const modal = bootstrap.Modal.getInstance(addAvailabilityModal);
+                    if (modal) {
+                        modal.hide();
+                    }
+                });
+            }
+            
+            // Initial render
+            renderAvailabilityList();
 
             // Function to update selected cities display
             function updateSelectedCities() {
