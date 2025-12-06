@@ -64,6 +64,13 @@ class BookingController extends Controller
             ];
         }
             
+        // Debug logging
+        \Log::info('Availability check for MUA ' . $muaId . ' on ' . $date . ':', [
+            'availability_hours' => $mua->availability_hours,
+            'unavailable_slots' => $unavailableSlots,
+            'existing_bookings_count' => $existingBookings->count()
+        ]);
+            
         return response()->json($unavailableSlots);
     }
 

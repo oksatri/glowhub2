@@ -992,95 +992,103 @@
                 const selectedDate = $(this).val();
                 if (!selectedDate) return;
                 
-                // Get availability hours data
-                const availabilityHours = @json($mua['availability_hours'] ?? []);
-                const unavailableSlots = [];
+                // Show loading state
+                const $timeSelect = $('#bk_time');
+                $timeSelect.empty();
+                $timeSelect.append('<option value="">Loading...</option>');
                 
-                // Parse availability hours and find slots for selected date
-                availabilityHours.forEach(slot => {
-                    if (slot.date === selectedDate) {
-                        unavailableSlots.push({
-                            start: slot.start_time,
-                            end: slot.end_time
-                        });
+                // Fetch availability via AJAX
+                $.ajax({
+                    url: '{{ route("front.bookings.check-availability", $mua["id"]) }}',
+                    method: 'GET',
+                    data: { date: selectedDate },
+                    success: function(unavailableSlots) {
+                        console.log('Unavailable slots for', selectedDate, ':', unavailableSlots); // Debug
+                        generateTimeSlots(unavailableSlots);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX error:', error); // Debug
+                        // If AJAX fails, generate without availability data
+                        generateTimeSlots([]);
                     }
                 });
                 
-                // Generate time slots (same logic as PHP)
-                const operationalHours = '{{ $mua['operational_hours'] ?? '' }}';
-                let timeSlots = [];
-                
-                // Parse operational hours
-                const opMatch = operationalHours.match(/(\d{1,2})[:\.](\d{2}).*?(\d{1,2})[:\.](\d{2})/);
-                if (opMatch) {
-                    const start = new Date(`2000-01-01T${opMatch[1]}:${opMatch[2]}:00`);
-                    const end = new Date(`2000-01-01T${opMatch[3]}:${opMatch[4]}:00`);
+                function generateTimeSlots(unavailableSlots) {
+                    // Generate time slots (same logic as PHP)
+                    const operationalHours = '{{ $mua['operational_hours'] ?? '' }}';
+                    let timeSlots = [];
                     
-                    while (start <= end) {
-                        const timeSlot = start.toTimeString().slice(0, 5);
+                    // Parse operational hours
+                    const opMatch = operationalHours.match(/(\d{1,2})[:\.]\d{2}).*?(\d{1,2})[:\.]\d{2})/);
+                    if (opMatch) {
+                        const start = new Date(`2000-01-01T${opMatch[1]}:${opMatch[2]}:00`);
+                        const end = new Date(`2000-01-01T${opMatch[3]}:${opMatch[4]}:00`);
                         
-                        // Check if unavailable
-                        const isUnavailable = unavailableSlots.some(unavailable => {
-                            const slotTime = new Date(`2000-01-01T${timeSlot}:00`);
-                            const unavailStart = new Date(`2000-01-01T${unavailable.start}:00`);
-                            const unavailEnd = new Date(`2000-01-01T${unavailable.end}:00`);
+                        while (start <= end) {
+                            const timeSlot = start.toTimeString().slice(0, 5);
                             
-                            return slotTime >= unavailStart && slotTime < unavailEnd;
-                        });
-                        
-                        if (!isUnavailable) {
-                            timeSlots.push(timeSlot);
+                            // Check if unavailable
+                            const isUnavailable = unavailableSlots.some(unavailable => {
+                                const slotTime = new Date(`2000-01-01T${timeSlot}:00`);
+                                const unavailStart = new Date(`2000-01-01T${unavailable.start}:00`);
+                                const unavailEnd = new Date(`2000-01-01T${unavailable.end}:00`);
+                                
+                                return slotTime >= unavailStart && slotTime < unavailEnd;
+                            });
+                            
+                            if (!isUnavailable) {
+                                timeSlots.push(timeSlot);
+                            }
+                            
+                            start.setMinutes(start.getMinutes() + 30);
                         }
-                        
-                        start.setMinutes(start.getMinutes() + 30);
                     }
-                }
-                
-                // Fallback to 09:00-19:00
-                if (timeSlots.length === 0) {
-                    const fallbackStart = new Date(`2000-01-01T09:00:00`);
-                    const fallbackEnd = new Date(`2000-01-01T19:00:00`);
                     
-                    while (fallbackStart < fallbackEnd) {
-                        const timeSlot = fallbackStart.toTimeString().slice(0, 5);
+                    // Fallback to 09:00-19:00
+                    if (timeSlots.length === 0) {
+                        const fallbackStart = new Date(`2000-01-01T09:00:00`);
+                        const fallbackEnd = new Date(`2000-01-01T19:00:00`);
                         
-                        const isUnavailable = unavailableSlots.some(unavailable => {
-                            const slotTime = new Date(`2000-01-01T${timeSlot}:00`);
-                            const unavailStart = new Date(`2000-01-01T${unavailable.start}:00`);
-                            const unavailEnd = new Date(`2000-01-01T${unavailable.end}:00`);
+                        while (fallbackStart < fallbackEnd) {
+                            const timeSlot = fallbackStart.toTimeString().slice(0, 5);
                             
-                            return slotTime >= unavailStart && slotTime < unavailEnd;
-                        });
-                        
-                        if (!isUnavailable) {
-                            timeSlots.push(timeSlot);
+                            const isUnavailable = unavailableSlots.some(unavailable => {
+                                const slotTime = new Date(`2000-01-01T${timeSlot}:00`);
+                                const unavailStart = new Date(`2000-01-01T${unavailable.start}:00`);
+                                const unavailEnd = new Date(`2000-01-01T${unavailable.end}:00`);
+                                
+                                return slotTime >= unavailStart && slotTime < unavailEnd;
+                            });
+                            
+                            if (!isUnavailable) {
+                                timeSlots.push(timeSlot);
+                            }
+                            
+                            fallbackStart.setMinutes(fallbackStart.getMinutes() + 30);
                         }
-                        
-                        fallbackStart.setMinutes(fallbackStart.getMinutes() + 30);
                     }
-                }
-                
-                // Update time select
-                const $timeSelect = $('#bk_time');
-                $timeSelect.empty();
-                $timeSelect.append('<option value="">Select time</option>');
-                
-                if (timeSlots.length > 0) {
-                    timeSlots.forEach(time => {
-                        $timeSelect.append(`<option value="${time}">${time}</option>`);
-                    });
-                } else {
-                    $timeSelect.append('<option value="" disabled>No available times for this date</option>');
-                }
-                
-                // Show info if there are unavailable slots
-                const $infoText = $('#bk_time').next('.text-muted');
-                if (unavailableSlots.length > 0) {
-                    if ($infoText.length === 0) {
-                        $('#bk_time').after('<small class="text-muted mt-1 d-block"><i class="fas fa-info-circle me-1"></i>Some time slots are unavailable due to external bookings</small>');
+                    
+                    // Update time select
+                    $timeSelect.empty();
+                    $timeSelect.append('<option value="">Select time</option>');
+                    
+                    if (timeSlots.length > 0) {
+                        timeSlots.forEach(time => {
+                            $timeSelect.append(`<option value="${time}">${time}</option>`);
+                        });
+                    } else {
+                        $timeSelect.append('<option value="" disabled>No available times for this date</option>');
                     }
-                } else {
-                    $infoText.remove();
+                    
+                    // Show info if there are unavailable slots
+                    const $infoText = $timeSelect.next('.text-muted');
+                    if (unavailableSlots.length > 0) {
+                        if ($infoText.length === 0) {
+                            $timeSelect.after('<small class="text-muted mt-1 d-block"><i class="fas fa-info-circle me-1"></i>Some time slots are unavailable due to existing bookings</small>');
+                        }
+                    } else {
+                        $infoText.remove();
+                    }
                 }
             });
 
