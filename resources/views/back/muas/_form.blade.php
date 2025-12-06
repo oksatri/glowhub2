@@ -220,11 +220,25 @@
             const serviceCitiesSelect = document.getElementById('serviceCitiesSelect');
             const selectedCitiesList = document.getElementById('selectedCitiesList');
             
+            // Modal trigger using jQuery
+            $(document).on('click', '[data-bs-target="#addAvailabilityModal"]', function(e) {
+                e.preventDefault();
+                console.log('Modal trigger clicked'); // Debug
+                $('#addAvailabilityModal').modal('show');
+            });
+            
             // Availability Management
             const availabilityHoursInput = document.getElementById('availabilityHoursInput');
             const availabilityList = document.getElementById('availabilityList');
             const saveAvailabilityBtn = document.getElementById('saveAvailability');
             const addAvailabilityModal = document.getElementById('addAvailabilityModal');
+            
+            console.log('Availability elements:', {
+                availabilityHoursInput,
+                availabilityList,
+                saveAvailabilityBtn,
+                addAvailabilityModal
+            }); // Debug
             
             let availabilityData = [];
             
@@ -296,10 +310,14 @@
             // Save availability
             if (saveAvailabilityBtn) {
                 saveAvailabilityBtn.addEventListener('click', function() {
+                    console.log('Save availability clicked'); // Debug
+                    
                     const date = document.getElementById('availabilityDate').value;
                     const startTime = document.getElementById('availabilityStartTime').value;
                     const endTime = document.getElementById('availabilityEndTime').value;
                     const reason = document.getElementById('availabilityReason').value;
+                    
+                    console.log('Form data:', { date, startTime, endTime, reason }); // Debug
                     
                     if (!date || !startTime || !endTime) {
                         alert('Mohon lengkapi semua field yang wajib diisi');
@@ -320,6 +338,8 @@
                         created_at: new Date().toISOString()
                     };
                     
+                    console.log('New slot:', newSlot); // Debug
+                    
                     availabilityData.push(newSlot);
                     renderAvailabilityList();
                     
@@ -329,12 +349,11 @@
                     document.getElementById('availabilityEndTime').value = '';
                     document.getElementById('availabilityReason').value = '';
                     
-                    // Close modal using Bootstrap
-                    const modal = bootstrap.Modal.getInstance(addAvailabilityModal);
-                    if (modal) {
-                        modal.hide();
-                    }
+                    // Close modal using Bootstrap 4 (jQuery)
+                    $('#addAvailabilityModal').modal('hide');
                 });
+            } else {
+                console.log('Save availability button not found'); // Debug
             }
             
             // Initial render
