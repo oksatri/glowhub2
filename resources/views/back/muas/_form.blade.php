@@ -187,21 +187,21 @@
             <div class="modal-body">
                 <div class="mb-3">
                     <label class="form-label">Tanggal</label>
-                    <input type="date" class="form-control form-control-sm" id="availabilityDate" required>
+                    <input type="date" class="form-control form-control-sm" id="availabilityDate" name="availability_date_temp">
                 </div>
                 <div class="row mb-3">
                     <div class="col-6">
                         <label class="form-label">Jam Mulai</label>
-                        <input type="time" class="form-control form-control-sm" id="availabilityStartTime" required>
+                        <input type="time" class="form-control form-control-sm" id="availabilityStartTime" name="availability_start_time_temp">
                     </div>
                     <div class="col-6">
                         <label class="form-label">Jam Selesai</label>
-                        <input type="time" class="form-control form-control-sm" id="availabilityEndTime" required>
+                        <input type="time" class="form-control form-control-sm" id="availabilityEndTime" name="availability_end_time_temp">
                     </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Alasan (opsional)</label>
-                    <textarea class="form-control form-control-sm" id="availabilityReason" rows="2" 
+                    <textarea class="form-control form-control-sm" id="availabilityReason" name="availability_reason_temp" rows="2" 
                               placeholder="e.g. Booking di luar platform, event pribadi, dll"></textarea>
                 </div>
             </div>
@@ -328,6 +328,7 @@
                     
                     console.log('Form data:', { date, startTime, endTime, reason }); // Debug
                     
+                    // Manual validation
                     if (!date || !startTime || !endTime) {
                         alert('Mohon lengkapi semua field yang wajib diisi');
                         return;
@@ -352,7 +353,7 @@
                     availabilityData.push(newSlot);
                     renderAvailabilityList();
                     
-                    // Reset form and close modal
+                    // Reset form
                     document.getElementById('availabilityDate').value = '';
                     document.getElementById('availabilityStartTime').value = '';
                     document.getElementById('availabilityEndTime').value = '';
