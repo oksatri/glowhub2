@@ -166,7 +166,7 @@
 
         @media (max-width: 767px) {
             .main-header {
-                padding: 4px 0 !important;
+                padding: 0px !important;
             }
             .main-logo img {
                 max-height: 40px !important;
