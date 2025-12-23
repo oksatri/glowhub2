@@ -48,7 +48,7 @@
     </div> --}}
     <!--top-content-->
 
-    <header id="header" style="padding: 10px 0px !important">
+    <header id="header" class="main-header">
         <div class="container-fluid">
             <div class="row align-items-center">
                 <!-- Logo -->
@@ -159,6 +159,27 @@
     </header>
 
     <style>
+        /* Header */
+        .main-header {
+            padding: 6px 0 !important;
+        }
+
+        @media (max-width: 767px) {
+            .main-header {
+                padding: 4px 0 !important;
+            }
+            .main-logo img {
+                max-height: 40px !important;
+            }
+            #mobileMenu {
+                margin-top: 5px;
+            }
+            .nav-link-mobile {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+        }
+
         /* Desktop Menu */
         .menu-list {
             list-style: none;
