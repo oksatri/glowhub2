@@ -159,8 +159,7 @@
     </header>
 
     <style>
-        /* Header */
-        .main-header {
+        /* Header */         .main-header {
             padding: 6px 0 !important;
         }
 
