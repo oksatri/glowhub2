@@ -102,8 +102,8 @@
 
         @media (max-width: 768px) {
             .container {
-                padding-left: 8px;
-                padding-right: 8px;
+                padding-left: 15px;
+                padding-right: 15px;
             }
         }
 
