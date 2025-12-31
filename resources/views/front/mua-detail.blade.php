@@ -709,6 +709,13 @@
                                         Rp 0
                                     </h5>
                                 </div>
+                                @if (!empty($mua['note']))
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div>
+                                        <div class="fw-semibold small">{{$mua['note']}}</div>
+                                    </div>
+                                </div>
+                                @endif
 
                                 <button type="button" id="bookNowBtn" class="btn w-100 fw-bold"
                                     style="background: linear-gradient(135deg, #845d70 0%, #6d4c5a 100%); color: white; border: none; border-radius: 20px; padding: 12px;">

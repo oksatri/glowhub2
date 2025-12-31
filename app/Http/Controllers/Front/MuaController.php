@@ -162,6 +162,7 @@ class MuaController extends Controller
             'mua_name' => $mua->name, // Add separate MUA name field
             'service_name' => $activeService ? $activeService->service_name : null, // Add service name field
             'description' => $activeService ? $activeService->description : null,
+            'note' => @$mua->description,
             'location' => trim($mua && $mua->rel_city ? $mua->rel_city->name : ($mua->city ?? '')),
             'rating' => (float) ($mua->rating ?? 4.5),
             'price' => $activeService ? (int) $activeService->price : null,
