@@ -190,6 +190,11 @@
             [class*="col-"] {
                 padding: 0.375rem;
             }
+
+            /* Reduce header row spacing on mobile */
+            header .row {
+                margin-bottom: -0.25rem !important;
+            }
         }
 
         /* Form label improvements */
