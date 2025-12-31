@@ -188,7 +188,10 @@
 
         @media (max-width: 768px) {
             [class*="col-"] {
-                padding: 0.375rem;
+                padding-top: 0px;
+                padding-bottom: 0px;
+                padding-left: 0.375rem;
+                padding-right: 0.375rem;
             }
         }
 
