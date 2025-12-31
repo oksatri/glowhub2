@@ -467,52 +467,99 @@
 
                                             // Get unavailable slots from availability_hours for selected date
                                             $selectedDate = $_GET['date'] ?? now()->format('Y-m-d'); // Get from URL or default to today
+                                            if (!empty($mua['availability_hours'])) {
+                                                $availabilityHours = is_array($mua['availability_hours']) ?
+                                                    $mua['availability_hours'] :
+                                                    json_decode($mua['availability_hours'], true) ?? [];
 
-                                            // Get unavailable time slots from existing bookings
-                                            $unavailableBookings = \App\Models\Booking::where('mua_id', $mua['id'])
-                                                ->where('status', '!=', 'rejected') // Using 'rejected' instead of 'cancelled' based on your schema
-                                                ->whereDate('selected_date', $selectedDate)
-                                                ->get(['selected_date', 'selected_time']);
-
-                                            foreach ($unavailableBookings as $booking) {
-                                                if ($booking->selected_time) {
-                                                    // Assuming selected_time is in format 'H:i' and represents the end time
-                                                    $endTime = \Carbon\Carbon::parse($booking->selected_time);
-                                                    // Assuming 1.5 hours before the end time is the start time (as per your note)
-                                                    $startTime = (clone $endTime)->subMinutes(90);
-
-                                                    $unavailableSlots[] = [
-                                                        'start' => $startTime->format('H:i'),
-                                                        'end' => $endTime->format('H:i')
-                                                    ];
+                                                foreach ($availabilityHours as $slot) {
+                                                    $slotDate = \Carbon\Carbon::parse($slot['date']);
+                                                    if ($slotDate->format('Y-m-d') === $selectedDate) {
+                                                        $unavailableSlots[] = [
+                                                            'start' => $slot['start_time'],
+                                                            'end' => $slot['end_time']
+                                                        ];
+                                                    }
                                                 }
                                             }
 
-                                            // Generate time slots based on operational hours (09:00-21:00 as fallback)
-                                            $startTime = new \DateTime('09:00');
-                                            $endTime = new \DateTime('21:00');
+                                            // Get existing bookings for selected date
+                                            $existingBookings = \App\Models\Booking::where('mua_id', $mua['id'])
+                                                ->where('selected_date', $selectedDate)
+                                                ->whereIn('status', ['pending', 'confirmed', 'completed'])
+                                                ->get();
 
-                                            while ($startTime < $endTime) {
-                                                $timeSlot = $startTime->format('H:i');
-                                                $isAvailable = true;
+                                            foreach ($existingBookings as $booking) {
+                                                // Calculate blocked time range (1.5 hours before completion time)
+                                                $completionTime = new \DateTime($booking->selected_time);
+                                                $blockedStart = (clone $completionTime)->modify('-90 minutes');
+                                                $blockedEnd = (clone $completionTime)->modify('+30 minutes');
 
-                                                // Check if this time slot is available
-                                                foreach ($unavailableSlots as $slot) {
-                                                    $slotStart = new \DateTime($slot['start']);
-                                                    $slotEnd = new \DateTime($slot['end']);
-                                                    $currentTime = new \DateTime($timeSlot);
+                                                $unavailableSlots[] = [
+                                                    'start' => $blockedStart->format('H:i'),
+                                                    'end' => $blockedEnd->format('H:i')
+                                                ];
+                                            }
 
-                                                    if ($currentTime >= $slotStart && $currentTime < $slotEnd) {
-                                                        $isAvailable = false;
-                                                        break;
+                                            // Generate time slots every 30 minutes based on operational_hours if possible
+                                            $op = $mua['operational_hours'] ?? '';
+                                            if (!empty($op) && preg_match('/(\d{1,2})[:\.](\d{2}).*?(\d{1,2})[:\.](\d{2})/u', $op, $m)) {
+                                                try {
+                                                    $start = new \DateTime($m[1] . ':' . $m[2]);
+                                                    $end = new \DateTime($m[3] . ':' . $m[4]);
+                                                    while ($start <= $end) {
+                                                        $timeSlot = $start->format('H:i');
+
+                                                        // Check if this time slot is unavailable
+                                                        $isUnavailable = false;
+                                                        foreach ($unavailableSlots as $unavailable) {
+                                                            $slotTime = new \DateTime($timeSlot);
+                                                            $unavailStart = new \DateTime($unavailable['start']);
+                                                            $unavailEnd = new \DateTime($unavailable['end']);
+
+                                                            if ($slotTime >= $unavailStart && $slotTime < $unavailEnd) {
+                                                                $isUnavailable = true;
+                                                                break;
+                                                            }
+                                                        }
+
+                                                        if (!$isUnavailable) {
+                                                            $timeSlots[] = $timeSlot;
+                                                        }
+
+                                                        $start->modify('+30 minutes');
                                                     }
+                                                } catch (\Exception $e) {
+                                                    $timeSlots = [];
                                                 }
+                                            }
 
-                                                if ($isAvailable) {
-                                                    $timeSlots[] = $timeSlot;
+                                            // Fallback: if no valid slots from operational_hours, use default 09:00-19:00
+                                            if (empty($timeSlots)) {
+                                                $fallbackStart = new \DateTime('09:00');
+                                                $fallbackEnd = new \DateTime('19:00');
+                                                while ($fallbackStart < $fallbackEnd) {
+                                                    $timeSlot = $fallbackStart->format('H:i');
+
+                                                    // Check if this time slot is unavailable
+                                                    $isUnavailable = false;
+                                                    foreach ($unavailableSlots as $unavailable) {
+                                                        $slotTime = new \DateTime($timeSlot);
+                                                        $unavailStart = new \DateTime($unavailable['start']);
+                                                        $unavailEnd = new \DateTime($unavailable['end']);
+
+                                                        if ($slotTime >= $unavailStart && $slotTime < $unavailEnd) {
+                                                            $isUnavailable = true;
+                                                            break;
+                                                        }
+                                                    }
+
+                                                    if (!$isUnavailable) {
+                                                        $timeSlots[] = $timeSlot;
+                                                    }
+
+                                                    $fallbackStart->modify('+30 minutes');
                                                 }
-
-                                                $startTime->modify('+30 minutes');
                                             }
 
                                             $selectedTime = $timeSlots[0] ?? null;
@@ -940,16 +987,15 @@
                 });
             });
 
-            // Function to update available end times based on selected date and duration
-            function updateAvailableEndTimes() {
-                const selectedDate = $('#bk_date').val();
+            // Handle date change to update time slots based on availability
+            $('#bk_date').on('change', function() {
+                const selectedDate = $(this).val();
                 if (!selectedDate) return;
 
-                const duration = parseInt($('#duration').val()); // in minutes
-                const $timeSelect = $('#bk_time');
-
                 // Show loading state
-                $timeSelect.empty().append('<option value="">Loading...</option>');
+                const $timeSelect = $('#bk_time');
+                $timeSelect.empty();
+                $timeSelect.append('<option value="">Loading...</option>');
 
                 // Fetch availability via AJAX
                 $.ajax({
@@ -957,116 +1003,94 @@
                     method: 'GET',
                     data: { date: selectedDate },
                     success: function(unavailableSlots) {
-                        console.log('Unavailable slots for', selectedDate, ':', unavailableSlots);
-                        generateEndTimeSlots(unavailableSlots, duration);
+                        console.log('Unavailable slots for', selectedDate, ':', unavailableSlots); // Debug
+                        generateTimeSlots(unavailableSlots);
                     },
                     error: function(xhr, status, error) {
-                        console.error('AJAX error:', error);
+                        console.error('AJAX error:', error); // Debug
                         // If AJAX fails, generate without availability data
-                        generateEndTimeSlots([], duration);
+                        generateTimeSlots([]);
                     }
                 });
-            }
 
-            // Function to generate available end time slots
-            function generateEndTimeSlots(unavailableSlots, duration) {
-                const operationalHours = '{{ $mua['operational_hours'] ?? '09:00-17:00' }}';
-                const $timeSelect = $('#bk_time');
-                let availableSlots = [];
+                function generateTimeSlots(unavailableSlots) {
+                    // Generate time slots (same logic as PHP)
+                    const operationalHours = '{{ $mua['operational_hours'] ?? '' }}';
+                    let timeSlots = [];
 
-                // Parse operational hours
-                const opMatch = operationalHours.match(/(\d{1,2})[:\\.](\d{2}).*?(\d{1,2})[:\\.](\d{2})/);
+                    // Parse operational hours
+                    const opMatch = operationalHours.match(/(\d{1,2})[:\.](\d{2}).*?(\d{1,2})[:\.](\d{2})/);
+                    if (opMatch) {
+                        const start = new Date(`2000-01-01T${opMatch[1]}:${opMatch[2]}:00`);
+                        const end = new Date(`2000-01-01T${opMatch[3]}:${opMatch[4]}:00`);
 
-                if (opMatch) {
-                    const openTime = new Date(`2000-01-01T${opMatch[1]}:${opMatch[2]}:00`);
-                    const closeTime = new Date(`2000-01-01T${opMatch[3]}:${opMatch[4]}:00`);
+                        while (start <= end) {
+                            const timeSlot = start.toTimeString().slice(0, 5);
 
-                    // Calculate minimum end time (opening time + duration)
-                    const minEndTime = new Date(openTime);
-                    minEndTime.setMinutes(minEndTime.getMinutes() + duration);
+                            // Check if unavailable
+                            const isUnavailable = unavailableSlots.some(unavailable => {
+                                const slotTime = new Date(`2000-01-01T${timeSlot}:00`);
+                                const unavailStart = new Date(`2000-01-01T${unavailable.start}:00`);
+                                const unavailEnd = new Date(`2000-01-01T${unavailable.end}:00`);
 
-                    // Generate possible end times (every 30 minutes)
-                    let currentTime = new Date(minEndTime);
-
-                    while (currentTime <= closeTime) {
-                        const endTime = currentTime.toTimeString().slice(0, 5);
-                        const startTime = new Date(currentTime);
-                        startTime.setMinutes(startTime.getMinutes() - duration);
-                        const startTimeStr = startTime.toTimeString().slice(0, 5);
-
-                        // Check if this time slot is available (not in unavailableSlots)
-                        let isAvailable = true;
-                        const slotStart = new Date(`2000-01-01T${startTimeStr}:00`);
-                        const slotEnd = new Date(`2000-01-01T${endTime}:00`);
-
-                        for (const slot of unavailableSlots) {
-                            const unavailStart = new Date(`2000-01-01T${slot.start}:00`);
-                            const unavailEnd = new Date(`2000-01-01T${slot.end}:00`);
-
-                            // Check for overlap
-                            if (slotStart < unavailEnd && slotEnd > unavailStart) {
-                                isAvailable = false;
-                                break;
-                            }
-                        }
-
-                        if (isAvailable) {
-                            availableSlots.push({
-                                endTime: endTime,
-                                startTime: startTimeStr
+                                return slotTime >= unavailStart && slotTime < unavailEnd;
                             });
+
+                            if (!isUnavailable) {
+                                timeSlots.push(timeSlot);
+                            }
+
+                            start.setMinutes(start.getMinutes() + 30);
                         }
+                    }
 
-                        // Move to next possible end time (30-minute intervals)
-                        currentTime.setMinutes(currentTime.getMinutes() + 30);
+                    // Fallback to 09:00-19:00
+                    if (timeSlots.length === 0) {
+                        const fallbackStart = new Date(`2000-01-01T09:00:00`);
+                        const fallbackEnd = new Date(`2000-01-01T19:00:00`);
+
+                        while (fallbackStart < fallbackEnd) {
+                            const timeSlot = fallbackStart.toTimeString().slice(0, 5);
+
+                            const isUnavailable = unavailableSlots.some(unavailable => {
+                                const slotTime = new Date(`2000-01-01T${timeSlot}:00`);
+                                const unavailStart = new Date(`2000-01-01T${unavailable.start}:00`);
+                                const unavailEnd = new Date(`2000-01-01T${unavailable.end}:00`);
+
+                                return slotTime >= unavailStart && slotTime < unavailEnd;
+                            });
+
+                            if (!isUnavailable) {
+                                timeSlots.push(timeSlot);
+                            }
+
+                            fallbackStart.setMinutes(fallbackStart.getMinutes() + 30);
+                        }
+                    }
+
+                    // Update time select
+                    $timeSelect.empty();
+                    $timeSelect.append('<option value="">Select time</option>');
+
+                    if (timeSlots.length > 0) {
+                        timeSlots.forEach(time => {
+                            $timeSelect.append(`<option value="${time}">${time}</option>`);
+                        });
+                    } else {
+                        $timeSelect.append('<option value="" disabled>No available times for this date</option>');
+                    }
+
+                    // Show info if there are unavailable slots
+                    const $infoText = $timeSelect.next('.text-muted');
+                    if (unavailableSlots.length > 0) {
+                        if ($infoText.length === 0) {
+                            $timeSelect.after('<small class="text-muted mt-1 d-block"><i class="fas fa-info-circle me-1"></i>Some time slots are unavailable due to existing bookings</small>');
+                        }
+                    } else {
+                        $infoText.remove();
                     }
                 }
-
-                // Update the time select dropdown
-                $timeSelect.empty();
-
-                if (availableSlots.length > 0) {
-                    $timeSelect.append('<option value="">Select end time</option>');
-                    availableSlots.forEach(slot => {
-                        $timeSelect.append(`<option value="${slot.endTime}" data-start-time="${slot.startTime}">${slot.endTime} (starts at ${slot.startTime})</option>`);
-                    });
-                } else {
-                    $timeSelect.append('<option value="" disabled>No available time slots for this duration</option>');
-                }
-
-                // Show info if there are unavailable slots
-                const $infoText = $timeSelect.next('.text-muted');
-                if (unavailableSlots.length > 0) {
-                    if ($infoText.length === 0) {
-                        $timeSelect.after('<small class="text-muted mt-1 d-block"><i class="fas fa-info-circle me-1"></i>Some time slots are unavailable due to existing bookings</small>');
-                    }
-                } else {
-                    $infoText.remove();
-                }
-            }
-
-            // Handle date change
-            $('#bk_date').on('change', updateAvailableEndTimes);
-
-            // Handle duration change
-            $('#duration').on('change', updateAvailableEndTimes);
-
-            // Handle time selection
-            $('#bk_time').on('change', function() {
-                const selectedOption = $(this).find('option:selected');
-                if (selectedOption.val()) {
-                    const startTime = selectedOption.data('start-time');
-                    $('#start_time').val(startTime);
-                } else {
-                    $('#start_time').val('');
-                }
             });
-            });
-
-            // Update time slots when the page loads if a date is already selected
-            if ($('#bk_date').val()) {
-                updateAvailableEndTimes();
-            }
 
             // Handle feature checkbox changes for visual feedback
             $('.service-checkbox').on('change', function() {
