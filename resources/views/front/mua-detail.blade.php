@@ -470,15 +470,22 @@
 
                                             // Get unavailable time slots from existing bookings
                                             $unavailableBookings = \App\Models\Booking::where('mua_id', $mua['id'])
-                                                ->where('status', '!=', 'cancelled')
-                                                ->whereDate('start_time', $selectedDate)
-                                                ->get(['start_time', 'end_time']);
+                                                ->where('status', '!=', 'rejected') // Using 'rejected' instead of 'cancelled' based on your schema
+                                                ->whereDate('selected_date', $selectedDate)
+                                                ->get(['selected_date', 'selected_time']);
 
                                             foreach ($unavailableBookings as $booking) {
-                                                $unavailableSlots[] = [
-                                                    'start' => \Carbon\Carbon::parse($booking->start_time)->format('H:i'),
-                                                    'end' => \Carbon\Carbon::parse($booking->end_time)->format('H:i')
-                                                ];
+                                                if ($booking->selected_time) {
+                                                    // Assuming selected_time is in format 'H:i' and represents the end time
+                                                    $endTime = \Carbon\Carbon::parse($booking->selected_time);
+                                                    // Assuming 1.5 hours before the end time is the start time (as per your note)
+                                                    $startTime = (clone $endTime)->subMinutes(90);
+
+                                                    $unavailableSlots[] = [
+                                                        'start' => $startTime->format('H:i'),
+                                                        'end' => $endTime->format('H:i')
+                                                    ];
+                                                }
                                             }
 
                                             // Generate time slots based on operational hours (09:00-21:00 as fallback)
