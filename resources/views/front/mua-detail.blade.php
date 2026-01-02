@@ -320,6 +320,30 @@
                                     </p>
                                 </div>
 
+                                <!-- Free Features -->
+                                @if (!empty($features))
+                                    @php
+                                        $freeFeatures = collect($features)->filter(function($feature) {
+                                            return empty($feature['min_price']) && empty($feature['max_price']) && empty($feature['extra_price']);
+                                        });
+                                    @endphp
+                                    @if ($freeFeatures->count() > 0)
+                                        <div class="text-center mb-2">
+                                            <div class="small text-muted mb-1">
+                                                <i class="fas fa-gift me-1 text-success"></i>
+                                                <strong>Free Features Included:</strong>
+                                            </div>
+                                            <div class="d-flex flex-wrap justify-content-center gap-1">
+                                                @foreach ($freeFeatures as $feature)
+                                                    <span class="badge bg-success-subtle text-success border border-success" style="font-size: 0.7rem;">
+                                                        <i class="fas fa-check-circle me-1"></i>{{ $feature['name'] }}
+                                                    </span>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endif
+
                                 <!-- Rating & Reviews -->
                                 <div class="text-center mb-2">
                                     <div class="rating mb-1">
