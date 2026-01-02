@@ -104,6 +104,12 @@
                 <span class="info-label">Time:</span>
                 {{ $selectedTime }}
             </div>
+            @if($notes)
+            <div class="info-item">
+                <span class="info-label">Your Notes:</span>
+                {{ $notes }}
+            </div>
+            @endif
         </div>
 
         <div class="next-steps">

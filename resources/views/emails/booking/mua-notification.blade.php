@@ -102,6 +102,12 @@
                 <span class="info-label">Address:</span>
                 {{ $customerAddress }}
             </div>
+            @if($notes)
+            <div class="info-item">
+                <span class="info-label">Notes:</span>
+                {{ $notes }}
+            </div>
+            @endif
         </div>
 
         <h2>Booking Details</h2>

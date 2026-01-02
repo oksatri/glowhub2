@@ -102,6 +102,12 @@
                 <span class="info-label">Time:</span>
                 {{ $selectedTime }}
             </div>
+            @if($notes)
+            <div class="info-item">
+                <span class="info-label">Customer Notes:</span>
+                {{ $notes }}
+            </div>
+            @endif
         </div>
 
         <p><strong>Action Required:</strong> Please review this booking request and take appropriate action.</p>

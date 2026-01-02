@@ -667,6 +667,15 @@
                                             </small>
                                         @endif
                                     </div>
+                                    <div class="col-12">
+                                        <label class="form-label small">Additional Notes <span class="text-muted">(Optional)</span></label>
+                                        <textarea name="notes" id="bk_notes" class="form-control" rows="3"
+                                            placeholder="Please mention any special requests, preferences, or important details..."></textarea>
+                                        <small class="text-muted d-block mt-1">
+                                            <i class="fas fa-info-circle me-1"></i>
+                                            You can add special requests like makeup style preferences, skin allergies, or event details here.
+                                        </small>
+                                    </div>
                                 </div>
 
                                 <!-- Distance Check Section -->
@@ -1333,6 +1342,7 @@
                 var email = $('#bk_email').val();
                 var whatsapp = $('#bk_whatsapp').val();
                 var address = $('#bk_address').val();
+                var notes = $('#bk_notes').val();
                 if (!name || !email || !whatsapp || !address) {
                     alert('Please complete your contact information');
                     return;
@@ -1347,7 +1357,8 @@
                     name: name,
                     email: email,
                     whatsapp: whatsapp,
-                    address: address
+                    address: address,
+                    notes: notes
                 });
 
                 var url = $('#bookingForm').attr('action');
@@ -1379,6 +1390,7 @@
                         email: email,
                         whatsapp: whatsapp,
                         address: address,
+                        notes: notes,
                         distance: $('#bk_distance').val() || null,
                         selected_date: formattedDate,
                         selected_time: selectedTime,
@@ -1397,6 +1409,7 @@
                             $('#bk_services, #bk_mua_service_id').val('');
                             // reset form fields except prefilled auth info
                             $('#bk_address').val('');
+                            $('#bk_notes').val('');
                             setTimeout(function() {
                                 $('.alert.alert-success').remove();
                             }, 5000);

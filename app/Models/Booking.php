@@ -14,6 +14,7 @@ class Booking extends Model
         'customer_email',
         'customer_whatsapp',
         'customer_address',
+        'notes',
         'distance_km',
         'selected_date',
         'selected_time',

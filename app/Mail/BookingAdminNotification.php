@@ -36,6 +36,7 @@ class BookingAdminNotification extends Mailable
                 'customerName' => $this->booking->customer_name,
                 'customerEmail' => $this->booking->customer_email,
                 'customerWhatsapp' => $this->booking->customer_whatsapp,
+                'notes' => $this->booking->notes,
                 'selectedDate' => $this->booking->selected_date->format('d M Y'),
                 'selectedTime' => $this->booking->selected_time,
                 'muaName' => $this->booking->mua->name ?? 'N/A',

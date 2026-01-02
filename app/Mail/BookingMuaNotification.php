@@ -37,6 +37,7 @@ class BookingMuaNotification extends Mailable
                 'customerEmail' => $this->booking->customer_email,
                 'customerWhatsapp' => $this->booking->customer_whatsapp,
                 'customerAddress' => $this->booking->customer_address,
+                'notes' => $this->booking->notes,
                 'selectedDate' => $this->booking->selected_date->format('d M Y'),
                 'selectedTime' => $this->booking->selected_time,
                 'serviceName' => $this->booking->service->service_name ?? 'N/A',

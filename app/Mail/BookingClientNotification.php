@@ -39,6 +39,7 @@ class BookingClientNotification extends Mailable
                 'selectedDate' => $this->booking->selected_date->format('d M Y'),
                 'selectedTime' => $this->booking->selected_time,
                 'customerName' => $this->booking->customer_name,
+                'notes' => $this->booking->notes,
             ]
         );
     }

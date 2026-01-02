@@ -170,6 +170,12 @@
                     <span class="info-label">Address:</span>
                     <span class="info-value">{{ $booking->customer_address }}</span>
                 </div>
+                @if($booking->notes)
+                <div class="info-item">
+                    <span class="info-label">Customer Notes:</span>
+                    <span class="info-value">{{ $booking->notes }}</span>
+                </div>
+                @endif
             </div>
 
             <!-- Booking Details -->
