@@ -306,20 +306,6 @@
                                         {{ $mua['service_name'] ?? 'Service Available' }}
                                     </h6>
                                 </div>
-
-                                <div class="text-center mb-2">
-                                    <p class="text-muted mb-1 small">
-                                        @if (!empty($mua['max_distance']))
-                                            Available within {{ $mua['max_distance'] }} km radius
-                                        @else
-                                            Service area available
-                                        @endif
-                                    </p>
-                                    <p class="small text-black fst-italic mb-0">
-                                        {{ $mua['description'] }}
-                                    </p>
-                                </div>
-
                                 <!-- Free Features -->
                                 @if (!empty($features))
                                     @php
@@ -343,6 +329,19 @@
                                         </div>
                                     @endif
                                 @endif
+
+                                <div class="text-center mb-2">
+                                    <p class="text-muted mb-1 small">
+                                        @if (!empty($mua['max_distance']))
+                                            Available within {{ $mua['max_distance'] }} km radius
+                                        @else
+                                            Service area available
+                                        @endif
+                                    </p>
+                                    <p class="small text-black fst-italic mb-0">
+                                        {{ $mua['description'] }}
+                                    </p>
+                                </div>
 
                                 <!-- Rating & Reviews -->
                                 <div class="text-center mb-2">
