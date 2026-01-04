@@ -100,6 +100,11 @@
                                     <a href="{{ $isHomePage ? '#contact' : url('/#contact') }}" class="nav-link">Contact
                                         Us</a>
                                 </li>
+                                <li class="menu-item">
+                                    <div class="google-translate-wrapper">
+                                        <div id="google_translate_element"></div>
+                                    </div>
+                                </li>
                             </ul>
                         </div>
                     </nav>
@@ -148,6 +153,11 @@
                                     <li class="menu-item-mobile">
                                         <a href="{{ $isHomePage ? '#contact' : url('/#contact') }}"
                                             class="nav-link-mobile">Contact Us</a>
+                                    </li>
+                                    <li class="menu-item-mobile">
+                                        <div class="google-translate-wrapper-mobile">
+                                            <div id="google_translate_element_mobile"></div>
+                                        </div>
                                     </li>
                                 </ul>
                             </div>
@@ -254,5 +264,113 @@
                 display: none !important;
             }
         }
+
+        /* Google Translate Styling */
+        .google-translate-wrapper {
+            display: flex;
+            align-items: center;
+            padding: 4px 0;
+        }
+
+        .google-translate-wrapper-mobile {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        /* Hide Google Translate branding and customize appearance */
+        .goog-te-banner-frame.skiptranslate {
+            display: none !important;
+        }
+
+        body {
+            top: 0px !important;
+        }
+
+        .goog-te-gadget {
+            font-family: inherit !important;
+            font-size: 0.85rem !important;
+            color: #3d2a33 !important;
+        }
+
+        .goog-te-gadget .goog-te-combo {
+            margin: 0 !important;
+            padding: 4px 8px !important;
+            border: 1px solid #dee2e6 !important;
+            border-radius: 4px !important;
+            background: white !important;
+            color: #3d2a33 !important;
+            font-size: 0.8rem !important;
+            font-weight: 500 !important;
+            outline: none !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .goog-te-gadget .goog-te-combo:hover {
+            border-color: #845d70 !important;
+            box-shadow: 0 2px 4px rgba(132, 93, 112, 0.1) !important;
+        }
+
+        .goog-te-gadget .goog-te-combo:focus {
+            border-color: #845d70 !important;
+            box-shadow: 0 0 0 2px rgba(132, 93, 112, 0.2) !important;
+        }
+
+        /* Hide "Powered by Google" text */
+        .goog-te-gadget > span > span:first-child {
+            display: none !important;
+        }
+
+        /* Mobile specific styling */
+        @media (max-width: 767px) {
+            .goog-te-gadget {
+                font-size: 0.9rem !important;
+            }
+
+            .goog-te-gadget .goog-te-combo {
+                width: 100% !important;
+                padding: 8px 12px !important;
+                font-size: 0.9rem !important;
+            }
+        }
     </style>
 </div>
+
+@push('scripts')
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<script>
+    function googleTranslateElementInit() {
+        // Desktop translate element
+        new google.translate.TranslateElement({
+            pageLanguage: 'en',
+            includedLanguages: 'en,id,zh-CN,ja,ko,th,vi,ms,tl,fr,de,es,pt,ru,ar',
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+            autoDisplay: false
+        }, 'google_translate_element');
+
+        // Mobile translate element
+        new google.translate.TranslateElement({
+            pageLanguage: 'en',
+            includedLanguages: 'en,id,zh-CN,ja,ko,th,vi,ms,tl,fr,de,es,pt,ru,ar',
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+            autoDisplay: false
+        }, 'google_translate_element_mobile');
+    }
+
+    // Add custom styling after Google Translate loads
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            // Hide the "Select Language" text
+            const googGadgets = document.querySelectorAll('.goog-te-gadget');
+            googGadgets.forEach(function(gadget) {
+                const firstChild = gadget.querySelector('span:first-child');
+                if (firstChild && firstChild.textContent.includes('Select Language')) {
+                    firstChild.style.display = 'none';
+                }
+            });
+        }, 1000);
+    });
+</script>
+@endpush
