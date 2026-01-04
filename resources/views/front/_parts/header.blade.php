@@ -101,8 +101,25 @@
                                         Us</a>
                                 </li>
                                 <li class="menu-item">
-                                    <div class="google-translate-wrapper">
-                                        <div id="google_translate_element"></div>
+                                    <div class="custom-translate-wrapper">
+                                        <select id="customLanguageSelector" class="custom-language-select">
+                                            <option value="en">🇬🇧 English</option>
+                                            <option value="id">🇮🇩 Bahasa</option>
+                                            <option value="zh-CN">🇨🇳 中文</option>
+                                            <option value="ja">🇯🇵 日本語</option>
+                                            <option value="ko">🇰🇷 한국어</option>
+                                            <option value="th">🇹🇭 ไทย</option>
+                                            <option value="vi">🇻🇳 Tiếng Việt</option>
+                                            <option value="ms">🇲🇾 Bahasa Melayu</option>
+                                            <option value="tl">🇵🇭 Filipino</option>
+                                            <option value="fr">🇫🇷 Français</option>
+                                            <option value="de">🇩🇪 Deutsch</option>
+                                            <option value="es">🇪🇸 Español</option>
+                                            <option value="pt">🇵🇹 Português</option>
+                                            <option value="ru">🇷🇺 Русский</option>
+                                            <option value="ar">🇸🇦 العربية</option>
+                                        </select>
+                                        <div id="google_translate_element" style="display: none;"></div>
                                     </div>
                                 </li>
                             </ul>
@@ -155,8 +172,25 @@
                                             class="nav-link-mobile">Contact Us</a>
                                     </li>
                                     <li class="menu-item-mobile">
-                                        <div class="google-translate-wrapper-mobile">
-                                            <div id="google_translate_element_mobile"></div>
+                                        <div class="custom-translate-wrapper-mobile">
+                                            <select id="customLanguageSelectorMobile" class="custom-language-select-mobile">
+                                                <option value="en">🌐 English</option>
+                                                <option value="id">🇮🇩 Bahasa Indonesia</option>
+                                                <option value="zh-CN">🇨🇳 中文</option>
+                                                <option value="ja">🇯🇵 日本語</option>
+                                                <option value="ko">🇰🇷 한국어</option>
+                                                <option value="th">🇹🇭 ไทย</option>
+                                                <option value="vi">🇻🇳 Tiếng Việt</option>
+                                                <option value="ms">🇲🇾 Bahasa Melayu</option>
+                                                <option value="tl">🇵🇭 Filipino</option>
+                                                <option value="fr">🇫🇷 Français</option>
+                                                <option value="de">🇩🇪 Deutsch</option>
+                                                <option value="es">🇪🇸 Español</option>
+                                                <option value="pt">🇵🇹 Português</option>
+                                                <option value="ru">🇷🇺 Русский</option>
+                                                <option value="ar">🇸🇦 العربية</option>
+                                            </select>
+                                            <div id="google_translate_element_mobile" style="display: none;"></div>
                                         </div>
                                     </li>
                                 </ul>
@@ -265,15 +299,15 @@
             }
         }
 
-        /* Google Translate Styling */
-        .google-translate-wrapper {
+        /* Custom Language Selector Styling */
+        .custom-translate-wrapper {
             display: flex;
             align-items: center;
             padding: 4px 0;
             position: relative;
         }
 
-        .google-translate-wrapper::before {
+        .custom-translate-wrapper::before {
             content: '';
             position: absolute;
             left: -8px;
@@ -284,100 +318,56 @@
             background: linear-gradient(to bottom, transparent, rgba(132, 93, 112, 0.3), transparent);
         }
 
-        .google-translate-wrapper-mobile {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 15px 20px;
-            border-top: 1px solid #e9ecef;
-            background: linear-gradient(135deg, rgba(132, 93, 112, 0.02) 0%, rgba(132, 93, 112, 0.05) 100%);
+        .custom-language-select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            padding: 8px 32px 8px 12px;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            background: linear-gradient(135deg, rgba(132, 93, 112, 0.05) 0%, rgba(132, 93, 112, 0.1) 100%);
+            color: var(--primary-color);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            min-width: 140px;
+            position: relative;
+            outline: none;
         }
 
-        .google-translate-wrapper-mobile::before {
-            content: '🌐';
-            margin-right: 10px;
-            font-size: 1.1rem;
-            opacity: 0.7;
+        .custom-language-select:hover {
+            background: linear-gradient(135deg, rgba(132, 93, 112, 0.1) 0%, rgba(132, 93, 112, 0.15) 100%);
+            border-color: rgba(132, 93, 112, 0.3);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(132, 93, 112, 0.15);
         }
 
-        /* Hide Google Translate branding and customize appearance */
-        .goog-te-banner-frame.skiptranslate {
-            display: none !important;
+        .custom-language-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(132, 93, 112, 0.2);
+            background: white;
         }
 
-        body {
-            top: 0px !important;
-        }
-
-        .goog-te-gadget {
-            font-family: 'Poppins', sans-serif !important;
-            font-size: 0.8rem !important;
-            color: var(--primary-color) !important;
-            font-weight: 500 !important;
-        }
-
-        .goog-te-gadget .goog-te-combo {
-            margin: 0 !important;
-            padding: 8px 12px !important;
-            border: 2px solid transparent !important;
-            border-radius: 8px !important;
-            background: linear-gradient(135deg, rgba(132, 93, 112, 0.05) 0%, rgba(132, 93, 112, 0.1) 100%) !important;
-            color: var(--primary-color) !important;
-            font-size: 0.8rem !important;
-            font-weight: 500 !important;
-            font-family: 'Poppins', sans-serif !important;
-            outline: none !important;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-            cursor: pointer !important;
-            min-width: 120px !important;
-            position: relative !important;
-        }
-
-        .goog-te-gadget .goog-te-combo:hover {
-            background: linear-gradient(135deg, rgba(132, 93, 112, 0.1) 0%, rgba(132, 93, 112, 0.15) 100%) !important;
-            border-color: rgba(132, 93, 112, 0.3) !important;
-            transform: translateY(-1px) !important;
-            box-shadow: 0 4px 12px rgba(132, 93, 112, 0.15) !important;
-        }
-
-        .goog-te-gadget .goog-te-combo:focus {
-            border-color: var(--primary-color) !important;
-            box-shadow: 0 0 0 3px rgba(132, 93, 112, 0.2) !important;
-            background: white !important;
-        }
-
-        .goog-te-gadget .goog-te-combo:active {
-            transform: translateY(0) !important;
+        .custom-language-select:active {
+            transform: translateY(0);
         }
 
         /* Custom dropdown arrow */
-        .goog-te-gadget .goog-te-combo {
-            appearance: none !important;
-            -webkit-appearance: none !important;
-            -moz-appearance: none !important;
-            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23845d70'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E") !important;
-            background-repeat: no-repeat !important;
-            background-position: right 8px center !important;
-            background-size: 20px !important;
-            padding-right: 32px !important;
+        .custom-language-select {
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23845d70'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+            background-size: 20px;
         }
 
-        /* Hide "Powered by Google" text */
-        .goog-te-gadget > span > span:first-child {
-            display: none !important;
+        .custom-language-select:hover {
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236d4c5a'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
         }
 
-        /* Hide Google Translate tooltip */
-        .goog-tooltip {
-            display: none !important;
-        }
-
-        .goog-tooltip:hover {
-            display: none !important;
-        }
-
-        /* Custom language icon for desktop */
-        .google-translate-wrapper::after {
+        /* Custom language icon */
+        .custom-translate-wrapper::after {
             content: '🌐';
             position: absolute;
             right: -25px;
@@ -388,75 +378,121 @@
             transition: all 0.3s ease;
         }
 
-        .google-translate-wrapper:hover::after {
+        .custom-translate-wrapper:hover::after {
             opacity: 1;
             transform: translateY(-50%) scale(1.1);
         }
 
-        /* Mobile specific styling */
+        /* Mobile Version */
+        .custom-translate-wrapper-mobile {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 20px;
+            border-top: 1px solid #e9ecef;
+            background: linear-gradient(135deg, rgba(132, 93, 112, 0.02) 0%, rgba(132, 93, 112, 0.05) 100%);
+        }
+
+        .custom-language-select-mobile {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            width: 100%;
+            padding: 12px 40px 12px 16px;
+            border: 2px solid rgba(132, 93, 112, 0.2);
+            border-radius: 12px;
+            background: white;
+            color: var(--primary-color);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            outline: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .custom-language-select-mobile:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(132, 93, 112, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .custom-language-select-mobile:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(132, 93, 112, 0.2);
+        }
+
+        /* Mobile dropdown arrow */
+        .custom-language-select-mobile {
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23845d70'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 24px;
+        }
+
+        /* Option styling */
+        .custom-language-select option,
+        .custom-language-select-mobile option {
+            padding: 10px 16px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 400;
+            background: white;
+            color: #3d2a33;
+        }
+
+        .custom-language-select option:hover,
+        .custom-language-select-mobile option:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Loading state */
+        .custom-language-select.loading,
+        .custom-language-select-mobile.loading {
+            animation: pulse 1.5s ease-in-out infinite;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* Accessibility */
+        .custom-language-select:focus-visible,
+        .custom-language-select-mobile:focus-visible {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        /* Mobile responsive */
         @media (max-width: 767px) {
-            .goog-te-gadget {
-                font-size: 0.9rem !important;
-                width: 100% !important;
-            }
-
-            .goog-te-gadget .goog-te-combo {
-                width: 100% !important;
-                padding: 10px 16px !important;
-                font-size: 0.9rem !important;
-                background: white !important;
-                border: 2px solid rgba(132, 93, 112, 0.2) !important;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
-            }
-
-            .goog-te-gadget .goog-te-combo:hover {
-                border-color: var(--primary-color) !important;
-                box-shadow: 0 4px 12px rgba(132, 93, 112, 0.15) !important;
-            }
-
-            .google-translate-wrapper-mobile::after {
-                content: '';
+            .custom-translate-wrapper::after {
                 display: none;
             }
         }
 
-        /* Loading animation */
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.6;
-            }
-        }
-
-        .goog-te-gadget.loading .goog-te-combo {
-            animation: pulse 1.5s ease-in-out infinite;
-        }
-
-        /* Focus states for accessibility */
-        .goog-te-gadget .goog-te-combo:focus-visible {
-            outline: 2px solid var(--primary-color) !important;
-            outline-offset: 2px !important;
-        }
-
-        /* High contrast mode support */
+        /* High contrast support */
         @media (prefers-contrast: high) {
-            .goog-te-gadget .goog-te-combo {
-                border: 2px solid #000 !important;
-                background: white !important;
-                color: #000 !important;
+            .custom-language-select,
+            .custom-language-select-mobile {
+                border: 2px solid #000;
+                background: white;
+                color: #000;
             }
         }
 
         /* Reduced motion support */
         @media (prefers-reduced-motion: reduce) {
-            .goog-te-gadget .goog-te-combo {
-                transition: none !important;
+            .custom-language-select,
+            .custom-language-select-mobile {
+                transition: none;
             }
 
-            .google-translate-wrapper::after {
-                transition: none !important;
+            .custom-translate-wrapper::after {
+                transition: none;
             }
         }
     </style>
@@ -465,14 +501,12 @@
 @push('scripts')
 <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 <script>
-    function googleTranslateElementInit() {
-        // Add loading state
-        document.querySelectorAll('.google-translate-wrapper, .google-translate-wrapper-mobile').forEach(function(wrapper) {
-            wrapper.classList.add('loading');
-        });
+    let googleTranslateElement = null;
+    let googleTranslateElementMobile = null;
 
-        // Desktop translate element
-        new google.translate.TranslateElement({
+    function googleTranslateElementInit() {
+        // Initialize hidden Google Translate elements
+        googleTranslateElement = new google.translate.TranslateElement({
             pageLanguage: 'en',
             includedLanguages: 'en,id,zh-CN,ja,ko,th,vi,ms,tl,fr,de,es,pt,ru,ar',
             layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
@@ -480,8 +514,7 @@
             multilanguagePage: true
         }, 'google_translate_element');
 
-        // Mobile translate element
-        new google.translate.TranslateElement({
+        googleTranslateElementMobile = new google.translate.TranslateElement({
             pageLanguage: 'en',
             includedLanguages: 'en,id,zh-CN,ja,ko,th,vi,ms,tl,fr,de,es,pt,ru,ar',
             layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
@@ -489,123 +522,200 @@
             multilanguagePage: true
         }, 'google_translate_element_mobile');
 
-        // Remove loading state after initialization
-        setTimeout(function() {
-            document.querySelectorAll('.google-translate-wrapper, .google-translate-wrapper-mobile').forEach(function(wrapper) {
-                wrapper.classList.remove('loading');
-            });
-        }, 1500);
+        // Setup custom selectors after Google Translate loads
+        setTimeout(setupCustomSelectors, 1000);
     }
 
-    // Enhanced styling after Google Translate loads
+    function setupCustomSelectors() {
+        // Desktop selector
+        const desktopSelector = document.getElementById('customLanguageSelector');
+        const mobileSelector = document.getElementById('customLanguageSelectorMobile');
+
+        if (desktopSelector) {
+            desktopSelector.addEventListener('change', function() {
+                changeLanguage(this.value);
+                // Sync mobile selector
+                if (mobileSelector) {
+                    mobileSelector.value = this.value;
+                }
+            });
+        }
+
+        if (mobileSelector) {
+            mobileSelector.addEventListener('change', function() {
+                changeLanguage(this.value);
+                // Sync desktop selector
+                if (desktopSelector) {
+                    desktopSelector.value = this.value;
+                }
+            });
+        }
+
+        // Detect current language and set selector value
+        detectCurrentLanguage();
+    }
+
+    function changeLanguage(languageCode) {
+        // Add loading state
+        document.querySelectorAll('.custom-language-select, .custom-language-select-mobile').forEach(function(select) {
+            select.classList.add('loading');
+        });
+
+        // Find the Google Translate dropdown and change its value
+        const googleDropdown = document.querySelector('.goog-te-combo');
+        if (googleDropdown) {
+            googleDropdown.value = languageCode;
+            googleDropdown.dispatchEvent(new Event('change'));
+        }
+
+        // Remove loading state after a delay
+        setTimeout(function() {
+            document.querySelectorAll('.custom-language-select, .custom-language-select-mobile').forEach(function(select) {
+                select.classList.remove('loading');
+            });
+        }, 1500);
+
+        // Save language preference
+        localStorage.setItem('preferredLanguage', languageCode);
+
+        // Add smooth transition effect
+        document.body.style.opacity = '0.95';
+        setTimeout(function() {
+            document.body.style.opacity = '1';
+        }, 300);
+    }
+
+    function detectCurrentLanguage() {
+        // Check if page is translated
+        const body = document.body;
+        let currentLang = 'en';
+
+        if (body.classList.contains('translated-ltr')) {
+            // Try to detect current language from Google Translate
+            const googleDropdown = document.querySelector('.goog-te-combo');
+            if (googleDropdown && googleDropdown.value) {
+                currentLang = googleDropdown.value;
+            }
+        }
+
+        // Check saved preference
+        const savedLang = localStorage.getItem('preferredLanguage');
+        if (savedLang && savedLang !== 'en') {
+            currentLang = savedLang;
+        }
+
+        // Set both selectors to current language
+        document.getElementById('customLanguageSelector').value = currentLang;
+        document.getElementById('customLanguageSelectorMobile').value = currentLang;
+    }
+
+    // Enhanced styling and functionality
     document.addEventListener('DOMContentLoaded', function() {
-        // Custom styling function
-        function customizeGoogleTranslate() {
-            // Hide the "Select Language" text and other unwanted elements
-            const unwantedSelectors = [
+        // Hide all Google Translate elements
+        function hideGoogleElements() {
+            const elementsToHide = [
+                '.goog-te-banner-frame',
                 '.goog-te-gadget > span:first-child',
                 '.goog-te-gadget .goog-te-combo + span',
-                '.goog-te-banner-frame',
                 '.goog-tooltip'
             ];
 
-            unwantedSelectors.forEach(function(selector) {
+            elementsToHide.forEach(function(selector) {
                 const elements = document.querySelectorAll(selector);
                 elements.forEach(function(element) {
-                    if (element && (element.textContent.includes('Select Language') ||
-                                   element.textContent.includes('Powered by'))) {
-                        element.style.display = 'none';
-                    }
+                    element.style.display = 'none';
                 });
             });
 
-            // Add custom dropdown styling
-            const dropdowns = document.querySelectorAll('.goog-te-combo');
-            dropdowns.forEach(function(dropdown) {
-                // Add custom class for enhanced styling
-                dropdown.classList.add('custom-translate-dropdown');
-
-                // Add change event listener for smooth transitions
-                dropdown.addEventListener('change', function() {
-                    // Add a subtle loading effect when language changes
-                    document.body.style.opacity = '0.95';
-                    setTimeout(function() {
-                        document.body.style.opacity = '1';
-                    }, 300);
-                });
-
-                // Add hover sound effect (optional)
-                dropdown.addEventListener('mouseenter', function() {
-                    this.style.transform = 'translateY(-1px)';
-                });
-
-                dropdown.addEventListener('mouseleave', function() {
-                    this.style.transform = 'translateY(0)';
-                });
+            // Ensure Google Translate dropdown is hidden
+            const googleDropdowns = document.querySelectorAll('.goog-te-combo');
+            googleDropdowns.forEach(function(dropdown) {
+                dropdown.style.display = 'none';
             });
-
-            // Add custom styling to the language selection
-            const style = document.createElement('style');
-            style.textContent = `
-                .custom-translate-dropdown option {
-                    padding: 8px 12px !important;
-                    font-family: 'Poppins', sans-serif !important;
-                    font-weight: 400 !important;
-                }
-
-                .custom-translate-dropdown option:hover {
-                    background: var(--primary-color) !important;
-                    color: white !important;
-                }
-            `;
-            document.head.appendChild(style);
         }
 
-        // Initial customization
-        customizeGoogleTranslate();
+        // Initial hide
+        hideGoogleElements();
 
-        // Re-apply customization periodically to handle dynamic changes
-        setInterval(customizeGoogleTranslate, 2000);
+        // Periodic hiding to handle dynamic changes
+        setInterval(hideGoogleElements, 2000);
 
-        // Final customization after page fully loads
+        // Final hide after page loads
         window.addEventListener('load', function() {
-            setTimeout(customizeGoogleTranslate, 1000);
+            setTimeout(hideGoogleElements, 1000);
         });
-    });
 
-    // Add keyboard navigation support
-    document.addEventListener('keydown', function(e) {
-        // Ctrl/Cmd + L to focus language selector
-        if ((e.ctrlKey || e.metaKey) && e.key === 'l') {
-            e.preventDefault();
-            const dropdown = document.querySelector('.goog-te-combo');
-            if (dropdown) {
-                dropdown.focus();
-                dropdown.click();
-            }
-        }
-    });
-
-    // Add smooth scroll behavior when language changes
-    let currentLanguage = 'en';
-    const observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-            if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-                const body = document.body;
-                if (body.classList.contains('translated-ltr')) {
-                    // Language changed, scroll to top smoothly
-                    window.scrollTo({
-                        top: 0,
-                        behavior: 'smooth'
-                    });
+        // Add keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            // Ctrl/Cmd + L to focus language selector
+            if ((e.ctrlKey || e.metaKey) && e.key === 'l') {
+                e.preventDefault();
+                const desktopSelector = document.getElementById('customLanguageSelector');
+                if (desktopSelector) {
+                    desktopSelector.focus();
+                    desktopSelector.click();
                 }
             }
         });
+
+        // Add smooth scroll when language changes
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                    const body = document.body;
+                    if (body.classList.contains('translated-ltr')) {
+                        // Language changed, scroll to top smoothly
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+
+                        // Update selectors to reflect new language
+                        detectCurrentLanguage();
+                    }
+                }
+            });
+        });
+
+        observer.observe(document.body, {
+            attributes: true,
+            attributeFilter: ['class']
+        });
+
+        // Add hover effects
+        const customSelects = document.querySelectorAll('.custom-language-select, .custom-language-select-mobile');
+        customSelects.forEach(function(select) {
+            select.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-1px)';
+            });
+
+            select.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Add focus effects
+        customSelects.forEach(function(select) {
+            select.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.02)';
+            });
+
+            select.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
+            });
+        });
     });
 
-    observer.observe(document.body, {
-        attributes: true,
-        attributeFilter: ['class']
+    // Handle browser back/forward buttons
+    window.addEventListener('popstate', function() {
+        detectCurrentLanguage();
+    });
+
+    // Handle page visibility changes
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+            detectCurrentLanguage();
+        }
     });
 </script>
 @endpush
