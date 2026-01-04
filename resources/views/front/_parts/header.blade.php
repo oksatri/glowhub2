@@ -504,8 +504,60 @@
 </div>
 
 @push('scripts')
-<!-- Try multiple CDN sources for Google Translate -->
+<!-- Enhanced Google Translate with comprehensive error handling -->
 <script>
+    // Intercept and block problematic Google Translate requests
+    (function() {
+        // Store original fetch
+        const originalFetch = window.fetch;
+        const originalXHROpen = XMLHttpRequest.prototype.open;
+
+        // Intercept fetch requests
+        window.fetch = function(url, options) {
+            if (url && typeof url === 'string') {
+                if (url.includes('translate.googleapis.com') ||
+                    url.includes('element/log') ||
+                    url.includes('translate.google.com')) {
+                    console.log('Blocking Google Translate analytics request:', url);
+                    return Promise.reject(new Error('Request blocked by custom handler'));
+                }
+            }
+            return originalFetch.apply(this, arguments);
+        };
+
+        // Intercept XMLHttpRequest
+        XMLHttpRequest.prototype.open = function(method, url, async, user, password) {
+            if (url && typeof url === 'string') {
+                if (url.includes('translate.googleapis.com') ||
+                    url.includes('element/log') ||
+                    url.includes('translate.google.com')) {
+                    console.log('Blocking Google Translate XHR request:', url);
+                    // Don't actually open the request
+                    return;
+                }
+            }
+            return originalXHROpen.apply(this, arguments);
+        };
+    })();
+
+    // Enhanced CSP meta tag
+    (function() {
+        const meta = document.createElement('meta');
+        meta.httpEquiv = 'Content-Security-Policy';
+        meta.content = `
+            script-src 'self' 'unsafe-inline' 'unsafe-eval' https://translate.google.com https://ssl.gstatic.com https://www.gstatic.com;
+            connect-src 'self' https://translate.googleapis.com;
+            img-src 'self' data: https: https://ssl.gstatic.com https://www.gstatic.com;
+            style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://ssl.gstatic.com;
+            font-src 'self' https://fonts.gstatic.com;
+        `.replace(/\s+/g, ' ').trim();
+
+        // Only add if not already present
+        if (!document.querySelector('meta[http-equiv="Content-Security-Policy"]')) {
+            document.head.appendChild(meta);
+        }
+    })();
+
     // Fallback function for loading Google Translate
     function loadGoogleTranslate() {
         const script = document.createElement('script');
