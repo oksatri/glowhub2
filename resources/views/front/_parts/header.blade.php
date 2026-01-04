@@ -504,31 +504,152 @@
 </div>
 
 @push('scripts')
-<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<!-- Try multiple CDN sources for Google Translate -->
 <script>
+    // Fallback function for loading Google Translate
+    function loadGoogleTranslate() {
+        const script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.async = true;
+
+        // Try primary source first
+        script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+
+        // Add error handling
+        script.onerror = function() {
+            console.warn('Primary Google Translate source failed, trying alternative...');
+            // Try alternative source
+            const fallbackScript = document.createElement('script');
+            fallbackScript.type = 'text/javascript';
+            fallbackScript.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+            fallbackScript.onerror = function() {
+                console.warn('Alternative Google Translate source failed, using local fallback...');
+                // Initialize local fallback
+                initLocalFallback();
+            };
+            document.head.appendChild(fallbackScript);
+        };
+
+        document.head.appendChild(script);
+    }
+
+    // Local fallback language switcher
+    function initLocalFallback() {
+        console.log('Using local language fallback');
+        // Show a simple language selector without Google Translate
+        const selectors = document.querySelectorAll('.custom-language-select, .custom-language-select-mobile');
+        selectors.forEach(function(selector) {
+            selector.addEventListener('change', function() {
+                // Store preference
+                localStorage.setItem('preferredLanguage', this.value);
+                // Show notification
+                showTranslationNotification(this.value);
+            });
+        });
+    }
+
+    function showTranslationNotification(language) {
+        const languageNames = {
+            'en': 'English',
+            'id': 'Bahasa Indonesia',
+            'zh-CN': '中文',
+            'ja': '日本語',
+            'ko': '한국어',
+            'th': 'ไทย',
+            'vi': 'Tiếng Việt',
+            'ms': 'Bahasa Melayu',
+            'tl': 'Filipino',
+            'fr': 'Français',
+            'de': 'Deutsch',
+            'es': 'Español',
+            'pt': 'Português',
+            'ru': 'Русский',
+            'ar': 'العربية'
+        };
+
+        // Create notification
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--primary-color);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            z-index: 9999;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            animation: slideIn 0.3s ease;
+        `;
+        notification.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-info-circle"></i>
+                <span>Language set to ${languageNames[language] || language}</span>
+            </div>
+        `;
+
+        document.body.appendChild(notification);
+
+        // Remove after 3 seconds
+        setTimeout(function() {
+            notification.style.animation = 'slideOut 0.3s ease';
+            setTimeout(function() {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }, 3000);
+    }
+
+    // Add animation styles
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+    `;
+    document.head.appendChild(style);
+
+    // Initialize Google Translate with fallback
     let googleTranslateElement = null;
     let googleTranslateElementMobile = null;
+    let googleTranslateLoaded = false;
 
     function googleTranslateElementInit() {
-        // Initialize hidden Google Translate elements
-        googleTranslateElement = new google.translate.TranslateElement({
-            pageLanguage: 'en',
-            includedLanguages: 'en,id,zh-CN,ja,ko,th,vi,ms,tl,fr,de,es,pt,ru,ar',
-            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-            autoDisplay: false,
-            multilanguagePage: true
-        }, 'google_translate_element');
+        try {
+            googleTranslateLoaded = true;
+            console.log('Google Translate loaded successfully');
 
-        googleTranslateElementMobile = new google.translate.TranslateElement({
-            pageLanguage: 'en',
-            includedLanguages: 'en,id,zh-CN,ja,ko,th,vi,ms,tl,fr,de,es,pt,ru,ar',
-            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-            autoDisplay: false,
-            multilanguagePage: true
-        }, 'google_translate_element_mobile');
+            // Initialize hidden Google Translate elements
+            googleTranslateElement = new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'en,id,zh-CN,ja,ko,th,vi,ms,tl,fr,de,es,pt,ru,ar',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false,
+                multilanguagePage: true
+            }, 'google_translate_element');
 
-        // Setup custom selectors after Google Translate loads
-        setTimeout(setupCustomSelectors, 1000);
+            googleTranslateElementMobile = new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                includedLanguages: 'en,id,zh-CN,ja,ko,th,vi,ms,tl,fr,de,es,pt,ru,ar',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false,
+                multilanguagePage: true
+            }, 'google_translate_element_mobile');
+
+            // Setup custom selectors after Google Translate loads
+            setTimeout(setupCustomSelectors, 1000);
+        } catch (error) {
+            console.error('Google Translate initialization failed:', error);
+            initLocalFallback();
+        }
     }
 
     function setupCustomSelectors() {
@@ -538,7 +659,13 @@
 
         if (desktopSelector) {
             desktopSelector.addEventListener('change', function() {
-                changeLanguage(this.value);
+                if (googleTranslateLoaded) {
+                    changeLanguage(this.value);
+                } else {
+                    initLocalFallback();
+                    localStorage.setItem('preferredLanguage', this.value);
+                    showTranslationNotification(this.value);
+                }
                 // Sync mobile selector
                 if (mobileSelector) {
                     mobileSelector.value = this.value;
@@ -548,7 +675,13 @@
 
         if (mobileSelector) {
             mobileSelector.addEventListener('change', function() {
-                changeLanguage(this.value);
+                if (googleTranslateLoaded) {
+                    changeLanguage(this.value);
+                } else {
+                    initLocalFallback();
+                    localStorage.setItem('preferredLanguage', this.value);
+                    showTranslationNotification(this.value);
+                }
                 // Sync desktop selector
                 if (desktopSelector) {
                     desktopSelector.value = this.value;
@@ -561,6 +694,11 @@
     }
 
     function changeLanguage(languageCode) {
+        if (!googleTranslateLoaded) {
+            showTranslationNotification(languageCode);
+            return;
+        }
+
         // Add loading state
         document.querySelectorAll('.custom-language-select, .custom-language-select-mobile').forEach(function(select) {
             select.classList.add('loading');
@@ -595,7 +733,7 @@
         const body = document.body;
         let currentLang = 'en';
 
-        if (body.classList.contains('translated-ltr')) {
+        if (body.classList.contains('translated-ltr') && googleTranslateLoaded) {
             // Try to detect current language from Google Translate
             const googleDropdown = document.querySelector('.goog-te-combo');
             if (googleDropdown && googleDropdown.value) {
@@ -610,12 +748,23 @@
         }
 
         // Set both selectors to current language
-        document.getElementById('customLanguageSelector').value = currentLang;
-        document.getElementById('customLanguageSelectorMobile').value = currentLang;
+        const desktopSelector = document.getElementById('customLanguageSelector');
+        const mobileSelector = document.getElementById('customLanguageSelectorMobile');
+
+        if (desktopSelector) desktopSelector.value = currentLang;
+        if (mobileSelector) mobileSelector.value = currentLang;
     }
 
-    // Enhanced styling and functionality
+    // Load Google Translate with fallback
     document.addEventListener('DOMContentLoaded', function() {
+        // Load Google Translate
+        loadGoogleTranslate();
+
+        // Setup other functionality
+        setupEnhancedFeatures();
+    });
+
+    function setupEnhancedFeatures() {
         // Hide all Google Translate elements
         function hideGoogleElements() {
             const elementsToHide = [
@@ -709,7 +858,7 @@
                 this.parentElement.style.transform = 'scale(1)';
             });
         });
-    });
+    }
 
     // Handle browser back/forward buttons
     window.addEventListener('popstate', function() {
