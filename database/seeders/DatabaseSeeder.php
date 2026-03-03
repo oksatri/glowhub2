@@ -29,5 +29,7 @@ class DatabaseSeeder extends Seeder
         // Large administrative regions (provinces/regencies/districts/villages)
         // Requires database/sql/wilayah_indonesia_pg.sql to exist in the project
         $this->call(WilayahSeeder::class);
+        $this->call(DefaultContentSeeder::class);
+        $this->call(BackendContentSeeder::class);
     }
 }
