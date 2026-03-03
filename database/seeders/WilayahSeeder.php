@@ -26,6 +26,9 @@ class WilayahSeeder extends Seeder
 
         $sql = File::get($path);
 
+        // Convert PostgreSQL double-quoted identifiers to MySQL backtick-quoted identifiers
+        $sql = str_replace('"', '`', $sql);
+
         // The SQL dump uses backslash-escaped single-quotes like \' inside string literals
         // (e.g. 'Ma\'u'). PostgreSQL expects single quotes to be escaped by doubling them
         // when run via PDO, so convert backslash-escaped single-quotes to SQL-standard ''.

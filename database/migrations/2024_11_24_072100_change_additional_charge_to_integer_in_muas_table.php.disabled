@@ -9,11 +9,15 @@ return new class extends Migration
 {
     public function up()
     {
-        DB::statement('ALTER TABLE muas ALTER COLUMN additional_charge TYPE BIGINT USING (additional_charge::BIGINT)');
+        Schema::table('muas', function (Blueprint $table) {
+            $table->bigInteger('additional_charge')->change();
+        });
     }
 
     public function down()
     {
-        DB::statement('ALTER TABLE muas ALTER COLUMN additional_charge TYPE NUMERIC(10,2) USING (additional_charge::NUMERIC(10,2))');
+        Schema::table('muas', function (Blueprint $table) {
+            $table->decimal('additional_charge', 10, 2)->change();
+        });
     }
 };

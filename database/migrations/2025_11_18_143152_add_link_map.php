@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('muas', function (Blueprint $table) {
             if (! Schema::hasColumn('muas', 'link_map')) {
-                $table->string('link_map')->nullable()->after('experience');
+                $table->string('link_map')->nullable();
             }
         });
     }
