@@ -58,9 +58,9 @@
 
                 <!-- Mobile Menu Toggle -->
                 <div class="col-6 d-md-none text-end">
-                    <button class="btn btn-outline-primary btn-xs" type="button" data-bs-toggle="collapse"
+                    <button class="btn btn-outline-primary btn-sm" type="button" data-bs-toggle="collapse"
                         data-bs-target="#mobileMenu" aria-controls="mobileMenu" aria-expanded="false"
-                        aria-label="Toggle navigation">
+                        aria-label="Toggle navigation" style="padding: 4px 8px; font-size: 0.75rem;">
                         <i class="fas fa-bars"></i>
                     </button>
                 </div>
