@@ -196,7 +196,7 @@
         #mobileMenu {
             background: #f8f9fa;
             border-top: 1px solid #e9ecef;
-            margin-top: 5px;
+            margin-top: 2px;
             border-radius: 4px;
         }
 
