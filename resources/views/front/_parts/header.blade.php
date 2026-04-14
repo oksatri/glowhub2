@@ -58,7 +58,7 @@
 
                 <!-- Mobile Menu Toggle -->
                 <div class="col-6 d-md-none text-end">
-                    <button class="btn btn-outline-primary btn-sm" type="button" data-bs-toggle="collapse"
+                    <button class="btn btn-outline-primary btn-xs" type="button" data-bs-toggle="collapse"
                         data-bs-target="#mobileMenu" aria-controls="mobileMenu" aria-expanded="false"
                         aria-label="Toggle navigation">
                         <i class="fas fa-bars"></i>
@@ -111,7 +111,7 @@
 
     <style>
         /* Header */         .main-header {
-            padding: 6px 0 !important;
+            padding: 2px 0 !important;
         }
 
         @media (max-width: 767px) {
@@ -119,14 +119,14 @@
                 padding: 0px !important;
             }
             .main-logo img {
-                max-height: 40px !important;
+                max-height: 35px !important;
             }
             #mobileMenu {
-                margin-top: 5px;
+                margin-top: 2px;
             }
             .nav-link-mobile {
-                padding: 8px 15px;
-                font-size: 0.9rem;
+                padding: 6px 12px;
+                font-size: 0.85rem;
             }
         }
 
@@ -136,7 +136,7 @@
             margin: 0;
             padding: 0;
             display: flex;
-            gap: 5px;
+            gap: 2px;
             align-items: center;
             justify-content: flex-end;
         }
@@ -147,12 +147,12 @@
 
         .nav-link {
             display: inline-block;
-            padding: 8px 15px;
+            padding: 6px 12px;
             color: #3d2a33;
             text-decoration: none;
             font-weight: 500;
             transition: all 0.3s ease;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
         .nav-link:hover {
@@ -163,7 +163,7 @@
         .menu-list-mobile {
             list-style: none;
             margin: 0;
-            padding: 10px 0;
+            padding: 6px 0;
             display: flex;
             flex-direction: column;
         }
@@ -179,24 +179,24 @@
 
         .nav-link-mobile {
             display: block;
-            padding: 12px 20px;
+            padding: 8px 15px;
             color: #3d2a33;
             text-decoration: none;
             font-weight: 500;
             transition: all 0.3s ease;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
         }
 
         .nav-link-mobile:hover {
             background: rgba(132, 93, 112, 0.1);
             color: #845d70;
-            padding-left: 25px;
+            padding-left: 20px;
         }
 
         #mobileMenu {
             background: #f8f9fa;
             border-top: 1px solid #e9ecef;
-            margin-top: 10px;
+            margin-top: 5px;
             border-radius: 4px;
         }
 
