@@ -163,7 +163,7 @@
         .menu-list-mobile {
             list-style: none;
             margin: 0;
-            padding: 6px 0;
+            padding: 3px 0;
             display: flex;
             flex-direction: column;
         }
@@ -179,7 +179,7 @@
 
         .nav-link-mobile {
             display: block;
-            padding: 8px 15px;
+            padding: 5px 15px;
             color: #3d2a33;
             text-decoration: none;
             font-weight: 500;
@@ -196,7 +196,7 @@
         #mobileMenu {
             background: #f8f9fa;
             border-top: 1px solid #e9ecef;
-            margin-top: 2px;
+            margin-top: 0px;
             border-radius: 4px;
         }
 
