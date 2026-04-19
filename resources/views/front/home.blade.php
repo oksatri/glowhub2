@@ -218,7 +218,7 @@
                                             <!-- Service Name at top -->
                                             <div class="mb-2">
                                                 <h6 class="mb-0" title="{{ $service->service_name }}" style="font-size: 0.9rem; font-weight: 600;">
-                                                    {{ $service->service_name }}
+                                                    {{ strtoupper($service->service_name) }}
                                                 </h6>
                                             </div>
 
