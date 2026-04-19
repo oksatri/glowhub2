@@ -579,7 +579,7 @@
                                 </div>
 
                                 <div class="mt-1 text-center">
-                                    <a href="{{ route('mua.detail', ['id' => $mua['id'], 'service_id' => $mua['service_id'] ?? null]) }}" style="background: #8c5ad4 !important;" class="btn btn-outline-danger btn-sm">
+                                    <a href="{{ route('mua.detail', ['id' => $mua['id'], 'service_id' => $mua['service_id'] ?? null]) }}" style="background: #845d70 !important;" class="btn btn-outline-danger btn-sm">
                                         View Porto
                                     </a>
                                 </div>
