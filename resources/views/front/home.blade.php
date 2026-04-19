@@ -229,13 +229,13 @@
                                                     {{ $location ?: '-' }}</span>
                                             </div>
 
-                                            <div class="mb-1">
+                                            {{-- <div class="mb-1">
                                                 @if (!empty($service->categori_service))
                                                     <div class="small text-muted text-truncate" style="font-size: 0.74rem;" title="{{ $service->categori_service }}">
                                                         {{ $service->categori_service }}
                                                     </div>
                                                 @endif
-                                            </div>
+                                            </div> --}}
                                             <div class="d-flex justify-content-between align-items-center small mb-1" style="font-size: 0.78rem;">
                                                 <div class="d-flex align-items-center">
                                                     <i class="fas fa-star me-1" style="color:#FFB800;"></i>
