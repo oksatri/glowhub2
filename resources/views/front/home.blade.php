@@ -19,7 +19,7 @@
                                     @if ($section->has_button && is_array($section->buttons) && count($section->buttons) > 0)
                                         @foreach ($section->buttons as $btn)
                                             <a href="{{ $btn['url'] ?? '#' }}"
-                                                class="btn btn-lg {{ isset($btn['url']) && strpos($btn['url'], '#') !== false ? 'btn-outline-primary' : 'btn-primary' }}">
+                                                class="btn btn-sm {{ isset($btn['url']) && strpos($btn['url'], '#') !== false ? 'btn-outline-primary' : 'btn-primary' }}">
                                                 {{ $btn['label'] ?? 'Learn More' }}
                                             </a>
                                         @endforeach
@@ -108,12 +108,12 @@
                                                 @if ($section->has_button && is_array($section->buttons) && count($section->buttons) > 0)
                                                     @foreach ($section->buttons as $btn)
                                                         <a href="{{ $btn['url'] ?? '#' }}"
-                                                            class="btn btn-lg {{ isset($btn['url']) && strpos($btn['url'], '#') !== false ? 'btn-outline-primary' : 'btn-primary' }}">
+                                                            class="btn btn-sm {{ isset($btn['url']) && strpos($btn['url'], '#') !== false ? 'btn-outline-primary' : 'btn-primary' }}">
                                                             {{ $btn['label'] ?? 'Learn More' }}
                                                         </a>
                                                     @endforeach
                                                 @endif
-                                                {{-- <a href="{{ route('register') }}" class="btn btn-primary btn-lg">Join as MUA</a> --}}
+                                                {{-- <a href="{{ route('register') }}" class="btn btn-primary btn-sm">Join as MUA</a> --}}
                                             </div>
                                         </div>
                                     </div>
@@ -268,7 +268,7 @@
                             @if ($section->has_button && is_array($section->buttons) && count($section->buttons) > 0)
                                 @foreach ($section->buttons as $btn)
                                     <a href="{{ $btn['url'] ?? '#' }}"
-                                        class="btn btn-lg {{ isset($btn['url']) && strpos($btn['url'], '#') !== false ? 'btn-outline-primary' : 'btn-primary' }}">
+                                        class="btn btn-sm {{ isset($btn['url']) && strpos($btn['url'], '#') !== false ? 'btn-outline-primary' : 'btn-primary' }}">
                                         {{ $btn['label'] ?? 'Learn More' }}
                                     </a>
                                 @endforeach
