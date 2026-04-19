@@ -217,7 +217,7 @@
                                         <div class="px-3 py-2" style="background-color:#F6BBBD;">
                                             <!-- Service Name at top -->
                                             <div class="mb-2">
-                                                <h6 class="mb-0" title="{{ $service->service_name }}" style="font-size: 0.9rem; font-weight: 600;">
+                                                <h6 class="text-dark fw-semibold mb-0" title="{{ $service->service_name }}" style="font-size: 0.9rem;">
                                                     {{ strtoupper($service->service_name) }}
                                                 </h6>
                                             </div>
