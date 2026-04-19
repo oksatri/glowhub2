@@ -225,8 +225,8 @@
                                             <!-- Location at top -->
                                             <div class="d-flex align-items-center mb-2" style="font-size: 0.78rem;">
                                                 <i class="fas fa-map-marker-alt me-1" style="color:#D23B3B;"></i>
-                                                <span class="text-dark fw-semibold" title="{{ $location }}">
-                                                    {{ $location ?: '-' }}</span>
+                                                <h6 class="text-dark fw-semibold mb-0" title="{{ $location }}" style="font-size: inherit;">
+                                                    {{ $location ?: '-' }}</h6>
                                             </div>
 
                                             {{-- <div class="mb-1">
