@@ -131,7 +131,7 @@
             -moz-appearance: none;
             transition: all 0.3s ease;
             cursor: pointer;
-            border: 2px solid #f8bbbd;
+            border: 2px solid #f6bbbd;
             border-radius: 6px;
             padding: 0.6rem 0.8rem;
             background: rgba(255,255,255,0.9);
@@ -195,7 +195,7 @@
 
         .btn-reset {
             background: transparent;
-            border: 2px solid #f8bbbd;
+            border: 2px solid #f6bbbd;
             border-radius: 6px;
             padding: 0.6rem 1.2rem;
             color: var(--bs-primary);
@@ -212,7 +212,7 @@
         }
 
         .btn-reset:hover {
-            background: #f8bbbd !important;
+            background: #f6bbbd !important;
             border-color: var(--bs-primary) !important;
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(248, 187, 189, 0.4);
