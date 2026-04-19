@@ -519,47 +519,35 @@
                 @foreach ($items as $mua)
                     <!-- MUA Card -->
                     <div class="col-6 col-md-4 col-lg-3">
-                        <div class="h-100 mua-card">
-                            <!-- Heart Icon -->
-                            <div class="position-absolute top-0 end-0 p-1" style="z-index: 10;">
-                                <button type="button" class="btn btn-heart">
-                                    <i class="far fa-heart" style="color:#333; font-size:1rem;"></i>
+                        <div class="h-100 border-0 position-relative shadow-sm"
+                            style="background-color:#FDE1E1; border-radius:22px; overflow:hidden; transition: transform .2s ease, box-shadow .2s ease;">
+                            <div class="position-absolute top-0 end-0 p-2" style="z-index: 10;">
+                                <button type="button" class="btn btn-sm p-1 border-0 bg-transparent">
+                                    <i class="far fa-heart" style="color:#333; font-size:1.1rem;"></i>
                                 </button>
                             </div>
 
-                            <!-- MUA Image -->
                             <div class="w-100" style="aspect-ratio: 3 / 4; overflow:hidden;">
                                 <img src="{{ $mua['image'] }}" alt="{{ $mua['name'] }}"
                                     style="width:100%; height:100%; object-fit:cover;">
                             </div>
 
-                            <!-- Card Body -->
-                            <div class="mua-card-body">
-                                <!-- Service Name -->
-                                <div class="mb-1">
-                                    <h6 class="mua-name text-truncate" title="{{ $mua['name'] }}">
-                                        {{ $mua['name'] }}
+                            <div class="px-3 py-2" style="background-color:#F6BBBD;">
+                                <!-- Service Name at top -->
+                                <div class="mb-2">
+                                    <h6 class="text-dark fw-semibold mb-0" title="{{ $mua['name'] }}" style="font-size: 0.9rem;">
+                                        {{ strtoupper($mua['name']) }}
                                     </h6>
                                 </div>
 
-                                <!-- Location -->
-                                <div class="d-flex align-items-center mb-1 mua-location">
+                                <!-- Location at top -->
+                                <div class="d-flex align-items-center mb-2" style="font-size: 0.78rem;">
                                     <i class="fas fa-map-marker-alt me-1" style="color:#D23B3B;"></i>
-                                    <span class="text-dark text-truncate fw-semibold" title="{{ $mua['location'] }}">
-                                        {{ $mua['location'] ?: '-' }}</span>
+                                    <h6 class="text-dark fw-semibold mb-0" title="{{ $mua['location'] }}" style="font-size: inherit;">
+                                        {{ $mua['location'] ?: '-' }}</h6>
                                 </div>
 
-                                <!-- Category -->
-                                <div class="mb-1">
-                                    @if (!empty($mua['category']))
-                                        <div class="mua-category text-truncate" title="{{ $mua['category'] }}">
-                                            {{ $mua['category'] }}
-                                        </div>
-                                    @endif
-                                </div>
-
-                                <!-- Rating -->
-                                <div class="d-flex justify-content-between align-items-center mua-rating mb-1">
+                                <div class="d-flex justify-content-between align-items-center small mb-1" style="font-size: 0.78rem;">
                                     <div class="d-flex align-items-center">
                                         <i class="fas fa-star me-1" style="color:#FFB800;"></i>
                                         <span>
@@ -570,15 +558,13 @@
                                         </span>
                                     </div>
                                 </div>
-
                                 <div class="d-flex justify-content-between align-items-center mt-1">
-                                    <small class="text-muted" style="font-size: 0.7rem;">Mulai dari</small>
-                                    <strong class="mua-price text-dark">
+                                    <small class="text-muted" style="font-size: 0.8rem;">Mulai dari</small>
+                                    <strong class="text-dark" style="font-size: 0.8rem;">
                                         {{ $mua['price'] ? 'Rp. ' . number_format($mua['price'], 0, ',', '.') : '-' }}
                                     </strong>
                                 </div>
-
-                                <div class="mt-1 text-center">
+                                <div class="mt-2 text-center">
                                     <a href="{{ route('mua.detail', ['id' => $mua['id'], 'service_id' => $mua['service_id'] ?? null]) }}" style="background: #845d70 !important;" class="btn btn-outline-danger btn-sm">
                                         View Porto
                                     </a>
