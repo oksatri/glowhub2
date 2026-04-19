@@ -73,6 +73,8 @@
         :root {
             --bs-primary: {{ $primary }};
             --primary-color: {{ $primary }};
+            --bs-secondary: #845d70;
+            --secondary-color: #845d70;
         }
 
         /* Quick overrides to make sure Bootstrap components use the admin primary color */
@@ -83,6 +85,20 @@
         .btn-primary {
             background-color: var(--bs-primary) !important;
             border-color: var(--bs-primary) !important;
+        }
+
+        /* Secondary color overrides */
+        .bg-secondary {
+            background-color: var(--bs-secondary) !important;
+        }
+
+        .btn-secondary {
+            background-color: var(--bs-secondary) !important;
+            border-color: var(--bs-secondary) !important;
+        }
+
+        .text-secondary {
+            color: var(--bs-secondary) !important;
         }
 
         /* === RESPONSIVE & USER-FRIENDLY IMPROVEMENTS === */
