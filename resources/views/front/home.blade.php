@@ -217,7 +217,7 @@
                                         <div class="px-3 py-2" style="background-color:#F6BBBD;">
                                             <!-- Service Name at top -->
                                             <div class="mb-2">
-                                                <h6 class="mb-0 text-truncate" title="{{ $service->service_name }}" style="font-size: 0.9rem; font-weight: 600;">
+                                                <h6 class="mb-0" title="{{ $service->service_name }}" style="font-size: 0.9rem; font-weight: 600;">
                                                     {{ $service->service_name }}
                                                 </h6>
                                             </div>
@@ -249,7 +249,7 @@
                                             </div>
                                             <div class="d-flex justify-content-between align-items-center mt-1">
                                                 <small class="text-muted" style="font-size: 0.8rem;">Mulai dari</small>
-                                                <strong class="text-dark" style="font-size: 0.9rem;">
+                                                <strong class="text-dark" style="font-size: 0.8rem;">
                                                     {{ $price ? 'Rp. ' . number_format($price, 0, ',', '.') : '-' }}
                                                 </strong>
                                             </div>
