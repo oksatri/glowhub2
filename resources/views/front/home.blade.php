@@ -9,7 +9,7 @@
         @switch(strtolower($section->section_type))
             @case('hero')
                 <section id="home"
-                    style="padding-bottom: 3rem; background: linear-gradient(135deg, var(--bs-light) 0%, #fff4ed 100%); min-height: 80vh;">
+                    style="padding-bottom: 3rem !important;padding-top: 0.3rem !important; background: linear-gradient(135deg, var(--bs-light) 0%, #fff4ed 100%); min-height: 80vh;">
                     <div class="container">
                         <div class="row align-items-center">
                             <div class="col-lg-6">
