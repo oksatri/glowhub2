@@ -223,9 +223,9 @@
                                             </div>
 
                                             <!-- Location at top -->
-                                            <div class="d-flex align-items-center mb-2 small" style="font-size: 0.78rem;">
+                                            <div class="d-flex align-items-center mb-2" style="font-size: 0.78rem;">
                                                 <i class="fas fa-map-marker-alt me-1" style="color:#D23B3B;"></i>
-                                                <span class="text-dark text-truncate fw-semibold" title="{{ $location }}">
+                                                <span class="text-dark fw-semibold" title="{{ $location }}">
                                                     {{ $location ?: '-' }}</span>
                                             </div>
 
