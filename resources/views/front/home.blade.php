@@ -175,7 +175,7 @@
                                 {{ $section->description ?? 'Jelajahi makeup artist terverifikasi di dekat Anda.' }}</p>
                         </div>
 
-                        <div class="row g-3 g-md-4">
+                        <div class="row g-3 g-md-4" style="--bs-gutter-x: 2rem !important;">
                             @foreach ($featuredServices ?? collect() as $service)
                                 @php
                                     $m = $service->mua;
