@@ -9,7 +9,7 @@
         @switch(strtolower($section->section_type))
             @case('hero')
                 <section id="home"
-                    style="padding-bottom: 3rem !important;padding-top: 0.3rem !important; background: linear-gradient(135deg, var(--bs-light) 0%, #fff4ed 100%); min-height: 80vh;">
+                    style="padding-bottom: 3rem !important;padding-top: 0.3rem !important; background: linear-gradient(135deg, var(--bs-light) 0%, #fdf6e6 100%); min-height: 80vh;">
                     <div class="container">
                         <div class="row align-items-center">
                             <div class="col-lg-6">
@@ -167,7 +167,7 @@
             @break
 
             @case('product')
-                <section id="find-mua" class="py-5" style="background-color: #FFF4ED;">
+                <section id="find-mua" class="py-5" style="background-color: #fdf6e6;">
                     <div class="container">
                         <div class="text-center mb-4 mb-md-5">
                             <h2 class="fw-bold mb-3">{{ $section->title ?? 'Discover Top-Rated MUAs' }}</h2>
@@ -214,7 +214,7 @@
                                                 style="width:100%; height:100%; object-fit:cover;">
                                         </div>
 
-                                        <div class="px-3 py-2" style="background-color:#F7BCC6;">
+                                        <div class="px-3 py-2" style="background-color:#F6BBBD;">
                                             <!-- Service Name at top -->
                                             <div class="mb-2">
                                                 <h6 class="mb-0 text-truncate" title="{{ $service->service_name }}" style="font-size: 0.9rem; font-weight: 600;">

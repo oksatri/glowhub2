@@ -277,7 +277,7 @@
     </section>
 
     <!-- MUA Detail Section -->
-    <section class="py-3" style="background-color:#FFF4ED;">
+    <section class="py-3" style="background-color:#fdf6e6;">
         <div class="container">
             <div class="row g-2">
                 <!-- Left Column - Profile & Portfolio -->

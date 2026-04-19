@@ -245,7 +245,7 @@
 
         .mua-card-body {
             padding: 0.75rem;
-            background-color: #F7BCC6;
+            background-color: #F6BBBD;
         }
 
         @media (max-width: 768px) {
@@ -401,7 +401,7 @@
         }
     </style>
     <!-- Hero Section -->
-    <section class="hero-section" style="background: linear-gradient(135deg, var(--bs-light) 0%, #fff4ed 100%);">
+    <section class="hero-section" style="background: linear-gradient(135deg, var(--bs-light) 0%, #fdf6e6 100%);">
         <div class="container">
             <!-- Page Title -->
             <div class="text-center mb-3">
