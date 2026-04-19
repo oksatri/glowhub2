@@ -267,10 +267,10 @@
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb breadcrumb-elegant">
                     <li class="breadcrumb-item"><a href="{{ url('/') }}"
-                            class="text-danger text-decoration-none opacity-75 hover-opacity">Home</a></li>
+                            class="text-decoration-none opacity-75 hover-opacity">Home</a></li>
                     <li class="breadcrumb-item"><a href="{{ url('/mua-listing') }}"
-                            class="text-danger text-decoration-none opacity-75 hover-opacity">Find MUA</a></li>
-                    <li class="breadcrumb-item active text-danger fw-bold" aria-current="page">{{ $mua['location'] }}</li>
+                            class="text-decoration-none opacity-75 hover-opacity">Find MUA</a></li>
+                    <li class="breadcrumb-item active text-secondary fw-bold" aria-current="page">{{ $mua['location'] }}</li>
                 </ol>
             </nav>
         </div>
