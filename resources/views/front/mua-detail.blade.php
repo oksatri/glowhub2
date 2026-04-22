@@ -371,7 +371,7 @@
                                         </div>
                                     </div>
                                     <div class="col-6">
-                                        <h6 class="fw-bold mb-1 small">Schedule</h6>
+                                        {{-- <h6 class="fw-bold mb-1 small">Schedule</h6>
                                         <p class="small fw-semibold text-dark mb-0">
                                             @if (!empty($mua['operational_hours']))
                                                 <i class="fas fa-clock me-1"></i>{{ $mua['operational_hours'] }}
@@ -408,7 +408,7 @@
                                         @endif
                                         @if (empty($mua['operational_hours']) && empty($mua['availability_hours']))
                                             <span class="text-muted">—</span>
-                                        @endif
+                                        @endif --}}
                                     </div>
                                 </div>
                             </div>
@@ -620,6 +620,7 @@
                                     @foreach ($features as $idx => $feature)
                                         @php
                                             $hasPriceRange = (!empty($feature['min_price']) && $feature['min_price'] > 0) || (!empty($feature['max_price']) && $feature['max_price'] > 0);
+                                            $isImage = @$feature['is_image'];
                                         @endphp
 
                                             <div
@@ -628,6 +629,7 @@
                                                     name="feature_names[]" value="{{ $feature['name'] }}"
                                                     data-price="{{ $feature['min_price'] ?? $feature['max_price'] ?? $feature['extra_price'] ?? 0 }}"
                                                     data-service-id="{{ $activeService->id ?? null }}"
+                                                    data-is-image="{{ $isImage ? 'true' : 'false' }}"
                                                     id="feature{{ $idx }}"
                                                     @if (!$hasPriceRange)
                                                         checked disabled
@@ -700,21 +702,8 @@
                                         </small>
                                     </div>
 
-                                    <!-- Image Upload Section -->
-                                    @php
-                                        $hasImageFeature = false;
-                                        if (!empty($features)) {
-                                            foreach ($features as $feature) {
-                                                if (!empty($feature['is_image']) && $feature['is_image'] == true) {
-                                                    $hasImageFeature = true;
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                    @endphp
-                                    
-                                    @if ($hasImageFeature)
-                                    <div class="col-12">
+                                    <!-- Dynamic Image Upload Section -->
+                                    <div class="col-12" id="imageUploadSection" style="display: none;">
                                         <label class="form-label small">
                                             <i class="fas fa-image me-1"></i>Upload Reference Image <span class="text-muted">(Optional)</span>
                                         </label>
@@ -743,7 +732,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    @endif
                                 </div>
 
                                 <!-- Distance Check Section -->
@@ -1436,6 +1424,7 @@
                     formData.append('booking_image', imageFile);
                 }
 
+                var url = $('#bookingForm').attr('action');
                 console.log('Form action URL:', url);
 
                 // Check if all required data is present
@@ -1454,8 +1443,7 @@
 
                 // Disable book now button to prevent double clicks
                 $('#bookNowBtn').prop('disabled', true);
-                $('#bookNowBtn').html('<i class="fas fa-spinner fa-spin me-2"></i>Processing...');
-
+                $('#bookNowBtn').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
                 $.ajax({
                     url: url,
                     method: 'POST',
@@ -1474,11 +1462,14 @@
                             $('#bk_time').val('');
                             $('#bk_services, #bk_mua_service_id').val('');
                             // reset form fields except prefilled auth info
-                            $('#bk_name, #bk_email, #bk_whatsapp, #bk_address, #bk_notes').val('');
+                            $('#bk_address').val('');
+                            $('#bk_notes').val('');
                             // Reset image field and preview
                             $('#bk_booking_image').val('');
                             $('#imagePreview').attr('src', '');
                             $('#imagePreviewContainer').addClass('d-none');
+                            // Hide upload section
+                            $('#imageUploadSection').hide();
                             setTimeout(function() {
                                 $('.alert.alert-success').remove();
                             }, 5000);
@@ -1526,6 +1517,39 @@
                 });
             });
         });
+
+        // Handle checkbox change for image upload
+        $(document).on('change', '.service-checkbox', function() {
+            checkImageFeature();
+        });
+
+        // Initial check on page load
+        $(document).ready(function() {
+            checkImageFeature();
+        });
+
+        function checkImageFeature() {
+            var hasImageFeatureChecked = false;
+            
+            // Check if any feature with is_image is checked
+            $('.service-checkbox:checked').each(function() {
+                if ($(this).data('is-image') === 'true') {
+                    hasImageFeatureChecked = true;
+                    return false; // Break the loop
+                }
+            });
+
+            // Show/hide upload section based on checkbox state
+            if (hasImageFeatureChecked) {
+                $('#imageUploadSection').slideDown(300);
+            } else {
+                $('#imageUploadSection').slideUp(300);
+                // Clear image field when hidden
+                $('#bk_booking_image').val('');
+                $('#imagePreview').attr('src', '');
+                $('#imagePreviewContainer').addClass('d-none');
+            }
+        }
 
         // Image Preview Functions
         function previewImage(input) {
