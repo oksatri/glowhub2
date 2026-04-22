@@ -630,7 +630,7 @@
                                                     data-price="{{ $feature['min_price'] ?? $feature['max_price'] ?? $feature['extra_price'] ?? 0 }}"
                                                     data-service-id="{{ $activeService->id ?? null }}"
                                                     data-is-image="{{ ($feature['is_image'] ?? null) === 'on' ? 'true' : 'false' }}"
-                                                    <!-- DEBUG: feature={{ $feature['name'] }}, is_image={{ $feature['is_image'] ?? 'NULL' }, result={{ ($feature['is_image'] ?? '') == 'on' ? 'true' : 'false' }} -->
+                                                    <!-- DEBUG: feature={{ $feature['name'] }}, is_image={{ $feature['is_image'] ?? 'NULL' }}, result={{ ($feature['is_image'] ?? null) === 'on' ? 'true' : 'false' }} -->
                                                     data-feature-idx="{{ $idx }}"
                                                     id="feature{{ $idx }}"
                                                     @if (!$hasPriceRange)
