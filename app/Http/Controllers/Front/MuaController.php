@@ -265,7 +265,8 @@ class MuaController extends Controller
                 'selected_date' => 'required|date_format:Y-m-d',
                 'selected_time' => 'required|string',
                 'services' => 'nullable|array',
-                'mua_service_id' => 'nullable|integer'
+                'mua_service_id' => 'nullable|integer',
+                'booking_image' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:5120' // Max 5MB
             ]);
 
             // Debug: Log received data
@@ -280,6 +281,14 @@ class MuaController extends Controller
             $service = \App\Models\MuaService::find($request->input('mua_service_id'));
             $basePrice = $service ? $service->price : 0;
 
+            // Handle image upload if present
+            $imagePath = null;
+            if ($request->hasFile('booking_image')) {
+                $image = $request->file('booking_image');
+                $imageName = time() . '_booking_' . $id . '.' . $image->getClientOriginalExtension();
+                $imagePath = $image->storeAs('booking_images', $imageName, 'public');
+            }
+
             $booking = Booking::create([
                 'mua_id' => $id,
                 'mua_service_id' => $request->input('mua_service_id'),
@@ -293,6 +302,7 @@ class MuaController extends Controller
                 'selected_date' => $request->input('selected_date'),
                 'selected_time' => $request->input('selected_time'),
                 'services' => $request->input('services') ?: null,
+                'img' => $imagePath,
                 'status' => 'pending'
             ]);
 

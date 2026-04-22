@@ -24,7 +24,8 @@ class Booking extends Model
         'mua_note',
         'revised_price',
         'price_note',
-        'service_price'
+        'service_price',
+        'img'
     ];
 
     protected $casts = [

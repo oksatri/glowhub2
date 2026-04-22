@@ -659,7 +659,7 @@
 
 
                             <!-- Booking Form -->
-                            <form id="bookingForm" method="POST" action="{{ route('mua.book', $mua['id']) }}">
+                            <form id="bookingForm" method="POST" action="{{ route('mua.book', $mua['id']) }}" enctype="multipart/form-data">
                                 @csrf
 
                                 <!-- Contact fields (prefilled if authenticated) -->
@@ -699,6 +699,51 @@
                                             You can add special requests like makeup style preferences, skin allergies, or event details here.
                                         </small>
                                     </div>
+
+                                    <!-- Image Upload Section -->
+                                    @php
+                                        $hasImageFeature = false;
+                                        if (!empty($features)) {
+                                            foreach ($features as $feature) {
+                                                if (!empty($feature['is_image']) && $feature['is_image'] == true) {
+                                                    $hasImageFeature = true;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    @endphp
+                                    
+                                    @if ($hasImageFeature)
+                                    <div class="col-12">
+                                        <label class="form-label small">
+                                            <i class="fas fa-image me-1"></i>Upload Reference Image <span class="text-muted">(Optional)</span>
+                                        </label>
+                                        <div class="mb-2">
+                                            <input type="file" name="booking_image" id="bk_booking_image" 
+                                                   class="form-control" accept="image/*"
+                                                   onchange="previewImage(this)">
+                                            <small class="text-muted d-block mt-1">
+                                                <i class="fas fa-info-circle me-1"></i>
+                                                Upload a reference image to help the MUA understand your preferred style or look.
+                                                Supported formats: JPG, PNG, WebP (Max size: 5MB)
+                                            </small>
+                                        </div>
+                                        
+                                        <!-- Image Preview -->
+                                        <div id="imagePreviewContainer" class="d-none">
+                                            <div class="border rounded p-2 bg-light">
+                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                    <small class="text-muted fw-semibold">Preview:</small>
+                                                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeImage()">
+                                                        <i class="fas fa-times me-1"></i>Remove
+                                                    </button>
+                                                </div>
+                                                <img id="imagePreview" src="" alt="Preview" class="img-fluid rounded" 
+                                                     style="max-height: 200px; object-fit: cover;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endif
                                 </div>
 
                                 <!-- Distance Check Section -->
@@ -1371,20 +1416,26 @@
                     return;
                 }
 
-                // Debug: Log data sebelum dikirim
-                console.log('Sending data:', {
-                    selected_date: formattedDate,
-                    selected_time: selectedTime,
-                    services: services,
-                    mua_service_id: muaServiceId,
-                    name: name,
-                    email: email,
-                    whatsapp: whatsapp,
-                    address: address,
-                    notes: notes
-                });
+                // Create form data with FormData for file upload
+                var formData = new FormData();
+                formData.append('selected_date', formattedDate);
+                formData.append('selected_time', selectedTime);
+                formData.append('services', JSON.stringify(services));
+                formData.append('mua_service_id', muaServiceId);
+                formData.append('name', name);
+                formData.append('email', email);
+                formData.append('whatsapp', whatsapp);
+                formData.append('address', address);
+                formData.append('notes', notes);
+                formData.append('distance', $('#bk_distance').val());
+                formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
+                
+                // Add image file if exists
+                var imageFile = $('#bk_booking_image')[0].files[0];
+                if (imageFile) {
+                    formData.append('booking_image', imageFile);
+                }
 
-                var url = $('#bookingForm').attr('action');
                 console.log('Form action URL:', url);
 
                 // Check if all required data is present
@@ -1403,23 +1454,15 @@
 
                 // Disable book now button to prevent double clicks
                 $('#bookNowBtn').prop('disabled', true);
-                $('#bookNowBtn').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+                $('#bookNowBtn').html('<i class="fas fa-spinner fa-spin me-2"></i>Processing...');
+
                 $.ajax({
                     url: url,
                     method: 'POST',
-                    data: {
-                        _token: $('meta[name="csrf-token"]').attr('content'),
-                        name: name,
-                        email: email,
-                        whatsapp: whatsapp,
-                        address: address,
-                        notes: notes,
-                        distance: $('#bk_distance').val() || null,
-                        selected_date: formattedDate,
-                        selected_time: selectedTime,
-                        services: services,
-                        mua_service_id: $('#bk_mua_service_id').val() || null
-                    },
+                    data: formData,
+                    dataType: 'json',
+                    contentType: false,
+                    processData: false,
                     success: function(res) {
                         if (res.status === 'success') {
                             var html = '<div class="alert alert-success">' + res.message +
@@ -1431,8 +1474,11 @@
                             $('#bk_time').val('');
                             $('#bk_services, #bk_mua_service_id').val('');
                             // reset form fields except prefilled auth info
-                            $('#bk_address').val('');
-                            $('#bk_notes').val('');
+                            $('#bk_name, #bk_email, #bk_whatsapp, #bk_address, #bk_notes').val('');
+                            // Reset image field and preview
+                            $('#bk_booking_image').val('');
+                            $('#imagePreview').attr('src', '');
+                            $('#imagePreviewContainer').addClass('d-none');
                             setTimeout(function() {
                                 $('.alert.alert-success').remove();
                             }, 5000);
@@ -1480,5 +1526,40 @@
                 });
             });
         });
+
+        // Image Preview Functions
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                
+                // Check file size (5MB max)
+                if (input.files[0].size > 5 * 1024 * 1024) {
+                    alert('Image size should not exceed 5MB');
+                    input.value = '';
+                    return;
+                }
+                
+                // Check file type
+                var allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+                if (!allowedTypes.includes(input.files[0].type)) {
+                    alert('Invalid file type. Please upload JPG, PNG, or WebP image');
+                    input.value = '';
+                    return;
+                }
+                
+                reader.onload = function(e) {
+                    $('#imagePreview').attr('src', e.target.result);
+                    $('#imagePreviewContainer').removeClass('d-none');
+                };
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        
+        function removeImage() {
+            $('#bk_booking_image').val('');
+            $('#imagePreview').attr('src', '');
+            $('#imagePreviewContainer').addClass('d-none');
+        }
     </script>
 @endpush
