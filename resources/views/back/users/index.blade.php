@@ -95,7 +95,7 @@
                             <td>{{ $user->username }}</td>
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->role }}</td>
-                            <td>{{ $user->created_at->format('Y-m-d') }}</td>
+                            <td>{{ date('Y-m-d', strtotime($user->created_at)) }}</td>
                             <td class="text-end">
                                 @if($user->role !== 'admin')
                                 <a href="{{ url('users/' . $user->id . '/edit') }}"
