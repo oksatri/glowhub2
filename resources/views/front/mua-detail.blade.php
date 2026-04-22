@@ -863,24 +863,10 @@
         .hidden {
             display: none !important;
         }
-        
-        .flatpickr-calendar {
-            z-index: 9999 !important;
-            position: absolute !important;
-        }
-        
-        .flatpickr-calendar.open {
-            display: block !important;
-        }
-        
-        .flatpickr-calendar.hidden {
-            display: none !important;
-        }
     </style>
 @endpush
 
 @push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
         $(document).ready(function() {
             var maxDistance = {{ $mua['max_distance'] ?? 'null' }};
@@ -1127,76 +1113,7 @@
                 }
             });
 
-            // initialize datepicker for booking date
-            if (typeof flatpickr !== 'undefined') {
-                // Destroy any existing instance first
-                var existingInstance = $('#bk_date')[0]._flatpickr;
-                if (existingInstance) {
-                    existingInstance.destroy();
-                }
-                
-                // Prepare array of booked dates
-                var bookedDates = [];
-                @if (isset($existingBookings) && $existingBookings->count() > 0)
-                    @foreach ($existingBookings as $booking)
-                        bookedDates.push('{{ $booking->selected_date->format('Y-m-d') }}');
-                    @endforeach
-                @endif
-
-                // Function to find first available date
-                function findFirstAvailableDate() {
-                    var today = new Date();
-                    today.setHours(0, 0, 0, 0);
-                    
-                    for (var i = 0; i <= 30; i++) {
-                        var checkDate = new Date(today);
-                        checkDate.setDate(today.getDate() + i);
-                        var dateStr = checkDate.toISOString().split('T')[0];
-                        
-                        if (!bookedDates.includes(dateStr)) {
-                            return dateStr;
-                        }
-                    }
-                    return today; // fallback to today if no available date found
-                }
-
-                var firstAvailableDate = findFirstAvailableDate();
-
-                flatpickr('#bk_date', {
-                    minDate: 'today',
-                    maxDate: new Date().fp_incr(30),
-                    dateFormat: 'Y-m-d',
-                    defaultDate: firstAvailableDate,
-                    disable: bookedDates,
-                    locale: {
-                        firstDayOfWeek: 1,
-                        weekdays: {
-                            shorthand: ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'],
-                            longhand: ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu']
-                        },
-                        months: {
-                            shorthand: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
-                            longhand: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
-                        }
-                    },
-                    onChange: function(selectedDates, dateStr, instance) {
-                        updateTimeSlots(dateStr);
-                    },
-                    onReady: function(selectedDates, dateStr, instance) {
-                        if (selectedDates.length > 0) {
-                            var initialDate = instance.formatDate(selectedDates[0], 'Y-m-d');
-                            updateTimeSlots(initialDate);
-                        }
-                    },
-                    onClose: function(selectedDates, dateStr, instance) {
-                        // Ensure calendar is properly closed
-                        setTimeout(function() {
-                            $('.flatpickr-calendar').removeClass('open').hide();
-                        }, 100);
-                    }
-                });
-            }
-
+            
             function updateTimeSlots(selectedDate) {
                 if (!selectedDate) return;
 
@@ -1464,13 +1381,7 @@
             });
         });
 
-        // Clean up any stray flatpickr calendars when clicking outside
-        $(document).on('click', function(e) {
-            if (!$(e.target).closest('.flatpickr-calendar, #bk_date').length) {
-                $('.flatpickr-calendar').removeClass('open').hide();
-            }
-        });
-
+        
         // Handle checkbox change for image upload
         $(document).on('change', '.service-checkbox', function() {
             checkImageFeature();
