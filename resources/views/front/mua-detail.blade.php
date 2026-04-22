@@ -615,7 +615,6 @@
                                 <div class="g-1">
                                     @php
                                         $features = $features ?? [];
-                                        echo json_encode($features);
                                     @endphp
 
                                     @foreach ($features as $idx => $feature)
@@ -630,7 +629,7 @@
                                                     name="feature_names[]" value="{{ $feature['name'] }}"
                                                     data-price="{{ $feature['min_price'] ?? $feature['max_price'] ?? $feature['extra_price'] ?? 0 }}"
                                                     data-service-id="{{ $activeService->id ?? null }}"
-                                                    data-is-image="{{ ($feature['is_image'] ?? '') == 'on' ? 'true' : 'false' }}"
+                                                    data-is-image="{{ $feature['is_image'] == 1 ? 'true' : 'false' }}"
                                                     data-feature-idx="{{ $idx }}"
                                                     id="feature{{ $idx }}"
                                                     @if (!$hasPriceRange)
