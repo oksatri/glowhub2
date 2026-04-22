@@ -620,8 +620,6 @@
                                     @foreach ($features as $idx => $feature)
                                         @php
                                             $hasPriceRange = (!empty($feature['min_price']) && $feature['min_price'] > 0) || (!empty($feature['max_price']) && $feature['max_price'] > 0);
-                                            $isImage = @$feature['is_image'] && @$feature['is_image'] == 'on' ? 1 : 0;
-                                            dd($isImage);
                                         @endphp
 
                                             <div
@@ -630,7 +628,7 @@
                                                     name="feature_names[]" value="{{ $feature['name'] }}"
                                                     data-price="{{ $feature['min_price'] ?? $feature['max_price'] ?? $feature['extra_price'] ?? 0 }}"
                                                     data-service-id="{{ $activeService->id ?? null }}"
-                                                    data-is-image="{{ $isImage ? 'true' : 'false' }}"
+                                                    data-is-image="{{ @$feature['is_image'] && @$feature['is_image'] == 'on' ? 'true' : 'false' }}"
                                                     data-feature-idx="{{ $idx }}"
                                                     id="feature{{ $idx }}"
                                                     @if (!$hasPriceRange)
@@ -952,11 +950,9 @@
 
                 // Debug: Check portfolio data
                 const portfolioData = @json($portfolio ?? []);
-                console.log('Portfolio data from server:', portfolioData);
-                console.log('Portfolio data length:', portfolioData.length);
 
                 if (portfolioModal && portfolioCarousel) {
-                    console.log('Portfolio modal and carousel found');
+                    
 
                     // Remove existing event listeners to prevent duplicates
                     const newModal = portfolioModal.cloneNode(true);
@@ -1072,11 +1068,11 @@
                     method: 'GET',
                     data: { date: selectedDate },
                     success: function(unavailableSlots) {
-                        console.log('Unavailable slots for', selectedDate, ':', unavailableSlots); // Debug
+                        
                         generateTimeSlots(unavailableSlots);
                     },
                     error: function(xhr, status, error) {
-                        console.error('AJAX error:', error); // Debug
+                        
                         // If AJAX fails, generate without availability data
                         generateTimeSlots([]);
                     }
@@ -1425,22 +1421,14 @@
                         if (imageInput && imageInput.files && imageInput.files[0]) {
                             formData.append('feature_images[' + featureIdx + ']', imageInput.files[0]);
                         }
+                        checkImageFeature();
                     }
                 });
 
                 var url = $('#bookingForm').attr('action');
-                console.log('Form action URL:', url);
 
                 // Check if all required data is present
                 if (!formattedDate || !selectedTime || !name || !email || !whatsapp || !address) {
-                    console.error('Missing required data:', {
-                        selected_date: !!formattedDate,
-                        selected_time: !!selectedTime,
-                        name: !!name,
-                        email: !!email,
-                        whatsapp: !!whatsapp,
-                        address: !!address
-                    });
                     alert('Please fill all required fields');
                     return;
                 }
@@ -1492,11 +1480,6 @@
                         }
                     },
                     error: function(xhr) {
-                        console.log('XHR Status:', xhr.status);
-                        console.log('XHR Response Text:', xhr.responseText);
-                        console.log('XHR Response JSON:', xhr.responseJSON);
-                        console.log('XHR Headers:', xhr.getAllResponseHeaders());
-
                         var msg = 'Booking failed.';
                         if (xhr.responseJSON && xhr.responseJSON.message) {
                             msg = xhr.responseJSON.message;
@@ -1512,14 +1495,12 @@
                             msg = 'Validation Error: ' + msg;
                         } else if (xhr.status === 500) {
                             msg = 'Server Error: ' + msg;
-                            console.log('Full error response:', xhr);
                         } else if (xhr.status === 404) {
                             msg = 'Route not found. Please check the URL.';
                         } else if (xhr.status === 403) {
                             msg = 'Access forbidden. CSRF token may be invalid.';
                         }
 
-                        console.log('Final error message:', msg);
                         alert(msg);
                     }
                 });
@@ -1528,40 +1509,15 @@
 
         // Handle checkbox change for image upload
         $(document).on('change', '.service-checkbox', function() {
-            console.log('Checkbox changed:', {
-                value: $(this).val(),
-                checked: $(this).is(':checked'),
-                isImage: $(this).data('is-image'),
-                featureIdx: $(this).data('feature-idx')
-            });
             checkImageFeature();
         });
 
         // Initial check on page load
         $(document).ready(function() {
             checkImageFeature();
-            
-            // Add debug button for testing
-            $('body').append('<button id="debugBtn" style="position:fixed;top:10px;right:10px;z-index:9999;background:red;color:white;padding:5px;">Debug Upload</button>');
-            $('#debugBtn').click(function() {
-                console.log('=== DEBUG INFO ===');
-                console.log('Total checkboxes:', $('.service-checkbox').length);
-                $('.service-checkbox').each(function(i) {
-                    console.log('Checkbox ' + i + ':', {
-                        value: $(this).val(),
-                        checked: $(this).is(':checked'),
-                        isImage: $(this).data('is-image'),
-                        featureIdx: $(this).data('feature-idx'),
-                        uploadSection: $('#imageUpload' + $(this).data('feature-idx')).length
-                    });
-                });
-                checkImageFeature();
-            });
         });
 
         function checkImageFeature() {
-            console.log('checkImageFeature() called');
-            
             // Check each feature with is_image
             $('.service-checkbox').each(function() {
                 var $checkbox = $(this);
@@ -1569,20 +1525,10 @@
                 var isImageFeature = $checkbox.data('is-image') === 'true';
                 var $uploadSection = $('#imageUpload' + featureIdx);
                 
-                console.log('Feature check:', {
-                    featureIdx: featureIdx,
-                    isImageFeature: isImageFeature,
-                    isChecked: $checkbox.is(':checked'),
-                    uploadSectionExists: $uploadSection.length > 0,
-                    checkboxValue: $checkbox.val()
-                });
-                
                 if (isImageFeature) {
                     if ($checkbox.is(':checked')) {
-                        console.log('Showing upload section for feature:', featureIdx);
                         $uploadSection.removeClass('hidden').slideDown(300);
                     } else {
-                        console.log('Hiding upload section for feature:', featureIdx);
                         $uploadSection.slideUp(300, function() {
                             $(this).addClass('hidden');
                         });
