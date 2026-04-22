@@ -8,10 +8,42 @@
             <p class="text-muted small mb-0">Manage application users — minimal fields are used here; users can complete
                 their profile later.</p>
         </div>
-        <a href="{{ url('users/create') }}" class="btn px-4 py-2 rounded-pill text-white"
-            style="background: linear-gradient(135deg,#6D28D9,#2563EB); border: none;"><i class="fas fa-user-plus me-2"></i>
-            Create New User</a>
+        <div class="d-flex gap-2">
+            <button type="button" class="btn px-4 py-2 rounded-pill text-white" data-bs-toggle="modal" data-bs-target="#importExcelModal"
+                style="background: linear-gradient(135deg,#10B981,#059669); border: none;"><i class="fas fa-file-excel me-2"></i>
+                Import Excel</button>
+            <a href="{{ url('users/create') }}" class="btn px-4 py-2 rounded-pill text-white"
+                style="background: linear-gradient(135deg,#6D28D9,#2563EB); border: none;"><i class="fas fa-user-plus me-2"></i>
+                Create New User</a>
+        </div>
     </div>
+
+    <!-- Success/Error Messages -->
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
+    @if (session('import_errors'))
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <h6 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i>Import Errors:</h6>
+            <ul class="mb-0">
+                @foreach (session('import_errors') as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
 
     <div class="card border-0 shadow-sm">
         <div class="card-body px-4 py-4">
@@ -143,5 +175,64 @@
             </div>
         </div>
     </div>
+
+<!-- Import Excel Modal -->
+<div class="modal fade" id="importExcelModal" tabindex="-1" aria-labelledby="importExcelModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="importExcelModalLabel">
+                    <i class="fas fa-file-excel text-success me-2"></i>Import Users from Excel
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ route('users.import') }}" method="POST" enctype="multipart/form-data" id="importExcelForm">
+                @csrf
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="excel_file" class="form-label fw-semibold">Select Excel File</label>
+                        <input type="file" class="form-control" id="excel_file" name="excel_file" 
+                               accept=".xlsx,.xls,.csv" required>
+                        <div class="form-text">
+                            Supported formats: .xlsx, .xls, .csv (Max size: 10MB)
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info" role="alert">
+                        <h6 class="alert-heading"><i class="fas fa-info-circle me-1"></i>Excel Format Requirements:</h6>
+                        <small class="d-block mb-2">Your Excel file should contain the following columns in order:</small>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <small class="d-block">1. <strong>Name</strong> (Required)</small>
+                                <small class="d-block">2. <strong>Username</strong> (Required)</small>
+                                <small class="d-block">3. <strong>Email</strong> (Required)</small>
+                            </div>
+                            <div class="col-md-6">
+                                <small class="d-block">4. <strong>Phone</strong> (Optional)</small>
+                                <small class="d-block">5. <strong>Role</strong> (Optional: admin/mua/member)</small>
+                                <small class="d-block">6. <strong>Password</strong> (Optional, auto-generated if empty)</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">
+                            <i class="fas fa-download me-1"></i>
+                            <a href="{{ route('users.template') }}" class="text-decoration-none">Download Sample CSV Template</a>
+                        </small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i>Cancel
+                    </button>
+                    <button type="submit" class="btn btn-success" id="importBtn">
+                        <i class="fas fa-upload me-1"></i>Import Users
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 @endsection
