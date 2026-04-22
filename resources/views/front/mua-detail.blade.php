@@ -363,7 +363,7 @@
 
                                 <!-- Services & Price -->
                                 <div class="row text-center">
-                                    <div class="col-6">
+                                    <div class="col-12">
                                         <div class="border-end">
                                             <h6 class="fw-bold mb-1 small">Starting From</h6>
                                             <p class="small text-success fw-bold mb-0">Rp
@@ -862,71 +862,6 @@
     <style>
         .hidden {
             display: none !important;
-        }
-        
-        .flatpickr-months .flatpickr-month {
-            background: linear-gradient(135deg, var(--bs-primary) 0%, #ffe9f2 100%);
-            color: #ffffff;
-        }
-
-        .flatpickr-weekday {
-            color: var(--bs-primary);
-            font-weight: 600;
-        }
-
-        .flatpickr-day.selected,
-        .flatpickr-day.startRange,
-        .flatpickr-day.endRange,
-        .flatpickr-day.selected.inRange,
-        .flatpickr-day.startRange.inRange,
-        .flatpickr-day.endRange.inRange,
-        .flatpickr-day.selected:focus,
-        .flatpickr-day.startRange:focus,
-        .flatpickr-day.endRange:focus,
-        .flatpickr-day.selected:hover,
-        .flatpickr-day.startRange:hover,
-        .flatpickr-day.endRange:hover {
-            background: var(--bs-primary);
-            border-color: var(--bs-primary);
-            color: #ffffff;
-        }
-
-        .flatpickr-day.today {
-            border-color: var(--bs-primary);
-            color: var(--bs-primary);
-        }
-
-        .flatpickr-day.booked-date {
-            background-color: #f8d7da !important;
-            color: #721c24 !important;
-            border-color: #f5c6cb !important;
-            cursor: not-allowed !important;
-            opacity: 0.7;
-        }
-
-        .flatpickr-day.booked-date:hover {
-            background-color: #f8d7da !important;
-            color: #721c24 !important;
-        }
-
-        .flatpickr-day.past-date {
-            background-color: #e9ecef !important;
-            color: #6c757d !important;
-            border-color: #dee2e6 !important;
-            cursor: not-allowed !important;
-            opacity: 0.5;
-        }
-
-        .flatpickr-day.past-date:hover {
-            background-color: #e9ecef !important;
-            color: #6c757d !important;
-        }
-
-        .flatpickr-day.today-date {
-            background-color: #e7f3ff !important;
-            color: #0066cc !important;
-            border-color: #0066cc !important;
-            font-weight: bold;
         }
     </style>
 @endpush
