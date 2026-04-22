@@ -1397,7 +1397,18 @@
             $('.service-checkbox').each(function() {
                 var $checkbox = $(this);
                 var featureIdx = $checkbox.data('feature-idx');
-                var isImageFeature = $checkbox.data('is-image') === 'true' || $checkbox.data('is-image') === 1 || $checkbox.data('is-image') === '1';
+                // Debug: Check data attribute reading
+                var dataAttr = $checkbox.data('is-image');
+                var attrValue = $checkbox.attr('data-is-image');
+                console.log('Data attribute debug:', {
+                    name: $checkbox.val(),
+                    dataMethod: dataAttr,
+                    attrMethod: attrValue,
+                    dataType: typeof dataAttr,
+                    attrType: typeof attrValue
+                });
+                
+                var isImageFeature = dataAttr === 'true' || dataAttr === 1 || dataAttr === '1';
                 var isChecked = $checkbox.is(':checked');
                 var isDisabled = $checkbox.prop('disabled');
                 var $uploadSection = $('#imageUpload' + featureIdx);
