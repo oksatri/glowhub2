@@ -553,7 +553,7 @@
                                         <span>
                                             {{ $mua['rating'] ? number_format($mua['rating'], 1, ',', '.') : 'Baru' }}
                                             @if ($mua['reviews_count'] > 0)
-                                                <span class="text-muted">({{ $mua['reviews_count'] })</span>
+                                                <span class="text-muted">({{ $mua['reviews_count'] }})</span>
                                             @endif
                                         </span>
                                     </div>
