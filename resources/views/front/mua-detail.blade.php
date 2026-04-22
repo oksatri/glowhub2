@@ -1397,18 +1397,17 @@
             $('.service-checkbox').each(function() {
                 var $checkbox = $(this);
                 var featureIdx = $checkbox.data('feature-idx');
-                // Debug: Check data attribute reading
-                var dataAttr = $checkbox.data('is-image');
+                // Force refresh jQuery data and use attr directly
+                $checkbox.removeData('is-image');
                 var attrValue = $checkbox.attr('data-is-image');
-                console.log('Data attribute debug:', {
+                console.log('Direct attribute debug:', {
                     name: $checkbox.val(),
-                    dataMethod: dataAttr,
-                    attrMethod: attrValue,
-                    dataType: typeof dataAttr,
-                    attrType: typeof attrValue
+                    attrValue: attrValue,
+                    attrType: typeof attrValue,
+                    isImageResult: attrValue === 'true' || attrValue === 1 || attrValue === '1'
                 });
                 
-                var isImageFeature = dataAttr === 'true' || dataAttr === 1 || dataAttr === '1';
+                var isImageFeature = attrValue === 'true' || attrValue === 1 || attrValue === '1';
                 var isChecked = $checkbox.is(':checked');
                 var isDisabled = $checkbox.prop('disabled');
                 var $uploadSection = $('#imageUpload' + featureIdx);
