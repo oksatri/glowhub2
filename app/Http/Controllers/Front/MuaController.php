@@ -239,7 +239,7 @@ class MuaController extends Controller
         $existingBookings = Booking::where('mua_id', $id)
             ->where('status', '!=', 'rejected')
             ->get(['selected_date', 'selected_time']);
-
+        dd($features);
         return view('front.mua-detail', [
             'mua' => $muaData,
             'portfolio' => $portfolio,
