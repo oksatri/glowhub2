@@ -657,7 +657,7 @@
                                                 
                                                 @if ($isImage)
                                                 <!-- Image Upload for this Feature -->
-                                                <div class="feature-image-upload mt-2" id="imageUpload{{ $idx }}" style="display: none;">
+                                                <div class="feature-image-upload mt-2 hidden" id="imageUpload{{ $idx }}">
                                                     <small class="text-muted d-block mb-1">
                                                         <i class="fas fa-image me-1"></i>Upload reference image (optional):
                                                     </small>
@@ -857,14 +857,13 @@
 
 @endsection
 
-@push('style')
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/lightbox.min.css') }}">
     <style>
-        .flatpickr-calendar {
-            border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        .hidden {
+            display: none !important;
         }
-
+        
         .flatpickr-months .flatpickr-month {
             background: linear-gradient(135deg, var(--bs-primary) 0%, #ffe9f2 100%);
             color: #ffffff;
@@ -1473,7 +1472,9 @@
                                 var featureIdx = $(this).data('feature-idx');
                                 if (featureIdx !== undefined) {
                                     clearFeatureImage(featureIdx);
-                                    $('#imageUpload' + featureIdx).hide();
+                                    $('#imageUpload' + featureIdx).slideUp(300, function() {
+                                        $(this).addClass('hidden');
+                                    });
                                 }
                             });
                             setTimeout(function() {
@@ -1526,15 +1527,40 @@
 
         // Handle checkbox change for image upload
         $(document).on('change', '.service-checkbox', function() {
+            console.log('Checkbox changed:', {
+                value: $(this).val(),
+                checked: $(this).is(':checked'),
+                isImage: $(this).data('is-image'),
+                featureIdx: $(this).data('feature-idx')
+            });
             checkImageFeature();
         });
 
         // Initial check on page load
         $(document).ready(function() {
             checkImageFeature();
+            
+            // Add debug button for testing
+            $('body').append('<button id="debugBtn" style="position:fixed;top:10px;right:10px;z-index:9999;background:red;color:white;padding:5px;">Debug Upload</button>');
+            $('#debugBtn').click(function() {
+                console.log('=== DEBUG INFO ===');
+                console.log('Total checkboxes:', $('.service-checkbox').length);
+                $('.service-checkbox').each(function(i) {
+                    console.log('Checkbox ' + i + ':', {
+                        value: $(this).val(),
+                        checked: $(this).is(':checked'),
+                        isImage: $(this).data('is-image'),
+                        featureIdx: $(this).data('feature-idx'),
+                        uploadSection: $('#imageUpload' + $(this).data('feature-idx')).length
+                    });
+                });
+                checkImageFeature();
+            });
         });
 
         function checkImageFeature() {
+            console.log('checkImageFeature() called');
+            
             // Check each feature with is_image
             $('.service-checkbox').each(function() {
                 var $checkbox = $(this);
@@ -1542,11 +1568,23 @@
                 var isImageFeature = $checkbox.data('is-image') === 'true';
                 var $uploadSection = $('#imageUpload' + featureIdx);
                 
+                console.log('Feature check:', {
+                    featureIdx: featureIdx,
+                    isImageFeature: isImageFeature,
+                    isChecked: $checkbox.is(':checked'),
+                    uploadSectionExists: $uploadSection.length > 0,
+                    checkboxValue: $checkbox.val()
+                });
+                
                 if (isImageFeature) {
                     if ($checkbox.is(':checked')) {
-                        $uploadSection.slideDown(300);
+                        console.log('Showing upload section for feature:', featureIdx);
+                        $uploadSection.removeClass('hidden').slideDown(300);
                     } else {
-                        $uploadSection.slideUp(300);
+                        console.log('Hiding upload section for feature:', featureIdx);
+                        $uploadSection.slideUp(300, function() {
+                            $(this).addClass('hidden');
+                        });
                         // Clear image field when unchecked
                         clearFeatureImage(featureIdx);
                     }
