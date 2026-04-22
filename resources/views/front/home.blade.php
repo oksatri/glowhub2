@@ -214,16 +214,16 @@
                                                 style="width:100%; height:100%; object-fit:cover;">
                                         </div>
 
-                                        <div class="px-3 py-2" style="background-color:#F6BBBD; min-height: 180px; display: flex; flex-direction: column;">
+                                        <div class="px-3 py-2" style="background-color:#F6BBBD; display: flex; flex-direction: column; height: 100%;">
                                             <!-- Service Name at top -->
-                                            <div class="mb-2" style="min-height: 1.8rem;">
+                                            <div class="mb-2">
                                                 <h6 class="text-dark fw-semibold mb-0" title="{{ $service->service_name }}" style="font-size: 0.9rem; line-height: 1.2; word-wrap: break-word;">
                                                     {{ strtoupper($service->service_name) }}
                                                 </h6>
                                             </div>
 
                                             <!-- Location at top -->
-                                            <div class="d-flex align-items-center mb-2" style="font-size: 0.78rem; min-height: 1.5rem;">
+                                            <div class="d-flex align-items-center mb-2" style="font-size: 0.78rem;">
                                                 <i class="fas fa-map-marker-alt me-1" style="color:#D23B3B; flex-shrink: 0;"></i>
                                                 <h6 class="text-dark fw-semibold mb-0" title="{{ $location }}" style="font-size: inherit; line-height: 1.2; word-wrap: break-word; margin-left: 0.25rem;">
                                                     {{ $location ?: '-' }}</h6>
@@ -240,16 +240,18 @@
                                                     </span>
                                                 </div>
                                             </div>
-                                            <div class="d-flex justify-content-between align-items-center mt-auto">
-                                                <small class="text-muted" style="font-size: 0.8rem;">Mulai dari</small>
-                                                <strong class="text-dark" style="font-size: 0.8rem;">
-                                                    {{ $price ? 'Rp. ' . number_format($price, 0, ',', '.') : '-' }}
-                                                </strong>
-                                            </div>
-                                            <div class="mt-2 text-center">
-                                                <a href="{{ route('mua.detail', ['id' => $m->id, 'service_id' => $service->id]) }}" style="background: #845d70 !important;" class="btn btn-outline-danger btn-sm">
-                                                    View Porto
-                                                </a>
+                                            <div class="mt-auto">
+                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                    <small class="text-muted" style="font-size: 0.8rem;">Mulai dari</small>
+                                                    <strong class="text-dark" style="font-size: 0.8rem;">
+                                                        {{ $price ? 'Rp. ' . number_format($price, 0, ',', '.') : '-' }}
+                                                    </strong>
+                                                </div>
+                                                <div class="text-center">
+                                                    <a href="{{ route('mua.detail', ['id' => $m->id, 'service_id' => $service->id]) }}" style="background: #845d70 !important;" class="btn btn-outline-danger btn-sm">
+                                                        View Porto
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
