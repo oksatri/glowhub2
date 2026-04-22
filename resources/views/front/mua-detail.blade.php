@@ -1421,7 +1421,6 @@
                         if (imageInput && imageInput.files && imageInput.files[0]) {
                             formData.append('feature_images[' + featureIdx + ']', imageInput.files[0]);
                         }
-                        checkImageFeature();
                     }
                 });
 
