@@ -657,7 +657,7 @@
                                                 
                                                 @if (($feature['is_image'] ?? '') == 'on')
                                                 <!-- Image Upload for this Feature -->
-                                                <div class="feature-image-upload mt-2 hidden" id="imageUpload{{ $idx }}">
+                                                <div class="feature-image-upload mt-2" id="imageUpload{{ $idx }}" style="display: none;">
                                                     <small class="text-muted d-block mb-1">
                                                         <i class="fas fa-image me-1"></i>Upload reference image (optional):
                                                     </small>
@@ -1336,9 +1336,7 @@
                                 var featureIdx = $(this).data('feature-idx');
                                 if (featureIdx !== undefined) {
                                     clearFeatureImage(featureIdx);
-                                    $('#imageUpload' + featureIdx).slideUp(300, function() {
-                                        $(this).addClass('hidden');
-                                    });
+                                    $('#imageUpload' + featureIdx).hide();
                                 }
                             });
                             setTimeout(function() {
@@ -1395,23 +1393,32 @@
 
         function checkImageFeature() {
             // Debug: Log semua checkbox
+            console.log('=== Checking Image Features ===');
             $('.service-checkbox').each(function() {
                 var $checkbox = $(this);
                 var featureIdx = $checkbox.data('feature-idx');
                 var isImageFeature = $checkbox.data('is-image') === 'true';
                 var isChecked = $checkbox.is(':checked');
+                var isDisabled = $checkbox.prop('disabled');
                 var $uploadSection = $('#imageUpload' + featureIdx);
+                
+                console.log('Feature check:', {
+                    name: $checkbox.val(),
+                    isImageFeature: isImageFeature,
+                    isChecked: isChecked,
+                    isDisabled: isDisabled,
+                    shouldShow: isImageFeature && isChecked && !isDisabled,
+                    uploadSectionExists: $uploadSection.length > 0
+                });
                 
                 if (isImageFeature) {
                     // Only show upload if checkbox is checked AND it's not a disabled "include" feature
-                    if (isChecked && !$checkbox.prop('disabled')) {
-                        
-                        $uploadSection.removeClass('hidden').slideDown(300);
+                    if (isChecked && !isDisabled) {
+                        console.log('SHOWING upload for:', $checkbox.val());
+                        $uploadSection.show();
                     } else {
-                        
-                        $uploadSection.slideUp(300, function() {
-                            $(this).addClass('hidden');
-                        });
+                        console.log('HIDING upload for:', $checkbox.val());
+                        $uploadSection.hide();
                         // Clear image field when unchecked
                         clearFeatureImage(featureIdx);
                     }
