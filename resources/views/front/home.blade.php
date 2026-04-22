@@ -79,11 +79,11 @@
                                 @if ($aboutDetails->count() > 0)
                                     <!-- MUA Benefits -->
                                     <div class="row align-items-center mb-5">
-                                        <div class="col-lg-6">
+                                        {{-- <div class="col-lg-6">
                                             <img src="images/main-banner2.jpg" alt="Professional MUA"
                                                 class="img-fluid rounded-3 shadow">
-                                        </div>
-                                        <div class="col-lg-6">
+                                        </div> --}}
+                                        <div class="col-lg-12">
                                             <h3 class="fw-bold mb-0">{{ $aboutDetails->first()->title ?? 'Why Choose GlowHub?' }}
                                             </h3>
                                             <div class="mb-3">
