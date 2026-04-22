@@ -630,6 +630,7 @@
                                                     data-price="{{ $feature['min_price'] ?? $feature['max_price'] ?? $feature['extra_price'] ?? 0 }}"
                                                     data-service-id="{{ $activeService->id ?? null }}"
                                                     data-is-image="{{ $isImage ? 'true' : 'false' }}"
+                                                    data-feature-idx="{{ $idx }}"
                                                     id="feature{{ $idx }}"
                                                     @if (!$hasPriceRange)
                                                         checked disabled
@@ -653,6 +654,32 @@
                                                         <span class="text-muted small">Included</span>
                                                     @endif
                                                 </label>
+                                                
+                                                @if ($isImage)
+                                                <!-- Image Upload for this Feature -->
+                                                <div class="feature-image-upload mt-2" id="imageUpload{{ $idx }}" style="display: none;">
+                                                    <small class="text-muted d-block mb-1">
+                                                        <i class="fas fa-image me-1"></i>Upload reference image (optional):
+                                                    </small>
+                                                    <input type="file" name="feature_images[{{ $idx }}]" 
+                                                           class="form-control form-control-sm" 
+                                                           accept="image/*"
+                                                           onchange="previewFeatureImage(this, {{ $idx }})">
+                                                    <div id="previewContainer{{ $idx }}" class="mt-2 d-none">
+                                                        <div class="border rounded p-2 bg-light">
+                                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                                <small class="text-muted">Preview:</small>
+                                                                <button type="button" class="btn btn-sm btn-outline-danger" 
+                                                                        onclick="removeFeatureImage({{ $idx }})">
+                                                                    <i class="fas fa-times me-1"></i>Remove
+                                                                </button>
+                                                            </div>
+                                                            <img id="preview{{ $idx }}" src="" alt="Preview" 
+                                                                 class="img-fluid rounded" style="max-height: 150px; object-fit: cover;">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                @endif
                                             </div>
 
                                     @endforeach
@@ -702,37 +729,7 @@
                                         </small>
                                     </div>
 
-                                    <!-- Dynamic Image Upload Section -->
-                                    <div class="col-12" id="imageUploadSection" style="display: none;">
-                                        <label class="form-label small">
-                                            <i class="fas fa-image me-1"></i>Upload Reference Image <span class="text-muted">(Optional)</span>
-                                        </label>
-                                        <div class="mb-2">
-                                            <input type="file" name="booking_image" id="bk_booking_image" 
-                                                   class="form-control" accept="image/*"
-                                                   onchange="previewImage(this)">
-                                            <small class="text-muted d-block mt-1">
-                                                <i class="fas fa-info-circle me-1"></i>
-                                                Upload a reference image to help the MUA understand your preferred style or look.
-                                                Supported formats: JPG, PNG, WebP (Max size: 5MB)
-                                            </small>
-                                        </div>
-                                        
-                                        <!-- Image Preview -->
-                                        <div id="imagePreviewContainer" class="d-none">
-                                            <div class="border rounded p-2 bg-light">
-                                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                                    <small class="text-muted fw-semibold">Preview:</small>
-                                                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeImage()">
-                                                        <i class="fas fa-times me-1"></i>Remove
-                                                    </button>
-                                                </div>
-                                                <img id="imagePreview" src="" alt="Preview" class="img-fluid rounded" 
-                                                     style="max-height: 200px; object-fit: cover;">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                                                    </div>
 
                                 <!-- Distance Check Section -->
                                 @if (!empty($mua['link_map']))
@@ -1418,11 +1415,18 @@
                 formData.append('distance', $('#bk_distance').val());
                 formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
                 
-                // Add image file if exists
-                var imageFile = $('#bk_booking_image')[0].files[0];
-                if (imageFile) {
-                    formData.append('booking_image', imageFile);
-                }
+                // Add feature images if exists
+                $('.service-checkbox:checked').each(function() {
+                    var featureIdx = $(this).data('feature-idx');
+                    var isImageFeature = $(this).data('is-image') === 'true';
+                    
+                    if (isImageFeature) {
+                        var imageInput = $('input[name="feature_images[' + featureIdx + ']"]')[0];
+                        if (imageInput && imageInput.files && imageInput.files[0]) {
+                            formData.append('feature_images[' + featureIdx + ']', imageInput.files[0]);
+                        }
+                    }
+                });
 
                 var url = $('#bookingForm').attr('action');
                 console.log('Form action URL:', url);
@@ -1464,12 +1468,14 @@
                             // reset form fields except prefilled auth info
                             $('#bk_address').val('');
                             $('#bk_notes').val('');
-                            // Reset image field and preview
-                            $('#bk_booking_image').val('');
-                            $('#imagePreview').attr('src', '');
-                            $('#imagePreviewContainer').addClass('d-none');
-                            // Hide upload section
-                            $('#imageUploadSection').hide();
+                            // Reset all feature image fields and previews
+                            $('.service-checkbox').each(function() {
+                                var featureIdx = $(this).data('feature-idx');
+                                if (featureIdx !== undefined) {
+                                    clearFeatureImage(featureIdx);
+                                    $('#imageUpload' + featureIdx).hide();
+                                }
+                            });
                             setTimeout(function() {
                                 $('.alert.alert-success').remove();
                             }, 5000);
@@ -1529,30 +1535,27 @@
         });
 
         function checkImageFeature() {
-            var hasImageFeatureChecked = false;
-            
-            // Check if any feature with is_image is checked
-            $('.service-checkbox:checked').each(function() {
-                if ($(this).data('is-image') === 'true') {
-                    hasImageFeatureChecked = true;
-                    return false; // Break the loop
+            // Check each feature with is_image
+            $('.service-checkbox').each(function() {
+                var $checkbox = $(this);
+                var featureIdx = $checkbox.data('feature-idx');
+                var isImageFeature = $checkbox.data('is-image') === 'true';
+                var $uploadSection = $('#imageUpload' + featureIdx);
+                
+                if (isImageFeature) {
+                    if ($checkbox.is(':checked')) {
+                        $uploadSection.slideDown(300);
+                    } else {
+                        $uploadSection.slideUp(300);
+                        // Clear image field when unchecked
+                        clearFeatureImage(featureIdx);
+                    }
                 }
             });
-
-            // Show/hide upload section based on checkbox state
-            if (hasImageFeatureChecked) {
-                $('#imageUploadSection').slideDown(300);
-            } else {
-                $('#imageUploadSection').slideUp(300);
-                // Clear image field when hidden
-                $('#bk_booking_image').val('');
-                $('#imagePreview').attr('src', '');
-                $('#imagePreviewContainer').addClass('d-none');
-            }
         }
 
-        // Image Preview Functions
-        function previewImage(input) {
+        // Feature Image Preview Functions
+        function previewFeatureImage(input, featureIdx) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
                 
@@ -1572,18 +1575,22 @@
                 }
                 
                 reader.onload = function(e) {
-                    $('#imagePreview').attr('src', e.target.result);
-                    $('#imagePreviewContainer').removeClass('d-none');
+                    $('#preview' + featureIdx).attr('src', e.target.result);
+                    $('#previewContainer' + featureIdx).removeClass('d-none');
                 };
                 
                 reader.readAsDataURL(input.files[0]);
             }
         }
         
-        function removeImage() {
-            $('#bk_booking_image').val('');
-            $('#imagePreview').attr('src', '');
-            $('#imagePreviewContainer').addClass('d-none');
+        function removeFeatureImage(featureIdx) {
+            clearFeatureImage(featureIdx);
+        }
+        
+        function clearFeatureImage(featureIdx) {
+            $('input[name="feature_images[' + featureIdx + ']"]').val('');
+            $('#preview' + featureIdx).attr('src', '');
+            $('#previewContainer' + featureIdx).addClass('d-none');
         }
     </script>
 @endpush
