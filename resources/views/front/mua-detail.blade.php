@@ -1290,7 +1290,7 @@
                 // Add feature images if exists
                 $('.service-checkbox:checked').each(function() {
                     var featureIdx = $(this).data('feature-idx');
-                    var isImageFeature = $(this).data('is-image') === 'true';
+                    var isImageFeature = $(this).data('is-image') === 'true' || $(this).data('is-image') === 1 || $(this).data('is-image') === '1';
                     
                     if (isImageFeature) {
                         var imageInput = $('input[name="feature_images[' + featureIdx + ']"]')[0];
@@ -1397,7 +1397,7 @@
             $('.service-checkbox').each(function() {
                 var $checkbox = $(this);
                 var featureIdx = $checkbox.data('feature-idx');
-                var isImageFeature = $checkbox.data('is-image') === 'true';
+                var isImageFeature = $checkbox.data('is-image') === 'true' || $checkbox.data('is-image') === 1 || $checkbox.data('is-image') === '1';
                 var isChecked = $checkbox.is(':checked');
                 var isDisabled = $checkbox.prop('disabled');
                 var $uploadSection = $('#imageUpload' + featureIdx);
