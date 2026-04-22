@@ -620,7 +620,8 @@
                                     @foreach ($features as $idx => $feature)
                                         @php
                                             $hasPriceRange = (!empty($feature['min_price']) && $feature['min_price'] > 0) || (!empty($feature['max_price']) && $feature['max_price'] > 0);
-                                            $isImage = @$feature['is_image'] == 'on' ? true : false;
+                                            $isImage = @$feature['is_image'] && @$feature['is_image'] == 'on' ? 1 : 0;
+                                            dd($isImage);
                                         @endphp
 
                                             <div
