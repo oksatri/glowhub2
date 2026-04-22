@@ -615,15 +615,13 @@
                                 <div class="g-1">
                                     @php
                                         $features = $features ?? [];
+                                        echo json_encode($features);
                                     @endphp
 
                                     @foreach ($features as $idx => $feature)
                                         @php
                                             $hasPriceRange = (!empty($feature['min_price']) && $feature['min_price'] > 0) || (!empty($feature['max_price']) && $feature['max_price'] > 0);
-                                            // Debug: Log complete feature structure
-                                            error_log('Feature ' . $idx . ' (' . $feature['name'] . ') complete data: ' . json_encode($feature));
-                                            error_log('Feature ' . $feature['name'] . ' is_image: ' . ($feature['is_image'] ?? 'NULL'));
-                                            error_log('Feature ' . $feature['name'] . ' is_image type: ' . gettype($feature['is_image'] ?? null));
+                                            
                                         @endphp
 
                                             <div
