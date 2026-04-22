@@ -615,6 +615,7 @@
                                 <div class="g-1">
                                     @php
                                         $features = $features ?? [];
+                                        echo json_encode($features);
                                     @endphp
 
                                     @foreach ($features as $idx => $feature)
