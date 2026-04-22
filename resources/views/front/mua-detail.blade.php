@@ -654,7 +654,7 @@
                                                     @endif
                                                 </label>
                                                 
-                                                @if ($feature['is_image'] == 'on')
+                                                @if (($feature['is_image'] ?? '') == 'on')
                                                 <!-- Image Upload for this Feature -->
                                                 <div class="feature-image-upload mt-2 hidden" id="imageUpload{{ $idx }}">
                                                     <small class="text-muted d-block mb-1">
