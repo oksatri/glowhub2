@@ -1129,6 +1129,12 @@
 
             // initialize datepicker for booking date
             if (typeof flatpickr !== 'undefined') {
+                // Destroy any existing instance first
+                var existingInstance = $('#bk_date')[0]._flatpickr;
+                if (existingInstance) {
+                    existingInstance.destroy();
+                }
+                
                 // Prepare array of booked dates
                 var bookedDates = [];
                 @if (isset($existingBookings) && $existingBookings->count() > 0)
@@ -1137,21 +1143,19 @@
                     @endforeach
                 @endif
 
-                // Find first available date (today or next available)
+                // Function to find first available date
                 function findFirstAvailableDate() {
                     var today = new Date();
-                    var currentDate = new Date(today);
-
-                    // Check up to 30 days ahead
-                    for (var i = 0; i < 30; i++) {
-                        var dateStr = currentDate.getFullYear() + '-' +
-                            String(currentDate.getMonth() + 1).padStart(2, '0') + '-' +
-                            String(currentDate.getDate()).padStart(2, '0');
-
+                    today.setHours(0, 0, 0, 0);
+                    
+                    for (var i = 0; i <= 30; i++) {
+                        var checkDate = new Date(today);
+                        checkDate.setDate(today.getDate() + i);
+                        var dateStr = checkDate.toISOString().split('T')[0];
+                        
                         if (!bookedDates.includes(dateStr)) {
-                            return currentDate;
+                            return dateStr;
                         }
-                        currentDate.setDate(currentDate.getDate() + 1);
                     }
                     return today; // fallback to today if no available date found
                 }
@@ -1160,12 +1164,10 @@
 
                 flatpickr('#bk_date', {
                     minDate: 'today',
-                    maxDate: new Date().fp_incr(30), // Limit to 30 days ahead
+                    maxDate: new Date().fp_incr(30),
                     dateFormat: 'Y-m-d',
                     defaultDate: firstAvailableDate,
-                    position: 'auto',
-                    static: false,
-                    appendTo: document.body,
+                    disable: bookedDates,
                     locale: {
                         firstDayOfWeek: 1,
                         weekdays: {
@@ -1178,15 +1180,19 @@
                         }
                     },
                     onChange: function(selectedDates, dateStr, instance) {
-                        // Update time slots dynamically when date changes
                         updateTimeSlots(dateStr);
                     },
                     onReady: function(selectedDates, dateStr, instance) {
-                        // Initialize time slots for the default selected date
                         if (selectedDates.length > 0) {
                             var initialDate = instance.formatDate(selectedDates[0], 'Y-m-d');
                             updateTimeSlots(initialDate);
                         }
+                    },
+                    onClose: function(selectedDates, dateStr, instance) {
+                        // Ensure calendar is properly closed
+                        setTimeout(function() {
+                            $('.flatpickr-calendar').removeClass('open').hide();
+                        }, 100);
                     }
                 });
             }
@@ -1456,6 +1462,13 @@
                     }
                 });
             });
+        });
+
+        // Clean up any stray flatpickr calendars when clicking outside
+        $(document).on('click', function(e) {
+            if (!$(e.target).closest('.flatpickr-calendar, #bk_date').length) {
+                $('.flatpickr-calendar').removeClass('open').hide();
+            }
         });
 
         // Handle checkbox change for image upload
