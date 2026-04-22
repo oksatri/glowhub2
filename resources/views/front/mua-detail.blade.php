@@ -620,6 +620,8 @@
                                     @foreach ($features as $idx => $feature)
                                         @php
                                             $hasPriceRange = (!empty($feature['min_price']) && $feature['min_price'] > 0) || (!empty($feature['max_price']) && $feature['max_price'] > 0);
+                                            // Debug: Log is_image value
+                                            error_log('Feature ' . $feature['name'] . ' is_image: ' . ($feature['is_image'] ?? 'NULL'));
                                         @endphp
 
                                             <div
@@ -628,7 +630,7 @@
                                                     name="feature_names[]" value="{{ $feature['name'] }}"
                                                     data-price="{{ $feature['min_price'] ?? $feature['max_price'] ?? $feature['extra_price'] ?? 0 }}"
                                                     data-service-id="{{ $activeService->id ?? null }}"
-                                                    data-is-image="{{ @$feature['is_image'] && @$feature['is_image'] == 'on' ? 'true' : 'false' }}"
+                                                    data-is-image="{{ ($feature['is_image'] ?? '') == 'on' ? 'true' : 'false' }}"
                                                     data-feature-idx="{{ $idx }}"
                                                     id="feature{{ $idx }}"
                                                     @if (!$hasPriceRange)
