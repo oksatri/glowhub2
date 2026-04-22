@@ -214,10 +214,10 @@
                                                 style="width:100%; height:100%; object-fit:cover;">
                                         </div>
 
-                                        <div class="px-3 py-2" style="background-color:#F6BBBD;">
+                                        <div class="px-3 py-2" style="background-color:#F6BBBD; min-height: 180px; display: flex; flex-direction: column;">
                                             <!-- Service Name at top -->
                                             <div class="mb-2">
-                                                <h6 class="text-dark fw-semibold mb-0" title="{{ $service->service_name }}" style="font-size: 0.9rem;">
+                                                <h6 class="text-dark fw-semibold mb-0 text-truncate" title="{{ $service->service_name }}" style="font-size: 0.9rem;">
                                                     {{ strtoupper($service->service_name) }}
                                                 </h6>
                                             </div>
@@ -225,17 +225,10 @@
                                             <!-- Location at top -->
                                             <div class="d-flex align-items-center mb-2" style="font-size: 0.78rem;">
                                                 <i class="fas fa-map-marker-alt me-1" style="color:#D23B3B;"></i>
-                                                <h6 class="text-dark fw-semibold mb-0" title="{{ $location }}" style="font-size: inherit;">
+                                                <h6 class="text-dark fw-semibold mb-0 text-truncate" title="{{ $location }}" style="font-size: inherit;">
                                                     {{ $location ?: '-' }}</h6>
                                             </div>
 
-                                            {{-- <div class="mb-1">
-                                                @if (!empty($service->categori_service))
-                                                    <div class="small text-muted text-truncate" style="font-size: 0.74rem;" title="{{ $service->categori_service }}">
-                                                        {{ $service->categori_service }}
-                                                    </div>
-                                                @endif
-                                            </div> --}}
                                             <div class="d-flex justify-content-between align-items-center small mb-1" style="font-size: 0.78rem;">
                                                 <div class="d-flex align-items-center">
                                                     <i class="fas fa-star me-1" style="color:#FFB800;"></i>
@@ -247,7 +240,7 @@
                                                     </span>
                                                 </div>
                                             </div>
-                                            <div class="d-flex justify-content-between align-items-center mt-1">
+                                            <div class="d-flex justify-content-between align-items-center mt-auto">
                                                 <small class="text-muted" style="font-size: 0.8rem;">Mulai dari</small>
                                                 <strong class="text-dark" style="font-size: 0.8rem;">
                                                     {{ $price ? 'Rp. ' . number_format($price, 0, ',', '.') : '-' }}

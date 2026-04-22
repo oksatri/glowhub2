@@ -532,10 +532,10 @@
                                     style="width:100%; height:100%; object-fit:cover;">
                             </div>
 
-                            <div class="px-3 py-2" style="background-color:#F6BBBD;">
+                            <div class="px-3 py-2" style="background-color:#F6BBBD; min-height: 180px; display: flex; flex-direction: column;">
                                 <!-- Service Name at top -->
                                 <div class="mb-2">
-                                    <h6 class="text-dark fw-semibold mb-0" title="{{ $mua['name'] }}" style="font-size: 0.9rem;">
+                                    <h6 class="text-dark fw-semibold mb-0 text-truncate" title="{{ $mua['name'] }}" style="font-size: 0.9rem;">
                                         {{ strtoupper($mua['name']) }}
                                     </h6>
                                 </div>
@@ -543,7 +543,7 @@
                                 <!-- Location at top -->
                                 <div class="d-flex align-items-center mb-2" style="font-size: 0.78rem;">
                                     <i class="fas fa-map-marker-alt me-1" style="color:#D23B3B;"></i>
-                                    <h6 class="text-dark fw-semibold mb-0" title="{{ $mua['location'] }}" style="font-size: inherit;">
+                                    <h6 class="text-dark fw-semibold mb-0 text-truncate" title="{{ $mua['location'] }}" style="font-size: inherit;">
                                         {{ $mua['location'] ?: '-' }}</h6>
                                 </div>
 
@@ -553,12 +553,12 @@
                                         <span>
                                             {{ $mua['rating'] ? number_format($mua['rating'], 1, ',', '.') : 'Baru' }}
                                             @if ($mua['reviews_count'] > 0)
-                                                <span class="text-muted">({{ $mua['reviews_count'] }})</span>
+                                                <span class="text-muted">({{ $mua['reviews_count'] })</span>
                                             @endif
                                         </span>
                                     </div>
                                 </div>
-                                <div class="d-flex justify-content-between align-items-center mt-1">
+                                <div class="d-flex justify-content-between align-items-center mt-auto">
                                     <small class="text-muted" style="font-size: 0.8rem;">Mulai dari</small>
                                     <strong class="text-dark" style="font-size: 0.8rem;">
                                         {{ $mua['price'] ? 'Rp. ' . number_format($mua['price'], 0, ',', '.') : '-' }}
