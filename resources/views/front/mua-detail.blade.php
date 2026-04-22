@@ -863,6 +863,19 @@
         .hidden {
             display: none !important;
         }
+        
+        .flatpickr-calendar {
+            z-index: 9999 !important;
+            position: absolute !important;
+        }
+        
+        .flatpickr-calendar.open {
+            display: block !important;
+        }
+        
+        .flatpickr-calendar.hidden {
+            display: none !important;
+        }
     </style>
 @endpush
 
@@ -1150,6 +1163,9 @@
                     maxDate: new Date().fp_incr(30), // Limit to 30 days ahead
                     dateFormat: 'Y-m-d',
                     defaultDate: firstAvailableDate,
+                    position: 'auto',
+                    static: false,
+                    appendTo: document.body,
                     locale: {
                         firstDayOfWeek: 1,
                         weekdays: {
