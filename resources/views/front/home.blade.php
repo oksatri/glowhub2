@@ -240,18 +240,16 @@
                                                     </span>
                                                 </div>
                                             </div>
-                                            <div class="mt-auto">
-                                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                                    <small class="text-muted" style="font-size: 0.8rem;">Mulai dari</small>
-                                                    <strong class="text-dark" style="font-size: 0.8rem;">
-                                                        {{ $price ? 'Rp. ' . number_format($price, 0, ',', '.') : '-' }}
-                                                    </strong>
-                                                </div>
-                                                <div class="text-center">
-                                                    <a href="{{ route('mua.detail', ['id' => $m->id, 'service_id' => $service->id]) }}" style="background: #845d70 !important;" class="btn btn-outline-danger btn-sm">
-                                                        View Porto
-                                                    </a>
-                                                </div>
+                                            <div class="d-flex justify-content-between align-items-center mt-2 mb-2">
+                                                <small class="text-muted" style="font-size: 0.8rem;">Mulai dari</small>
+                                                <strong class="text-dark" style="font-size: 0.8rem;">
+                                                    {{ $price ? 'Rp. ' . number_format($price, 0, ',', '.') : '-' }}
+                                                </strong>
+                                            </div>
+                                            <div class="text-center">
+                                                <a href="{{ route('mua.detail', ['id' => $m->id, 'service_id' => $service->id]) }}" style="background: #845d70 !important;" class="btn btn-outline-danger btn-sm">
+                                                    View Porto
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
