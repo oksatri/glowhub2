@@ -654,7 +654,7 @@
                                                     @endif
                                                 </label>
                                                 
-                                                @if ($isImage)
+                                                
                                                 <!-- Image Upload for this Feature -->
                                                 <div class="feature-image-upload mt-2 hidden" id="imageUpload{{ $idx }}">
                                                     <small class="text-muted d-block mb-1">
@@ -678,7 +678,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                @endif
+                                                
                                             </div>
 
                                     @endforeach
