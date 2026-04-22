@@ -78,7 +78,7 @@
                                 @endif
                                 @if ($aboutDetails->count() > 0)
                                     <!-- MUA Benefits -->
-                                    <div class="row align-items-center mb-5 p-10">
+                                    <div class="row align-items-center mb-5 pl-10 pr-10">
                                         {{-- <div class="col-lg-6">
                                             <img src="images/main-banner2.jpg" alt="Professional MUA"
                                                 class="img-fluid rounded-3 shadow">
