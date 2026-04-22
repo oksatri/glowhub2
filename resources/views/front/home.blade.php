@@ -70,7 +70,7 @@
                                                     </div>
                                                     <h4 class="fw-bold" style="letter-spacing: 0px;">
                                                         {{ $detail->title ?? 'Step' }}</h4>
-                                                    <p class="text-muted">{{ Str::limit($detail->description ?? '', 160) }}</p>
+                                                    <p class="text-muted mb-0">{{ Str::limit($detail->description ?? '', 160) }}</p>
                                                 </div>
                                             </div>
                                         @endforeach
