@@ -534,16 +534,16 @@
 
                             <div class="px-3 py-2" style="background-color:#F6BBBD; min-height: 180px; display: flex; flex-direction: column;">
                                 <!-- Service Name at top -->
-                                <div class="mb-2">
-                                    <h6 class="text-dark fw-semibold mb-0 text-truncate" title="{{ $mua['name'] }}" style="font-size: 0.9rem;">
+                                <div class="mb-2" style="min-height: 1.8rem;">
+                                    <h6 class="text-dark fw-semibold mb-0" title="{{ $mua['name'] }}" style="font-size: 0.9rem; line-height: 1.2; word-wrap: break-word;">
                                         {{ strtoupper($mua['name']) }}
                                     </h6>
                                 </div>
 
                                 <!-- Location at top -->
-                                <div class="d-flex align-items-center mb-2" style="font-size: 0.78rem;">
-                                    <i class="fas fa-map-marker-alt me-1" style="color:#D23B3B;"></i>
-                                    <h6 class="text-dark fw-semibold mb-0 text-truncate" title="{{ $mua['location'] }}" style="font-size: inherit;">
+                                <div class="d-flex align-items-center mb-2" style="font-size: 0.78rem; min-height: 1.5rem;">
+                                    <i class="fas fa-map-marker-alt me-1" style="color:#D23B3B; flex-shrink: 0;"></i>
+                                    <h6 class="text-dark fw-semibold mb-0" title="{{ $mua['location'] }}" style="font-size: inherit; line-height: 1.2; word-wrap: break-word; margin-left: 0.25rem;">
                                         {{ $mua['location'] ?: '-' }}</h6>
                                 </div>
 
