@@ -615,7 +615,6 @@
                                 <div class="g-1">
                                     @php
                                         $features = $features ?? [];
-                                        echo json_encode($features);
                                     @endphp
 
                                     @foreach ($features as $idx => $feature)
@@ -1386,12 +1385,6 @@
         
         // Handle checkbox change for image upload
         $(document).on('change', '.service-checkbox', function() {
-            console.log('Checkbox changed:', {
-                value: $(this).val(),
-                checked: $(this).is(':checked'),
-                isImage: $(this).data('is-image'),
-                featureIdx: $(this).data('feature-idx')
-            });
             checkImageFeature();
         });
 
@@ -1402,7 +1395,6 @@
 
         function checkImageFeature() {
             // Debug: Log semua checkbox
-            console.log('=== Checking Image Features ===');
             $('.service-checkbox').each(function() {
                 var $checkbox = $(this);
                 var featureIdx = $checkbox.data('feature-idx');
@@ -1410,21 +1402,12 @@
                 var isChecked = $checkbox.is(':checked');
                 var $uploadSection = $('#imageUpload' + featureIdx);
                 
-                console.log('Feature:', {
-                    idx: featureIdx,
-                    value: $checkbox.val(),
-                    isImage: $checkbox.data('is-image'),
-                    isImageFeature: isImageFeature,
-                    isChecked: isChecked,
-                    uploadSectionExists: $uploadSection.length > 0
-                });
-                
                 if (isImageFeature) {
                     if (isChecked) {
-                        console.log('Showing upload for feature:', featureIdx);
+                        
                         $uploadSection.removeClass('hidden').slideDown(300);
                     } else {
-                        console.log('Hiding upload for feature:', featureIdx);
+                        
                         $uploadSection.slideUp(300, function() {
                             $(this).addClass('hidden');
                         });
