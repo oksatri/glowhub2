@@ -1403,7 +1403,8 @@
                 var $uploadSection = $('#imageUpload' + featureIdx);
                 
                 if (isImageFeature) {
-                    if (isChecked) {
+                    // Only show upload if checkbox is checked AND it's not a disabled "include" feature
+                    if (isChecked && !$checkbox.prop('disabled')) {
                         
                         $uploadSection.removeClass('hidden').slideDown(300);
                     } else {
