@@ -59,18 +59,18 @@
                                     <div class="row g-4">
                                         @foreach ($otherDetails as $detail)
                                             <div class="col-md-{{ 12 / max(1, $otherDetails->count()) }} text-center">
-                                                <div class="p-4">
-                                                    <div class="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center mb-3"
-                                                        style="width: 80px; height: 80px;">
+                                                <div class="p-3 p-md-4">
+                                                    <div class="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center mb-2 mb-md-3"
+                                                        style="width: 70px; height: 70px;">
                                                         @if ($detail->icon)
-                                                            <i class="{{ $detail->icon }} text-white fs-3"></i>
+                                                            <i class="{{ $detail->icon }} text-white fs-4 fs-md-3"></i>
                                                         @else
-                                                            <i class="fas fa-check-circle text-white fs-3"></i>
+                                                            <i class="fas fa-check-circle text-white fs-4 fs-md-3"></i>
                                                         @endif
                                                     </div>
-                                                    <h4 class="fw-bold" style="letter-spacing: 0px;">
+                                                    <h4 class="fw-bold mb-2 mb-md-3" style="letter-spacing: 0px; font-size: 1rem;">
                                                         {{ $detail->title ?? 'Step' }}</h4>
-                                                    <p class="text-muted mb-0">{{ Str::limit($detail->description ?? '', 160) }}</p>
+                                                    <p class="text-muted mb-0 small">{{ Str::limit($detail->description ?? '', 120) }}</p>
                                                 </div>
                                             </div>
                                         @endforeach
