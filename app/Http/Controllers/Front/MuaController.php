@@ -197,7 +197,7 @@ class MuaController extends Controller
                             'min_price' => isset($feature['min_price']) ? (int) $feature['min_price'] : null,
                             'max_price' => isset($feature['max_price']) ? (int) $feature['max_price'] : null,
                             'extra_price' => isset($feature['extra_price']) ? (int) $feature['extra_price'] : 0, // fallback for backward compatibility
-                            'is_image' => isset($feature['is_image']) ? $feature['is_image'] : null, // fallback for backward compatibility
+                            'is_image' => isset($feature['is_image']) ? true : false, // fallback for backward compatibility
                         ];
                         continue;
                     }
