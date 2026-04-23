@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Mua;
+use App\Imports\UsersImport;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
 {
@@ -127,5 +129,101 @@ class UserController extends Controller
         }
         $user->delete();
         return redirect()->route('admin.users.index')->with('success', 'User deleted.');
+    }
+
+    /**
+     * Import users from Excel file
+     */
+    public function import(Request $request)
+    {
+        $request->validate([
+            'excel_file' => 'required|mimes:xlsx,xls,csv|max:10240', // Max 10MB
+        ]);
+
+        try {
+            $file = $request->file('excel_file');
+
+            Excel::import(new UsersImport, $file);
+
+            return redirect()->route('admin.users.index')
+                ->with('success', 'Users imported successfully!');
+
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+            $failures = $e->failures();
+
+            $errorMessage = 'Import failed with validation errors:<br><br>';
+            foreach ($failures as $failure) {
+                $errorMessage .= "Row {$failure->row()}: " . implode(', ', $failure->errors()) . "<br>";
+            }
+
+            return redirect()->route('admin.users.index')
+                ->with('error', $errorMessage);
+
+        } catch (\Exception $e) {
+            return redirect()->route('admin.users.index')
+                ->with('error', 'Import failed: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Download sample Excel template
+     */
+    public function downloadTemplate()
+    {
+        $filePath = public_path('templates/users_import_template.xlsx');
+
+        if (!file_exists($filePath)) {
+            // Create template if it doesn't exist
+            $this->createTemplateFile();
+        }
+
+        return response()->download($filePath, 'users_import_template.xlsx');
+    }
+
+    /**
+     * Create Excel template file
+     */
+    private function createTemplateFile()
+    {
+        $templatePath = public_path('templates');
+        if (!is_dir($templatePath)) {
+            mkdir($templatePath, 0755, true);
+        }
+
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Set headers
+        $headers = ['name', 'username', 'email', 'password', 'role', 'whatsapp', 'address', 'biodata'];
+        $sheet->fromArray($headers, null, 'A1');
+
+        // Add sample data
+        $sampleData = [
+            'John Doe',
+            'johndoe',
+            'john@example.com',
+            'password123',
+            'user',
+            '+628123456789',
+            'Jakarta, Indonesia',
+            'Experienced makeup artist'
+        ];
+        $sheet->fromArray($sampleData, null, 'A2');
+
+        // Style the header row
+        $sheet->getStyle('A1:H1')->getFont()->setBold(true);
+        $sheet->getStyle('A1:H1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
+        $sheet->getStyle('A1:H1')->getFill()->getStartColor()->setRGB('E3F2FD');
+
+        // Auto-size columns
+        foreach (range('A', 'H') as $column) {
+            $sheet->getColumnDimension($column)->setAutoSize(true);
+        }
+
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        $writer->save($templatePath . '/users_import_template.xlsx');
+
+        $spreadsheet->disconnectWorksheets();
+        unset($spreadsheet);
     }
 }

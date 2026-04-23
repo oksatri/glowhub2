@@ -117,6 +117,8 @@ Route::middleware('auth')->group(function () {
         Route::post('settings', [SiteSettingController::class, 'update'])->name('admin.settings.update');
         // Users management
         Route::resource('users', UserController::class, ['as' => 'admin']);
+        Route::post('users/import', [UserController::class, 'import'])->name('admin.users.import');
+        Route::get('users/download-template', [UserController::class, 'downloadTemplate'])->name('admin.users.download-template');
 
         // Payment Methods management
         Route::resource('payment-methods', PaymentMethodController::class, ['as' => 'admin']);
