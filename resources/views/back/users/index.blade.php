@@ -9,7 +9,7 @@
                 their profile later.</p>
         </div>
         <div class="d-flex gap-2">
-            <button type="button" class="btn btn-outline-success px-3 py-2 rounded-pill" data-bs-toggle="modal" data-bs-target="#importModal">
+            <button type="button" class="btn btn-outline-success px-3 py-2 rounded-pill" data-bs-toggle="modal" data-bs-target="#importModal" onclick="$('#importModal').modal('show')">
                 <i class="fas fa-file-excel me-2"></i>Import Excel
             </button>
             <a href="{{ route('admin.users.download-template') }}" class="btn btn-outline-info px-3 py-2 rounded-pill">
