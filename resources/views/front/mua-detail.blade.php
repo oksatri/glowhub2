@@ -470,9 +470,12 @@
                             <div class="calendar-section">
                                 <div class="alert alert-info small">
                                     <i class="fas fa-info-circle me-2"></i>
-                                    <strong>Booking Information:</strong> Selected time = makeup completion time.
+                                    {{-- <strong>Booking Information:</strong> Selected time = makeup completion time.
                                     MUA arrives 1.5 hours before completion time.
-                                    If you book 06:00, then 04:30 (travel) and 06:00 (completion) will be blocked.
+                                    If you book 06:00, then 04:30 (travel) and 06:00 (completion) will be blocked. --}}
+                                    <strong>Booking Information:</strong> Waktu yang dipilih adalah waktu selesai makeup.
+MUA akan datang ±1,5 jam sebelumnya.
+Jadi jika booking jam 06.00, waktu yang diblok adalah 04.30–06.00.
                                 </div>
                                 <div class="row g-2">
                                     <div class="col-md-6">
@@ -620,7 +623,7 @@
                                     @foreach ($features as $idx => $feature)
                                         @php
                                             $hasPriceRange = (!empty($feature['min_price']) && $feature['min_price'] > 0) || (!empty($feature['max_price']) && $feature['max_price'] > 0);
-                                            
+
                                         @endphp
 
                                             <div
@@ -654,33 +657,33 @@
                                                         <span class="text-muted small">Included</span>
                                                     @endif
                                                 </label>
-                                                
+
                                                 @if ($feature['is_image'] == 1)
                                                 <!-- Image Upload for this Feature -->
                                                 <div class="feature-image-upload mt-2" id="imageUpload{{ $idx }}" style="display: none;">
                                                     <small class="text-muted d-block mb-1">
-                                                        <i class="fas fa-image me-1"></i>Upload reference image (optional):
+                                                        <i class="fas fa-image me-1"></i>Mohon sertakan referensi foto untuk estimasi harga :
                                                     </small>
-                                                    <input type="file" name="feature_images[{{ $idx }}]" 
-                                                           class="form-control form-control-sm" 
+                                                    <input type="file" name="feature_images[{{ $idx }}]"
+                                                           class="form-control form-control-sm"
                                                            accept="image/*"
                                                            onchange="previewFeatureImage(this, {{ $idx }})">
                                                     <div id="previewContainer{{ $idx }}" class="mt-2 d-none">
                                                         <div class="border rounded p-2 bg-light">
                                                             <div class="d-flex justify-content-between align-items-center mb-1">
                                                                 <small class="text-muted">Preview:</small>
-                                                                <button type="button" class="btn btn-sm btn-outline-danger" 
+                                                                <button type="button" class="btn btn-sm btn-outline-danger"
                                                                         onclick="removeFeatureImage({{ $idx }})">
                                                                     <i class="fas fa-times me-1"></i>Remove
                                                                 </button>
                                                             </div>
-                                                            <img id="preview{{ $idx }}" src="" alt="Preview" 
+                                                            <img id="preview{{ $idx }}" src="" alt="Preview"
                                                                  class="img-fluid rounded" style="max-height: 150px; object-fit: cover;">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 @endif
-                                                
+
                                             </div>
 
                                     @endforeach
@@ -888,7 +891,7 @@
                 const portfolioData = @json($portfolio ?? []);
 
                 if (portfolioModal && portfolioCarousel) {
-                    
+
 
                     // Remove existing event listeners to prevent duplicates
                     const newModal = portfolioModal.cloneNode(true);
@@ -1004,11 +1007,11 @@
                     method: 'GET',
                     data: { date: selectedDate },
                     success: function(unavailableSlots) {
-                        
+
                         generateTimeSlots(unavailableSlots);
                     },
                     error: function(xhr, status, error) {
-                        
+
                         // If AJAX fails, generate without availability data
                         generateTimeSlots([]);
                     }
@@ -1114,7 +1117,7 @@
                 }
             });
 
-            
+
             function updateTimeSlots(selectedDate) {
                 if (!selectedDate) return;
 
@@ -1286,12 +1289,12 @@
                 formData.append('notes', notes);
                 formData.append('distance', $('#bk_distance').val());
                 formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
-                
+
                 // Add feature images if exists
                 $('.service-checkbox:checked').each(function() {
                     var featureIdx = $(this).data('feature-idx');
                     var isImageFeature = $(this).data('is-image') === 'true' || $(this).data('is-image') === 1 || $(this).data('is-image') === '1';
-                    
+
                     if (isImageFeature) {
                         var imageInput = $('input[name="feature_images[' + featureIdx + ']"]')[0];
                         if (imageInput && imageInput.files && imageInput.files[0]) {
@@ -1380,7 +1383,7 @@
             });
         });
 
-        
+
         // Handle checkbox change for image upload
         $(document).on('change', '.service-checkbox', function() {
             checkImageFeature();
@@ -1406,12 +1409,12 @@
                     attrType: typeof attrValue,
                     isImageResult: attrValue === 'true' || attrValue === 1 || attrValue === '1'
                 });
-                
+
                 var isImageFeature = attrValue === 'true' || attrValue === 1 || attrValue === '1';
                 var isChecked = $checkbox.is(':checked');
                 var isDisabled = $checkbox.prop('disabled');
                 var $uploadSection = $('#imageUpload' + featureIdx);
-                
+
                 console.log('Feature check:', {
                     name: $checkbox.val(),
                     isImageFeature: isImageFeature,
@@ -1420,7 +1423,7 @@
                     shouldShow: isImageFeature && isChecked && !isDisabled,
                     uploadSectionExists: $uploadSection.length > 0
                 });
-                
+
                 if (isImageFeature) {
                     // Only show upload if checkbox is checked AND it's not a disabled "include" feature
                     if (isChecked && !isDisabled) {
@@ -1440,14 +1443,14 @@
         function previewFeatureImage(input, featureIdx) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
-                
+
                 // Check file size (5MB max)
                 if (input.files[0].size > 5 * 1024 * 1024) {
                     alert('Image size should not exceed 5MB');
                     input.value = '';
                     return;
                 }
-                
+
                 // Check file type
                 var allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
                 if (!allowedTypes.includes(input.files[0].type)) {
@@ -1455,20 +1458,20 @@
                     input.value = '';
                     return;
                 }
-                
+
                 reader.onload = function(e) {
                     $('#preview' + featureIdx).attr('src', e.target.result);
                     $('#previewContainer' + featureIdx).removeClass('d-none');
                 };
-                
+
                 reader.readAsDataURL(input.files[0]);
             }
         }
-        
+
         function removeFeatureImage(featureIdx) {
             clearFeatureImage(featureIdx);
         }
-        
+
         function clearFeatureImage(featureIdx) {
             $('input[name="feature_images[' + featureIdx + ']"]').val('');
             $('#preview' + featureIdx).attr('src', '');
