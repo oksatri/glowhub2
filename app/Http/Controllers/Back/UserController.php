@@ -144,9 +144,7 @@ class UserController extends Controller
         try {
             $file = $request->file('excel_file');
 
-            $import = Excel::import(new UsersImport, $file);
-
-            dd(@$import);
+            Excel::import(new UsersImport, $file);
             return redirect()->route('admin.users.index')
                 ->with('success', 'Users imported successfully!');
 
