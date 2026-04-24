@@ -12,9 +12,6 @@
             <button type="button" class="btn btn-outline-success px-3 py-2 rounded-pill" data-bs-toggle="modal" data-bs-target="#importModal" onclick="$('#importModal').modal('show')">
                 <i class="fas fa-file-excel me-2"></i>Import Excel
             </button>
-            <a href="{{ route('admin.users.download-template') }}" class="btn btn-outline-info px-3 py-2 rounded-pill">
-                <i class="fas fa-download me-2"></i>Download Template
-            </a>
             <a href="{{ url('users/create') }}" class="btn px-4 py-2 rounded-pill text-white"
                 style="background: linear-gradient(135deg,#6D28D9,#2563EB); border: none;"><i class="fas fa-user-plus me-2"></i>
                 Create New User</a>
@@ -172,9 +169,11 @@
                                 <li>Download the template first to see the required format</li>
                                 <li>Required columns: <code>name</code>, <code>username</code>, <code>email</code></li>
                                 <li>Optional columns: <code>password</code>, <code>role</code>, <code>whatsapp</code>, <code>address</code>, <code>biodata</code></li>
-                                <li>Username and email must be unique</li>
-                                <li>Default password will be "password123" if not provided</li>
-                                <li>Default role will be "user" if not specified</li>
+                                <li>Username and email must be unique across all users</li>
+                                <li>Default password: "password123" (if not provided)</li>
+                                <li>Default role: "user" (if not specified)</li>
+                                <li>Valid roles: <code>user</code>, <code>mua</code>, <code>admin</code></li>
+                                <li>Template includes 3 sample users with different roles</li>
                             </ul>
                         </div>
 

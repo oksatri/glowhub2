@@ -170,14 +170,53 @@ class UserController extends Controller
      */
     public function downloadTemplate()
     {
-        $filePath = public_path('templates/users_import_template.xlsx');
+        $excelPath = public_path('templates/users_import_template.xlsx');
+        $csvPath = public_path('templates/users_import_template.csv');
 
-        if (!file_exists($filePath)) {
-            // Create template if it doesn't exist
-            $this->createTemplateFile();
+        // Try to create Excel template first
+        if (!file_exists($excelPath)) {
+            try {
+                $this->createTemplateFile();
+            } catch (\Exception $e) {
+                // Fallback to CSV if Excel creation fails
+                if (file_exists($csvPath)) {
+                    return response()->download($csvPath, 'users_import_template.csv');
+                }
+                // Create simple CSV if neither exists
+                $this->createSimpleCsvTemplate();
+                return response()->download($csvPath, 'users_import_template.csv');
+            }
         }
 
-        return response()->download($filePath, 'users_import_template.xlsx');
+        // Return Excel if it exists and is valid
+        if (file_exists($excelPath) && filesize($excelPath) > 1000) {
+            return response()->download($excelPath, 'users_import_template.xlsx');
+        }
+
+        // Fallback to CSV
+        if (!file_exists($csvPath)) {
+            $this->createSimpleCsvTemplate();
+        }
+
+        return response()->download($csvPath, 'users_import_template.csv');
+    }
+
+    /**
+     * Create simple CSV template
+     */
+    private function createSimpleCsvTemplate()
+    {
+        $templatePath = public_path('templates');
+        if (!is_dir($templatePath)) {
+            mkdir($templatePath, 0755, true);
+        }
+
+        $csvContent = "name,username,email,password,role,whatsapp,address,biodata\n";
+        $csvContent .= "John Doe,johndoe123,john.doe@example.com,password123,user,+6281234567890,\"Jakarta Selatan, DKI Jakarta\",\"Regular user interested in makeup services\"\n";
+        $csvContent .= "Sarah Anderson,sarahmua,sarah.anderson@example.com,makeup2024,mua,+6282234567890,\"Bandung, Jawa Barat\",\"Professional makeup artist with 5 years experience\"\n";
+        $csvContent .= "Admin User,admin01,admin@glowhub.com,adminpass123,admin,+6283234567890,\"Jakarta Pusat, DKI Jakarta\",\"System administrator for managing platform\"\n";
+
+        file_put_contents($templatePath . '/users_import_template.csv', $csvContent);
     }
 
     /**
@@ -192,34 +231,134 @@ class UserController extends Controller
 
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Users Import Template');
 
         // Set headers
         $headers = ['name', 'username', 'email', 'password', 'role', 'whatsapp', 'address', 'biodata'];
         $sheet->fromArray($headers, null, 'A1');
 
-        // Add sample data
+        // Add sample data with realistic examples
         $sampleData = [
-            'John Doe',
-            'johndoe',
-            'john@example.com',
-            'password123',
-            'user',
-            '+628123456789',
-            'Jakarta, Indonesia',
-            'Experienced makeup artist'
+            // Row 2 - Regular User
+            [
+                'John Doe',
+                'johndoe123',
+                'john.doe@example.com',
+                'password123',
+                'user',
+                '+6281234567890',
+                'Jakarta Selatan, DKI Jakarta',
+                'Regular user interested in makeup services'
+            ],
+            // Row 3 - MUA User
+            [
+                'Sarah Anderson',
+                'sarahmua',
+                'sarah.anderson@example.com',
+                'makeup2024',
+                'mua',
+                '+6282234567890',
+                'Bandung, Jawa Barat',
+                'Professional makeup artist with 5 years experience in bridal and party makeup'
+            ],
+            // Row 4 - Admin User
+            [
+                'Admin User',
+                'admin01',
+                'admin@glowhub.com',
+                'adminpass123',
+                'admin',
+                '+6283234567890',
+                'Jakarta Pusat, DKI Jakarta',
+                'System administrator for managing platform'
+            ]
         ];
+
+        // Insert sample data starting from row 2
         $sheet->fromArray($sampleData, null, 'A2');
 
         // Style the header row
-        $sheet->getStyle('A1:H1')->getFont()->setBold(true);
-        $sheet->getStyle('A1:H1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
-        $sheet->getStyle('A1:H1')->getFill()->getStartColor()->setRGB('E3F2FD');
+        $headerStyle = [
+            'font' => [
+                'bold' => true,
+                'color' => ['rgb' => 'FFFFFF']
+            ],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'startColor' => ['rgb' => '4F46E5']
+            ],
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER
+            ]
+        ];
+        $sheet->getStyle('A1:H1')->applyFromArray($headerStyle);
 
-        // Auto-size columns
-        foreach (range('A', 'H') as $column) {
-            $sheet->getColumnDimension($column)->setAutoSize(true);
+        // Style the data rows
+        $dataStyle = [
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                    'color' => ['rgb' => 'E5E7EB']
+                ]
+            ],
+            'alignment' => [
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER
+            ]
+        ];
+        $sheet->getStyle('A1:H4')->applyFromArray($dataStyle);
+
+        // Set column widths
+        $columnWidths = [
+            'A' => 25, // name
+            'B' => 20, // username
+            'C' => 30, // email
+            'D' => 15, // password
+            'E' => 12, // role
+            'F' => 20, // whatsapp
+            'G' => 35, // address
+            'H' => 50  // biodata
+        ];
+
+        foreach ($columnWidths as $column => $width) {
+            $sheet->getColumnDimension($column)->setWidth($width);
         }
 
+        // Add instructions at the top
+        $sheet->insertNewRowBefore(1, 3);
+
+        // Instruction text
+        $instructions = [
+            'USERS IMPORT TEMPLATE - INSTRUCTIONS:',
+            '',
+            'REQUIRED FIELDS: name, username, email | OPTIONAL: password, role, whatsapp, address, biodata',
+            'ROLE OPTIONS: user, mua, admin | DEFAULT: password="password123", role="user"',
+            'NOTE: Username and email must be unique. Remove this instruction row before importing.'
+        ];
+
+        $sheet->fromArray($instructions, null, 'A1');
+
+        // Style instructions
+        $instructionStyle = [
+            'font' => [
+                'bold' => true,
+                'color' => ['rgb' => 'DC2626']
+            ],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'startColor' => ['rgb' => 'FEF2F2']
+            ]
+        ];
+        $sheet->getStyle('A1:A5')->applyFromArray($instructionStyle);
+
+        // Merge instruction cells
+        $sheet->mergeCells('A1:H1');
+        $sheet->mergeCells('A2:H2');
+        $sheet->mergeCells('A3:H3');
+        $sheet->mergeCells('A4:H4');
+        $sheet->mergeCells('A5:H5');
+
+        // Save the file
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
         $writer->save($templatePath . '/users_import_template.xlsx');
 
