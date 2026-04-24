@@ -27,12 +27,12 @@ class RoleMiddleware
 
         $user = Auth::user();
 
-        Log::info('RoleMiddleware - User authenticated:', [
-            'user_id' => $user->id,
-            'user_email' => $user->email,
-            'user_role' => $user->role,
-            'required_roles' => $roles
-        ]);
+        // Log::info('RoleMiddleware - User authenticated:', [
+        //     'user_id' => $user->id,
+        //     'user_email' => $user->email,
+        //     'user_role' => $user->role,
+        //     'required_roles' => $roles
+        // ]);
 
         if (!in_array($user->role, $roles)) {
             Log::error('RoleMiddleware - Role mismatch:', [
@@ -43,10 +43,10 @@ class RoleMiddleware
             abort(403, 'Unauthorized action.');
         }
 
-        Log::info('RoleMiddleware - Access granted for user:', [
-            'user_id' => $user->id,
-            'user_role' => $user->role
-        ]);
+        // Log::info('RoleMiddleware - Access granted for user:', [
+        //     'user_id' => $user->id,
+        //     'user_role' => $user->role
+        // ]);
 
         return $next($request);
     }
