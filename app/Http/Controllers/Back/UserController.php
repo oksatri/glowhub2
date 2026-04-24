@@ -141,12 +141,12 @@ class UserController extends Controller
             'excel_file' => 'required|mimes:xlsx,xls,csv|max:10240', // Max 10MB
         ]);
 
-        dd(@$request);
         try {
             $file = $request->file('excel_file');
 
-            Excel::import(new UsersImport, $file);
+            $import = Excel::import(new UsersImport, $file);
 
+            dd(@$import);
             return redirect()->route('admin.users.index')
                 ->with('success', 'Users imported successfully!');
 
