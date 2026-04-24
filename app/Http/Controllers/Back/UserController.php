@@ -171,9 +171,6 @@ class UserController extends Controller
      */
     public function downloadTemplate()
     {
-        \Log::info('downloadTemplate called');
-        \Log::info('Public path: ' . public_path());
-
         // Prioritize paths based on hosting structure (public_html folder)
         $possiblePaths = [
             public_path('templates/users_import_template.xlsx'), // Standard Laravel (../public_html)
@@ -181,13 +178,6 @@ class UserController extends Controller
             base_path('../public/templates/users_import_template.xlsx'), // Public in parent directory
             dirname(public_path()) . '/templates/users_import_template.xlsx', // Alternative
         ];
-
-        \Log::info('Checking Excel paths:');
-        foreach ($possiblePaths as $path) {
-            $exists = file_exists($path);
-            $size = $exists ? filesize($path) : 0;
-            \Log::info("Path: $path, Exists: $exists, Size: $size");
-        }
 
         $excelPath = null;
         foreach ($possiblePaths as $path) {
@@ -204,13 +194,6 @@ class UserController extends Controller
             base_path('../public/templates/users_import_template.csv'),
             dirname(public_path()) . '/templates/users_import_template.csv',
         ];
-
-        \Log::info('Checking CSV paths:');
-        foreach ($csvPaths as $path) {
-            $exists = file_exists($path);
-            $size = $exists ? filesize($path) : 0;
-            \Log::info("Path: $path, Exists: $exists, Size: $size");
-        }
 
         $csvPath = null;
         foreach ($csvPaths as $path) {
@@ -232,10 +215,8 @@ class UserController extends Controller
                     }
                 }
             } catch (\Exception $e) {
-                \Log::error('Excel creation failed: ' . $e->getMessage());
                 // Fallback to CSV if Excel creation fails
                 if ($csvPath) {
-                    \Log::info('Using fallback CSV: ' . $csvPath);
                     return response()->download($csvPath, 'users_import_template.csv');
                 }
                 // Create simple CSV if neither exists
@@ -246,7 +227,6 @@ class UserController extends Controller
 
         // Return Excel if found and valid
         if ($excelPath) {
-            \Log::info('Returning Excel: ' . $excelPath);
             return response()->download($excelPath, 'users_import_template.xlsx');
         }
 
@@ -262,7 +242,6 @@ class UserController extends Controller
             }
         }
 
-        \Log::info('Returning CSV: ' . $csvPath);
         return response()->download($csvPath, 'users_import_template.csv');
     }
 

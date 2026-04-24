@@ -12,6 +12,9 @@
             <button type="button" class="btn btn-outline-success px-3 py-2 rounded-pill" data-bs-toggle="modal" data-bs-target="#importModal" onclick="$('#importModal').modal('show')">
                 <i class="fas fa-file-excel me-2"></i>Import Excel
             </button>
+            <a href="{{ route('admin.users.download-template') }}" class="btn btn-outline-info px-3 py-2 rounded-pill">
+                <i class="fas fa-download me-2"></i>Download Template
+            </a>
             <a href="{{ url('users/create') }}" class="btn px-4 py-2 rounded-pill text-white"
                 style="background: linear-gradient(135deg,#6D28D9,#2563EB); border: none;"><i class="fas fa-user-plus me-2"></i>
                 Create New User</a>
