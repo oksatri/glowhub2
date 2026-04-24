@@ -174,7 +174,8 @@
                                 <li><strong>Valid roles:</strong> user, mua, admin</li>
                                 <li><strong>Default values:</strong> password="password123", role="user"</li>
                                 <li><strong>Username and email must be unique</strong></li>
-                                <li>Remove instruction rows (1-5) before importing</li>
+                                <li><strong>IMPORTANT:</strong> Delete instruction rows (1-5) before importing</li>
+                                <li>After deleting rows 1-5, your header row becomes row 1</li>
                                 <li>Maximum file size: 10MB</li>
                             </ul>
                         </div>

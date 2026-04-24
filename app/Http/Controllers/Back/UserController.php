@@ -423,7 +423,7 @@ class UserController extends Controller
             '',
             'REQUIRED FIELDS: name, username, email | OPTIONAL: password, role, whatsapp, address, biodata',
             'ROLE OPTIONS: user, mua, admin | DEFAULT: password="password123", role="user"',
-            'NOTE: Username and email must be unique. Remove instruction rows (1-5) before importing.'
+            'IMPORTANT: Delete rows 1-5 before importing. After deletion, header row becomes row 1.'
         ];
 
         $sheet->fromArray($instructions, null, 'A1');

@@ -14,6 +14,13 @@ use Illuminate\Validation\Rule;
 class UsersImport implements ToModel, WithHeadingRow, WithValidation, WithBatchInserts, WithChunkReading
 {
     /**
+     * Specify the heading row (row 6 after removing instruction rows 1-5)
+     */
+    public function headingRow(): int
+    {
+        return 1; // After deleting rows 1-5, header becomes row 1
+    }
+    /**
      * @param array $row
      *
      * @return \Illuminate\Database\Eloquent\Model|null
