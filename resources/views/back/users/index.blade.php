@@ -166,17 +166,16 @@
                     @csrf
                     <div class="modal-body">
                         <div class="alert alert-info mb-3">
-                            <i class="fas fa-info-circle me-2"></i>
-                            <strong>Instructions:</strong>
-                            <ul class="mb-0 mt-2">
-                                <li>Download the template first to see the required format</li>
-                                <li>Required columns: <code>name</code>, <code>username</code>, <code>email</code></li>
-                                <li>Optional columns: <code>password</code>, <code>role</code>, <code>whatsapp</code>, <code>address</code>, <code>biodata</code></li>
-                                <li>Username and email must be unique across all users</li>
-                                <li>Default password: "password123" (if not provided)</li>
-                                <li>Default role: "user" (if not specified)</li>
-                                <li>Valid roles: <code>user</code>, <code>mua</code>, <code>admin</code></li>
-                                <li>Template includes 3 sample users with different roles</li>
+                            <strong class="text-danger">📋 Important Instructions:</strong>
+                            <ul class="mb-0 small mt-2">
+                                <li>Download the template first to see the correct format</li>
+                                <li><strong>Required fields:</strong> name, username, email</li>
+                                <li><strong>Optional fields:</strong> password, role, whatsapp, address, biodata</li>
+                                <li><strong>Valid roles:</strong> user, mua, admin</li>
+                                <li><strong>Default values:</strong> password="password123", role="user"</li>
+                                <li><strong>Username and email must be unique</strong></li>
+                                <li>Remove instruction rows (1-5) before importing</li>
+                                <li>Maximum file size: 10MB</li>
                             </ul>
                         </div>
 

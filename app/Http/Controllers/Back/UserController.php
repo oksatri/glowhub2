@@ -415,7 +415,7 @@ class UserController extends Controller
         }
 
         // Add instructions at the top
-        $sheet->insertNewRowBefore(1, 3);
+        $sheet->insertNewRowBefore(1, 5);
 
         // Instruction text
         $instructions = [
@@ -423,7 +423,7 @@ class UserController extends Controller
             '',
             'REQUIRED FIELDS: name, username, email | OPTIONAL: password, role, whatsapp, address, biodata',
             'ROLE OPTIONS: user, mua, admin | DEFAULT: password="password123", role="user"',
-            'NOTE: Username and email must be unique. Remove this instruction row before importing.'
+            'NOTE: Username and email must be unique. Remove instruction rows (1-5) before importing.'
         ];
 
         $sheet->fromArray($instructions, null, 'A1');
@@ -441,12 +441,31 @@ class UserController extends Controller
         ];
         $sheet->getStyle('A1:A5')->applyFromArray($instructionStyle);
 
-        // Merge instruction cells
+        // Merge instruction cells (but keep them readable)
         $sheet->mergeCells('A1:H1');
         $sheet->mergeCells('A2:H2');
         $sheet->mergeCells('A3:H3');
         $sheet->mergeCells('A4:H4');
         $sheet->mergeCells('A5:H5');
+
+        // Style header row (now row 6)
+        $headerStyle = [
+            'font' => [
+                'bold' => true,
+                'color' => ['rgb' => 'FFFFFF']
+            ],
+            'fill' => [
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'startColor' => ['rgb' => '2563EB']
+            ],
+            'borders' => [
+                'allBorders' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                    'color' => ['rgb' => 'E5E7EB']
+                ]
+            ]
+        ];
+        $sheet->getStyle('A6:H6')->applyFromArray($headerStyle);
 
         // Save the file
         $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
