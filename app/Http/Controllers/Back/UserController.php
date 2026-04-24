@@ -9,6 +9,7 @@ use App\Models\Mua;
 use App\Imports\UsersImport;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
@@ -170,16 +171,71 @@ class UserController extends Controller
      */
     public function downloadTemplate()
     {
-        $excelPath = public_path('templates/users_import_template.xlsx');
-        $csvPath = public_path('templates/users_import_template.csv');
+        \Log::info('downloadTemplate called');
+        \Log::info('Public path: ' . public_path());
 
-        // Try to create Excel template first
-        if (!file_exists($excelPath)) {
+        // Prioritize paths based on hosting structure (public_html folder)
+        $possiblePaths = [
+            public_path('templates/users_import_template.xlsx'), // Standard Laravel (../public_html)
+            base_path('public/templates/users_import_template.xlsx'), // Public in same directory
+            base_path('../public/templates/users_import_template.xlsx'), // Public in parent directory
+            dirname(public_path()) . '/templates/users_import_template.xlsx', // Alternative
+        ];
+
+        \Log::info('Checking Excel paths:');
+        foreach ($possiblePaths as $path) {
+            $exists = file_exists($path);
+            $size = $exists ? filesize($path) : 0;
+            \Log::info("Path: $path, Exists: $exists, Size: $size");
+        }
+
+        $excelPath = null;
+        foreach ($possiblePaths as $path) {
+            if (file_exists($path) && filesize($path) > 1000) {
+                $excelPath = $path;
+                break;
+            }
+        }
+
+        // CSV paths with same priority
+        $csvPaths = [
+            public_path('templates/users_import_template.csv'),
+            base_path('public/templates/users_import_template.csv'),
+            base_path('../public/templates/users_import_template.csv'),
+            dirname(public_path()) . '/templates/users_import_template.csv',
+        ];
+
+        \Log::info('Checking CSV paths:');
+        foreach ($csvPaths as $path) {
+            $exists = file_exists($path);
+            $size = $exists ? filesize($path) : 0;
+            \Log::info("Path: $path, Exists: $exists, Size: $size");
+        }
+
+        $csvPath = null;
+        foreach ($csvPaths as $path) {
+            if (file_exists($path)) {
+                $csvPath = $path;
+                break;
+            }
+        }
+
+        // Try to create Excel template if not found
+        if (!$excelPath) {
             try {
                 $this->createTemplateFile();
+                // Check again after creation
+                foreach ($possiblePaths as $path) {
+                    if (file_exists($path) && filesize($path) > 1000) {
+                        $excelPath = $path;
+                        break;
+                    }
+                }
             } catch (\Exception $e) {
+                \Log::error('Excel creation failed: ' . $e->getMessage());
                 // Fallback to CSV if Excel creation fails
-                if (file_exists($csvPath)) {
+                if ($csvPath) {
+                    \Log::info('Using fallback CSV: ' . $csvPath);
                     return response()->download($csvPath, 'users_import_template.csv');
                 }
                 // Create simple CSV if neither exists
@@ -188,16 +244,25 @@ class UserController extends Controller
             }
         }
 
-        // Return Excel if it exists and is valid
-        if (file_exists($excelPath) && filesize($excelPath) > 1000) {
+        // Return Excel if found and valid
+        if ($excelPath) {
+            \Log::info('Returning Excel: ' . $excelPath);
             return response()->download($excelPath, 'users_import_template.xlsx');
         }
 
         // Fallback to CSV
-        if (!file_exists($csvPath)) {
+        if (!$csvPath) {
             $this->createSimpleCsvTemplate();
+            // Find the created CSV
+            foreach ($csvPaths as $path) {
+                if (file_exists($path)) {
+                    $csvPath = $path;
+                    break;
+                }
+            }
         }
 
+        \Log::info('Returning CSV: ' . $csvPath);
         return response()->download($csvPath, 'users_import_template.csv');
     }
 
@@ -206,9 +271,32 @@ class UserController extends Controller
      */
     private function createSimpleCsvTemplate()
     {
-        $templatePath = public_path('templates');
-        if (!is_dir($templatePath)) {
-            mkdir($templatePath, 0755, true);
+        // Prioritize same paths as downloadTemplate
+        $possibleDirs = [
+            public_path('templates'), // Standard Laravel (../public_html)
+            base_path('public/templates'), // Public in same directory
+            base_path('../public/templates'), // Public in parent directory
+            dirname(public_path()) . '/templates', // Alternative
+        ];
+
+        $templatePath = null;
+        foreach ($possibleDirs as $dir) {
+            if (!is_dir($dir)) {
+                try {
+                    mkdir($dir, 0755, true);
+                } catch (\Exception $e) {
+                    continue; // Try next directory
+                }
+            }
+            if (is_writable($dir)) {
+                $templatePath = $dir;
+                break;
+            }
+        }
+
+        // Fallback to system temp if no directory is writable
+        if (!$templatePath) {
+            $templatePath = sys_get_temp_dir();
         }
 
         $csvContent = "name,username,email,password,role,whatsapp,address,biodata\n";
@@ -224,9 +312,32 @@ class UserController extends Controller
      */
     private function createTemplateFile()
     {
-        $templatePath = public_path('templates');
-        if (!is_dir($templatePath)) {
-            mkdir($templatePath, 0755, true);
+        // Prioritize same paths as downloadTemplate
+        $possibleDirs = [
+            public_path('templates'), // Standard Laravel (../public_html)
+            base_path('public/templates'), // Public in same directory
+            base_path('../public/templates'), // Public in parent directory
+            dirname(public_path()) . '/templates', // Alternative
+        ];
+
+        $templatePath = null;
+        foreach ($possibleDirs as $dir) {
+            if (!is_dir($dir)) {
+                try {
+                    mkdir($dir, 0755, true);
+                } catch (\Exception $e) {
+                    continue; // Try next directory
+                }
+            }
+            if (is_writable($dir)) {
+                $templatePath = $dir;
+                break;
+            }
+        }
+
+        // Fallback to system temp if no directory is writable
+        if (!$templatePath) {
+            $templatePath = sys_get_temp_dir();
         }
 
         $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
