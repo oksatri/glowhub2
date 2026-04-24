@@ -14,11 +14,11 @@ class RoleMiddleware
      */
     public function handle(Request $request, Closure $next, ...$roles)
     {
-        Log::info('RoleMiddleware - Checking access:', [
-            'path' => $request->path(),
-            'method' => $request->method(),
-            'required_roles' => $roles
-        ]);
+        // Log::info('RoleMiddleware - Checking access:', [
+        //     'path' => $request->path(),
+        //     'method' => $request->method(),
+        //     'required_roles' => $roles
+        // ]);
 
         if (!Auth::check()) {
             Log::info('RoleMiddleware - User not authenticated, redirecting to login');
