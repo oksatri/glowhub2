@@ -91,7 +91,7 @@
                                     <label class="form-label">Birth Date</label>
                                     <input type="date" name="birth_date"
                                         class="form-control {{ $errors->has('birth_date') ? 'is-invalid' : '' }}"
-                                        value="{{ old('birth_date', $user->birth_date ? $user->birth_date->format('Y-m-d') : '') }}">
+                                        value="{{ old('birth_date', $user->birth_date) }}">
                                     @if ($errors->has('birth_date'))
                                         <div class="invalid-feedback">{{ $errors->first('birth_date') }}</div>
                                     @endif
