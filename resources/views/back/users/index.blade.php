@@ -8,9 +8,17 @@
             <p class="text-muted small mb-0">Manage application users — minimal fields are used here; users can complete
                 their profile later.</p>
         </div>
-        <a href="{{ url('users/create') }}" class="btn px-4 py-2 rounded-pill text-white"
-            style="background: linear-gradient(135deg,#6D28D9,#2563EB); border: none;"><i class="fas fa-user-plus me-2"></i>
-            Create New User</a>
+        <div class="d-flex gap-2">
+            <button type="button" class="btn btn-outline-success px-3 py-2 rounded-pill" data-bs-toggle="modal" data-bs-target="#importModal" onclick="$('#importModal').modal('show')">
+                <i class="fas fa-file-excel me-2"></i>Import Excel
+            </button>
+            {{-- <a href="{{ route('admin.users.download-template') }}" class="btn btn-outline-info px-3 py-2 rounded-pill">
+                <i class="fas fa-download me-2"></i>Download Template
+            </a> --}}
+            <a href="{{ url('users/create') }}" class="btn px-4 py-2 rounded-pill text-white"
+                style="background: linear-gradient(135deg,#6D28D9,#2563EB); border: none;"><i class="fas fa-user-plus me-2"></i>
+                Create New User</a>
+        </div>
     </div>
 
     <div class="card border-0 shadow-sm">
@@ -140,6 +148,65 @@
                 <div class="pagination-wrapper" style="margin: -0.25rem;">
                     {{ $users->appends(request()->query())->links() }}
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Excel Modal -->
+    <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="importModalLabel">
+                        <i class="fas fa-file-excel text-success me-2"></i>Import Users from Excel
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('admin.users.import') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="alert alert-info mb-3">
+                            <strong class="text-danger">📋 Important Instructions:</strong>
+                            <ul class="mb-0 small mt-2">
+                                <li>Download the template first to see the correct format</li>
+                                <li><strong>Required fields:</strong> name, username, email</li>
+                                <li><strong>Optional fields:</strong> password, role, whatsapp, address, biodata</li>
+                                <li><strong>Valid roles:</strong> user, mua, admin</li>
+                                <li><strong>Default values:</strong> password="password123", role="user"</li>
+                                <li><strong>Username and email must be unique</strong></li>
+                                <li><strong>IMPORTANT:</strong> Delete instruction rows (1-5) before importing</li>
+                                <li>After deleting rows 1-5, your header row becomes row 1</li>
+                                <li>Maximum file size: 10MB</li>
+                            </ul>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="excel_file" class="form-label fw-semibold">
+                                <i class="fas fa-file-upload me-2"></i>Choose Excel File
+                            </label>
+                            <input type="file" class="form-control" id="excel_file" name="excel_file"
+                                   accept=".xlsx,.xls,.csv" required>
+                            <div class="form-text">Supported formats: .xlsx, .xls, .csv (Max file size: 10MB)</div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <a href="{{ route('admin.users.download-template') }}" class="btn btn-outline-info btn-sm">
+                                <i class="fas fa-download me-2"></i>Download Template
+                            </a>
+                            <small class="text-muted align-self-center">
+                                Use this template to ensure correct format
+                            </small>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </button>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-file-import me-2"></i>Import Users
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

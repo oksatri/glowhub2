@@ -86,6 +86,9 @@ Route::get('/booking/price/accept/{id}', [\App\Http\Controllers\Front\BookingCon
 Route::get('/booking/price/reject/{id}', [\App\Http\Controllers\Front\BookingController::class, 'rejectPriceRevision'])->name('booking.price.reject');
 Route::get('/booking/invoice/{id}', [\App\Http\Controllers\Front\BookingController::class, 'showInvoice'])->name('front.booking.invoice');
 
+// Public download template route (no auth required)
+Route::get('users/download-template', [UserController::class, 'downloadTemplate'])->name('admin.users.download-template');
+
 // Authenticated routes
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -117,6 +120,7 @@ Route::middleware('auth')->group(function () {
         Route::post('settings', [SiteSettingController::class, 'update'])->name('admin.settings.update');
         // Users management
         Route::resource('users', UserController::class, ['as' => 'admin']);
+        Route::post('users/import', [UserController::class, 'import'])->name('admin.users.import');
 
         // Payment Methods management
         Route::resource('payment-methods', PaymentMethodController::class, ['as' => 'admin']);
@@ -131,6 +135,7 @@ Route::middleware('auth')->group(function () {
             return redirect('admin/muas');
         });
         Route::resource('admin/muas', BackMuaController::class, ['as' => 'admin']);
+
         // Nested MUA services (admin/muas/{mua}/services)
         Route::post('admin/muas/{mua}/services', [BackMuaServiceController::class, 'store'])->name('admin.muas.services.store');
         Route::put('admin/muas/{mua}/services/{id}', [BackMuaServiceController::class, 'update'])->name('admin.muas.services.update');
@@ -164,10 +169,6 @@ Route::middleware('auth')->group(function () {
         Route::resource('muas', BackMuaController::class, [
             'as' => 'admin'
         ])->only(['create', 'store', 'edit', 'update']);
-        // Nested MUA services (muas/{mua}/services)
-        Route::post('muas/{mua}/services', [BackMuaServiceController::class, 'store'])->name('muas.services.store');
-        Route::put('muas/{mua}/services/{id}', [BackMuaServiceController::class, 'update'])->name('muas.services.update');
-        Route::delete('muas/{mua}/services/{id}', [BackMuaServiceController::class, 'destroy'])->name('muas.services.destroy');
         // Portfolios
         Route::post('muas/{mua}/portfolios', [BackMuaPortfolioController::class, 'store'])->name('muas.portfolios.store');
         Route::put('muas/{mua}/portfolios/{id}', [BackMuaPortfolioController::class, 'update'])->name('muas.portfolios.update');

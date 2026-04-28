@@ -239,7 +239,7 @@ class MuaController extends Controller
         $existingBookings = Booking::where('mua_id', $id)
             ->where('status', '!=', 'rejected')
             ->get(['selected_date', 'selected_time']);
-            
+
         return view('front.mua-detail', [
             'mua' => $muaData,
             'portfolio' => $portfolio,
@@ -265,11 +265,20 @@ class MuaController extends Controller
                 'distance' => 'nullable|numeric',
                 'selected_date' => 'required|date_format:Y-m-d',
                 'selected_time' => 'required|string',
-                'services' => 'nullable|array',
+                'services' => 'nullable|string', // Accept JSON string from JavaScript
                 'mua_service_id' => 'nullable|integer',
                 'feature_images' => 'nullable|array',
                 'feature_images.*' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:5120' // Max 5MB per image
             ]);
+
+            // Parse and validate services JSON if provided
+            $servicesData = null;
+            if (!empty($request->input('services'))) {
+                $servicesData = json_decode($request->input('services'), true);
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    return back()->withErrors(['services' => 'Invalid services data format']);
+                }
+            }
 
             // Debug: Log received data
             Log::info('Booking request data:', [
@@ -307,7 +316,7 @@ class MuaController extends Controller
                 'distance_km' => $request->input('distance'),
                 'selected_date' => $request->input('selected_date'),
                 'selected_time' => $request->input('selected_time'),
-                'services' => $request->input('services') ?: null,
+                'services' => $servicesData ?: null, // Use parsed JSON data
                 'img' => !empty($featureImages) ? json_encode($featureImages) : null,
                 'status' => 'pending'
             ]);
